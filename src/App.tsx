@@ -1,6 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Sparkles } from '@react-three/drei'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import type { Mesh } from 'three'
 import {
   FREQUENCY_CATEGORIES,
@@ -10,11 +11,78 @@ import {
 } from './data/frequencyLibrary'
 
 const DEFAULT_ENTRY = FREQUENCY_LIBRARY.find((entry) => entry.id === 'open') ?? FREQUENCY_LIBRARY[0]
+const FAVORITES_STORAGE_KEY = 'vibraheal:favorites:v1'
+const SESSIONS_STORAGE_KEY = 'vibraheal:saved-sessions:v1'
+const MAX_SAVED_SESSIONS = 24
 
 type CategoryFilter = 'All' | FrequencyCategory
 
+type SavedSession = {
+  id: string
+  name: string
+  entryId: string
+  frequency: number
+  volume: number
+  offset: number
+  minutes: number
+  createdAt: string
+}
+
 function formatHz(value: number) {
   return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)
+}
+
+function readStoredStringArray(key: string): string[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const parsed: unknown = JSON.parse(window.localStorage.getItem(key) ?? '[]')
+    return Array.isArray(parsed)
+      ? parsed.filter((item): item is string => typeof item === 'string')
+      : []
+  } catch {
+    return []
+  }
+}
+
+function isSavedSession(value: unknown): value is SavedSession {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Record<string, unknown>
+  return (
+    typeof candidate.id === 'string' &&
+    typeof candidate.name === 'string' &&
+    typeof candidate.entryId === 'string' &&
+    typeof candidate.frequency === 'number' &&
+    typeof candidate.volume === 'number' &&
+    typeof candidate.offset === 'number' &&
+    typeof candidate.minutes === 'number' &&
+    typeof candidate.createdAt === 'string'
+  )
+}
+
+function readSavedSessions(): SavedSession[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const parsed: unknown = JSON.parse(window.localStorage.getItem(SESSIONS_STORAGE_KEY) ?? '[]')
+    return Array.isArray(parsed) ? parsed.filter(isSavedSession).slice(0, MAX_SAVED_SESSIONS) : []
+  } catch {
+    return []
+  }
+}
+
+function persistLocalValue(key: string, value: unknown) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value))
+    return true
+  } catch {
+    return false
+  }
+}
+
+function createSessionId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
 }
 
 function Orb({ intensity }: { intensity: number }) {
@@ -120,6 +188,12 @@ export default function App() {
   const [breathing, setBreathing] = useState(false)
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('All')
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStoredStringArray(FAVORITES_STORAGE_KEY))
+  const [savedSessions, setSavedSessions] = useState<SavedSession[]>(readSavedSessions)
+  const [sessionName, setSessionName] = useState('')
+  const [collectionMessage, setCollectionMessage] = useState('')
+  const [storageAvailable, setStorageAvailable] = useState(true)
   const audioRef = useRef<AudioGraph | null>(null)
 
   const timeLabel = useMemo(() => {
@@ -128,11 +202,17 @@ export default function App() {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }, [secondsLeft])
 
+  const favoriteEntries = useMemo(
+    () => FREQUENCY_LIBRARY.filter((entry) => favoriteIds.includes(entry.id)),
+    [favoriteIds],
+  )
+
   const filteredEntries = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
     return FREQUENCY_LIBRARY.filter((entry) => {
       const matchesCategory = category === 'All' || entry.category === category
-      if (!matchesCategory) return false
+      const matchesFavorite = !favoritesOnly || favoriteIds.includes(entry.id)
+      if (!matchesCategory || !matchesFavorite) return false
       if (!normalizedQuery) return true
       const searchable = [
         entry.name,
@@ -144,7 +224,15 @@ export default function App() {
       ].join(' ').toLowerCase()
       return searchable.includes(normalizedQuery)
     })
-  }, [category, query])
+  }, [category, favoriteIds, favoritesOnly, query])
+
+  useEffect(() => {
+    if (!persistLocalValue(FAVORITES_STORAGE_KEY, favoriteIds)) setStorageAvailable(false)
+  }, [favoriteIds])
+
+  useEffect(() => {
+    if (!persistLocalValue(SESSIONS_STORAGE_KEY, savedSessions)) setStorageAvailable(false)
+  }, [savedSessions])
 
   useEffect(() => {
     if (!playing) return
@@ -191,14 +279,18 @@ export default function App() {
     setFrequency(entry.hz)
   }
 
+  function stopPlayback() {
+    const graph = audioRef.current
+    if (graph) {
+      fadeAndClose(graph)
+      audioRef.current = null
+    }
+    setPlaying(false)
+  }
+
   async function togglePlayback() {
     if (playing) {
-      const graph = audioRef.current
-      if (graph) {
-        fadeAndClose(graph)
-        audioRef.current = null
-      }
-      setPlaying(false)
+      stopPlayback()
       return
     }
 
@@ -214,6 +306,50 @@ export default function App() {
     if (!playing) setSecondsLeft(next * 60)
   }
 
+  function toggleFavorite(entry: FrequencyEntry) {
+    const removing = favoriteIds.includes(entry.id)
+    setFavoriteIds((current) => (
+      removing ? current.filter((id) => id !== entry.id) : [...current, entry.id]
+    ))
+    setCollectionMessage(removing ? `Removed ${entry.name} from favorites.` : `Added ${entry.name} to favorites.`)
+  }
+
+  function saveCurrentSession(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const name = sessionName.trim() || `${selected.name} • ${formatHz(frequency)} Hz`
+    const nextSession: SavedSession = {
+      id: createSessionId(),
+      name,
+      entryId: selected.id,
+      frequency,
+      volume,
+      offset,
+      minutes,
+      createdAt: new Date().toISOString(),
+    }
+    setSavedSessions((current) => [nextSession, ...current].slice(0, MAX_SAVED_SESSIONS))
+    setSessionName('')
+    setCollectionMessage(`Saved “${name}” on this device.`)
+  }
+
+  function loadSavedSession(session: SavedSession) {
+    stopPlayback()
+    const matchingEntry = FREQUENCY_LIBRARY.find((entry) => entry.id === session.entryId)
+    if (matchingEntry) setSelected(matchingEntry)
+    setFrequency(Math.min(1200, Math.max(40, session.frequency)))
+    setVolume(Math.min(0.25, Math.max(0, session.volume)))
+    setOffset(Math.min(12, Math.max(0, session.offset)))
+    const nextMinutes = Math.min(120, Math.max(1, Math.round(session.minutes)))
+    setMinutes(nextMinutes)
+    setSecondsLeft(nextMinutes * 60)
+    setCollectionMessage(`Loaded “${session.name}”. Press Begin session when you are ready.`)
+  }
+
+  function removeSavedSession(session: SavedSession) {
+    setSavedSessions((current) => current.filter((item) => item.id !== session.id))
+    setCollectionMessage(`Removed “${session.name}”.`)
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -221,17 +357,18 @@ export default function App() {
           <span className="brand-mark">◉</span>
           <span><strong>VibraHeal</strong><small>sound • breath • visual rhythm</small></span>
         </a>
-        <span className="status-pill">MVP 0.2</span>
+        <span className="status-pill">MVP 0.3</span>
       </header>
 
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="eyebrow">A calm place to reconnect</p>
-          <h1>Find a tone. Shape a mindful moment.</h1>
-          <p className="lede">Search a growing library of clearly labeled tones, set a gentle timer, and let the visual field move with your session. VibraHeal is designed for relaxation and personal wellness—not diagnosis or medical treatment.</p>
+          <h1>Find a tone. Keep what works for you.</h1>
+          <p className="lede">Explore clearly labeled tones, favorite meaningful starting points, and save your own frequency, volume, timer, and stereo settings privately on this device.</p>
           <div className="hero-actions">
             <button className="primary-button" onClick={togglePlayback}>{playing ? 'Pause session' : 'Begin session'}</button>
             <a className="secondary-button" href="#frequency-library">Explore the library</a>
+            <a className="secondary-button" href="#my-collection">Open my collection</a>
             <button className="secondary-button" onClick={() => setBreathing((value) => !value)}>{breathing ? 'Hide breathing guide' : 'Open breathing guide'}</button>
           </div>
         </div>
@@ -241,7 +378,16 @@ export default function App() {
       <section className="dashboard" aria-label="VibraHeal session controls">
         <article className="panel session-panel">
           <div className="panel-heading"><span>Now playing</span><strong>{selected.name}</strong></div>
-          <span className={`content-label ${selected.category.toLowerCase().replaceAll(' ', '-')}`}>{selected.category}</span>
+          <div className="now-playing-meta">
+            <span className={`content-label ${selected.category.toLowerCase().replaceAll(' ', '-')}`}>{selected.category}</span>
+            <button
+              className={favoriteIds.includes(selected.id) ? 'favorite-pill active' : 'favorite-pill'}
+              onClick={() => toggleFavorite(selected)}
+              aria-pressed={favoriteIds.includes(selected.id)}
+            >
+              {favoriteIds.includes(selected.id) ? '★ Favorited' : '☆ Add favorite'}
+            </button>
+          </div>
           <div className="frequency-readout"><span>{formatHz(frequency)}</span><small>Hz carrier</small></div>
           <p>{selected.description}</p>
           <p className="intention"><strong>Session idea:</strong> {selected.intention}</p>
@@ -254,6 +400,7 @@ export default function App() {
           <label>Binaural offset <span>{offset} Hz</span>
             <input type="range" min="0" max="12" step="1" value={offset} onChange={(event) => setOffset(Number(event.target.value))} />
           </label>
+          <a className="save-setup-link" href="#my-collection">Save this complete setup ↓</a>
           <p className="headphone-note">Headphones are recommended for the stereo offset. Start at a low volume and stop if the sound feels uncomfortable.</p>
         </article>
 
@@ -282,31 +429,48 @@ export default function App() {
                 {item}
               </button>
             ))}
+            <button
+              className={favoritesOnly ? 'filter-chip favorite-filter active' : 'filter-chip favorite-filter'}
+              onClick={() => setFavoritesOnly((value) => !value)}
+              aria-pressed={favoritesOnly}
+            >
+              ★ Favorites ({favoriteIds.length})
+            </button>
           </div>
           <p className="result-count" aria-live="polite">Showing {filteredEntries.length} of {FREQUENCY_LIBRARY.length} tones</p>
           <div className="library-results">
-            {filteredEntries.map((entry) => (
-              <button
-                key={entry.id}
-                className={entry.id === selected.id ? 'library-card active' : 'library-card'}
-                onClick={() => chooseEntry(entry)}
-              >
-                <span className="library-card-top">
-                  <span>
-                    <strong>{entry.name}</strong>
-                    <small>{entry.category}</small>
-                  </span>
-                  <b>{formatHz(entry.hz)} Hz</b>
-                </span>
-                <span className="library-description">{entry.description}</span>
-                <span className="tag-row">{entry.tags.slice(0, 3).map((tag) => <small key={tag}>{tag}</small>)}</span>
-              </button>
-            ))}
+            {filteredEntries.map((entry) => {
+              const favorite = favoriteIds.includes(entry.id)
+              return (
+                <div key={entry.id} className={entry.id === selected.id ? 'library-card active' : 'library-card'}>
+                  <button className="library-card-select" onClick={() => chooseEntry(entry)}>
+                    <span className="library-card-top">
+                      <span>
+                        <strong>{entry.name}</strong>
+                        <small>{entry.category}</small>
+                      </span>
+                      <b>{formatHz(entry.hz)} Hz</b>
+                    </span>
+                    <span className="library-description">{entry.description}</span>
+                    <span className="tag-row">{entry.tags.slice(0, 3).map((tag) => <small key={tag}>{tag}</small>)}</span>
+                  </button>
+                  <button
+                    className={favorite ? 'favorite-star active' : 'favorite-star'}
+                    onClick={() => toggleFavorite(entry)}
+                    aria-label={favorite ? `Remove ${entry.name} from favorites` : `Add ${entry.name} to favorites`}
+                    aria-pressed={favorite}
+                    title={favorite ? 'Remove favorite' : 'Add favorite'}
+                  >
+                    {favorite ? '★' : '☆'}
+                  </button>
+                </div>
+              )
+            })}
             {filteredEntries.length === 0 && (
               <div className="empty-state">
-                <strong>No tones matched that search.</strong>
-                <p>Try a frequency number, a word such as “calm,” or choose a different label.</p>
-                <button className="wide-button" onClick={() => { setQuery(''); setCategory('All') }}>Show the full library</button>
+                <strong>{favoritesOnly && favoriteIds.length === 0 ? 'Your favorites are waiting.' : 'No tones matched that search.'}</strong>
+                <p>{favoritesOnly && favoriteIds.length === 0 ? 'Tap a star beside any tone to build your personal list.' : 'Try a frequency number, a word such as “calm,” or choose a different label.'}</p>
+                <button className="wide-button" onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false) }}>Show the full library</button>
               </div>
             )}
           </div>
@@ -327,13 +491,90 @@ export default function App() {
           <div className="breath-orb"><span>Inhale<br /><small>4 seconds</small></span></div>
           <p>Inhale for four, pause for four, and exhale slowly for six. Stop if you feel uncomfortable or lightheaded.</p>
         </article>
+
+        <article className="panel collection-panel" id="my-collection">
+          <div className="panel-heading">
+            <span>My collection</span>
+            <strong>{favoriteIds.length} favorite{favoriteIds.length === 1 ? '' : 's'} • {savedSessions.length} saved session{savedSessions.length === 1 ? '' : 's'}</strong>
+          </div>
+
+          <div className="collection-grid">
+            <section className="collection-section">
+              <div className="section-heading">
+                <div><p className="section-kicker">Favorite tones</p><h3>Your quick-start library</h3></div>
+                <button className="text-button" onClick={() => { setFavoritesOnly(true); window.location.hash = 'frequency-library' }}>View in library</button>
+              </div>
+              {favoriteEntries.length > 0 ? (
+                <div className="favorite-list">
+                  {favoriteEntries.map((entry) => (
+                    <button key={entry.id} onClick={() => chooseEntry(entry)}>
+                      <span>{entry.name}</span><strong>{formatHz(entry.hz)} Hz</strong>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="collection-empty"><strong>No favorites yet.</strong><p>Use the stars in the library to keep your most meaningful starting points close.</p></div>
+              )}
+            </section>
+
+            <section className="collection-section save-section">
+              <p className="section-kicker">Save current setup</p>
+              <h3>Keep this exact session</h3>
+              <p>The carrier, safe volume setting, stereo offset, timer, and library starting point stay in this browser.</p>
+              <form className="save-session-form" onSubmit={saveCurrentSession}>
+                <label htmlFor="session-name">Session name <span>optional</span></label>
+                <input
+                  id="session-name"
+                  value={sessionName}
+                  onChange={(event) => setSessionName(event.target.value)}
+                  maxLength={60}
+                  placeholder={`${selected.name} • ${formatHz(frequency)} Hz`}
+                />
+                <div className="session-snapshot" aria-label="Current session settings">
+                  <span><small>Carrier</small><strong>{formatHz(frequency)} Hz</strong></span>
+                  <span><small>Volume</small><strong>{Math.round(volume * 100)}%</strong></span>
+                  <span><small>Offset</small><strong>{offset} Hz</strong></span>
+                  <span><small>Timer</small><strong>{minutes} min</strong></span>
+                </div>
+                <button className="primary-button save-session-button" type="submit">Save session on this device</button>
+              </form>
+              {!storageAvailable && <p className="storage-warning" role="alert">Browser storage is unavailable, so favorites and sessions may not remain after this tab closes.</p>}
+            </section>
+          </div>
+
+          <section className="saved-sessions-section">
+            <div className="section-heading">
+              <div><p className="section-kicker">Saved sessions</p><h3>Return to your personal setups</h3></div>
+              <small>Stored only on this device</small>
+            </div>
+            {savedSessions.length > 0 ? (
+              <div className="saved-session-list">
+                {savedSessions.map((session) => (
+                  <article className="saved-session-card" key={session.id}>
+                    <div className="saved-session-copy">
+                      <strong>{session.name}</strong>
+                      <span>{formatHz(session.frequency)} Hz • {Math.round(session.volume * 100)}% volume • {session.offset} Hz offset • {session.minutes} min</span>
+                    </div>
+                    <div className="saved-session-actions">
+                      <button className="load-session-button" onClick={() => loadSavedSession(session)}>Load</button>
+                      <button className="remove-session-button" onClick={() => removeSavedSession(session)} aria-label={`Remove saved session ${session.name}`}>Remove</button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="collection-empty"><strong>No saved sessions yet.</strong><p>Adjust the controls, give the setup a name, and save it above.</p></div>
+            )}
+          </section>
+          <p className="collection-message" aria-live="polite">{collectionMessage}</p>
+        </article>
       </section>
 
       <section className="principles">
         <p className="eyebrow">Built with care</p>
         <h2>A trustworthy wellness experience.</h2>
         <div className="principle-grid">
-          <article><span>01</span><h3>Searchable and local-first</h3><p>Explore the library without an account. Search activity and session choices stay in your browser.</p></article>
+          <article><span>01</span><h3>Private by default</h3><p>Favorites and saved sessions stay in local browser storage. VibraHeal does not require an account or upload this collection.</p></article>
           <article><span>02</span><h3>Accessible controls</h3><p>Clear labels, keyboard-friendly buttons, low-volume defaults, and reduced-motion support.</p></article>
           <article><span>03</span><h3>Honest language</h3><p>Musical facts, wellness practices, and spiritual traditions are labeled separately instead of being presented as cures.</p></article>
         </div>
