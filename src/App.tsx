@@ -2,15 +2,20 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Sparkles } from '@react-three/drei'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Mesh } from 'three'
+import {
+  FREQUENCY_CATEGORIES,
+  FREQUENCY_LIBRARY,
+  type FrequencyCategory,
+  type FrequencyEntry,
+} from './data/frequencyLibrary'
 
-const PRESETS = [
-  { name: 'Ground', hz: 174, description: 'A low, steady tone for settling into a quiet session.' },
-  { name: 'Release', hz: 285, description: 'A gentle tone paired with slow breathing and reflection.' },
-  { name: 'Restore', hz: 396, description: 'A warm tone for meditation, journaling, or calm focus.' },
-  { name: 'Open', hz: 528, description: 'A bright tone for an uplifting mindfulness session.' },
-  { name: 'Connect', hz: 639, description: 'A balanced tone for gratitude and connection practices.' },
-  { name: 'Clarity', hz: 741, description: 'A clear tone for focused breathing and creative work.' },
-]
+const DEFAULT_ENTRY = FREQUENCY_LIBRARY.find((entry) => entry.id === 'open') ?? FREQUENCY_LIBRARY[0]
+
+type CategoryFilter = 'All' | FrequencyCategory
+
+function formatHz(value: number) {
+  return Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1)
+}
 
 function Orb({ intensity }: { intensity: number }) {
   const mesh = useRef<Mesh>(null)
@@ -89,15 +94,32 @@ function createAudioGraph(frequency: number, volume: number, binauralOffset: num
   return { context, left, right, leftGain, rightGain, master }
 }
 
+function fadeAndClose(graph: AudioGraph) {
+  const now = graph.context.currentTime
+  graph.master.gain.cancelScheduledValues(now)
+  graph.master.gain.setTargetAtTime(0, now, 0.04)
+  window.setTimeout(() => {
+    try {
+      graph.left.stop()
+      graph.right.stop()
+    } catch {
+      // The graph may already be stopped during page cleanup.
+    }
+    void graph.context.close()
+  }, 140)
+}
+
 export default function App() {
-  const [selected, setSelected] = useState(PRESETS[3])
-  const [frequency, setFrequency] = useState(PRESETS[3].hz)
+  const [selected, setSelected] = useState<FrequencyEntry>(DEFAULT_ENTRY)
+  const [frequency, setFrequency] = useState(DEFAULT_ENTRY.hz)
   const [volume, setVolume] = useState(0.12)
   const [offset, setOffset] = useState(6)
   const [playing, setPlaying] = useState(false)
   const [minutes, setMinutes] = useState(10)
   const [secondsLeft, setSecondsLeft] = useState(10 * 60)
   const [breathing, setBreathing] = useState(false)
+  const [query, setQuery] = useState('')
+  const [category, setCategory] = useState<CategoryFilter>('All')
   const audioRef = useRef<AudioGraph | null>(null)
 
   const timeLabel = useMemo(() => {
@@ -106,11 +128,34 @@ export default function App() {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }, [secondsLeft])
 
+  const filteredEntries = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase()
+    return FREQUENCY_LIBRARY.filter((entry) => {
+      const matchesCategory = category === 'All' || entry.category === category
+      if (!matchesCategory) return false
+      if (!normalizedQuery) return true
+      const searchable = [
+        entry.name,
+        entry.hz.toString(),
+        entry.category,
+        entry.description,
+        entry.intention,
+        ...entry.tags,
+      ].join(' ').toLowerCase()
+      return searchable.includes(normalizedQuery)
+    })
+  }, [category, query])
+
   useEffect(() => {
     if (!playing) return
     const timer = window.setInterval(() => {
       setSecondsLeft((value) => {
         if (value <= 1) {
+          const graph = audioRef.current
+          if (graph) {
+            fadeAndClose(graph)
+            audioRef.current = null
+          }
           setPlaying(false)
           return 0
         }
@@ -132,26 +177,25 @@ export default function App() {
   useEffect(() => () => {
     const graph = audioRef.current
     if (!graph) return
-    graph.left.stop()
-    graph.right.stop()
+    try {
+      graph.left.stop()
+      graph.right.stop()
+    } catch {
+      // The oscillators may already be stopping.
+    }
     void graph.context.close()
   }, [])
 
-  function choosePreset(preset: (typeof PRESETS)[number]) {
-    setSelected(preset)
-    setFrequency(preset.hz)
+  function chooseEntry(entry: FrequencyEntry) {
+    setSelected(entry)
+    setFrequency(entry.hz)
   }
 
   async function togglePlayback() {
     if (playing) {
       const graph = audioRef.current
       if (graph) {
-        graph.master.gain.setTargetAtTime(0, graph.context.currentTime, 0.04)
-        window.setTimeout(() => {
-          graph.left.stop()
-          graph.right.stop()
-          void graph.context.close()
-        }, 120)
+        fadeAndClose(graph)
         audioRef.current = null
       }
       setPlaying(false)
@@ -177,16 +221,17 @@ export default function App() {
           <span className="brand-mark">◉</span>
           <span><strong>VibraHeal</strong><small>sound • breath • visual rhythm</small></span>
         </a>
-        <span className="status-pill">MVP 0.1</span>
+        <span className="status-pill">MVP 0.2</span>
       </header>
 
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="eyebrow">A calm place to reconnect</p>
-          <h1>Shape a mindful session with sound, breath, and light.</h1>
-          <p className="lede">Choose a tone, set a gentle timer, and let the visual field move with your session. VibraHeal is designed for relaxation and personal wellness—not diagnosis or medical treatment.</p>
+          <h1>Find a tone. Shape a mindful moment.</h1>
+          <p className="lede">Search a growing library of clearly labeled tones, set a gentle timer, and let the visual field move with your session. VibraHeal is designed for relaxation and personal wellness—not diagnosis or medical treatment.</p>
           <div className="hero-actions">
             <button className="primary-button" onClick={togglePlayback}>{playing ? 'Pause session' : 'Begin session'}</button>
+            <a className="secondary-button" href="#frequency-library">Explore the library</a>
             <button className="secondary-button" onClick={() => setBreathing((value) => !value)}>{breathing ? 'Hide breathing guide' : 'Open breathing guide'}</button>
           </div>
         </div>
@@ -196,10 +241,12 @@ export default function App() {
       <section className="dashboard" aria-label="VibraHeal session controls">
         <article className="panel session-panel">
           <div className="panel-heading"><span>Now playing</span><strong>{selected.name}</strong></div>
-          <div className="frequency-readout"><span>{frequency}</span><small>Hz carrier</small></div>
+          <span className={`content-label ${selected.category.toLowerCase().replaceAll(' ', '-')}`}>{selected.category}</span>
+          <div className="frequency-readout"><span>{formatHz(frequency)}</span><small>Hz carrier</small></div>
           <p>{selected.description}</p>
-          <label>Carrier frequency
-            <input type="range" min="80" max="900" step="1" value={frequency} onChange={(event) => setFrequency(Number(event.target.value))} />
+          <p className="intention"><strong>Session idea:</strong> {selected.intention}</p>
+          <label>Carrier frequency <span>{formatHz(frequency)} Hz</span>
+            <input type="range" min="40" max="1200" step="0.1" value={frequency} onChange={(event) => setFrequency(Number(event.target.value))} />
           </label>
           <label>Volume <span>{Math.round(volume * 100)}%</span>
             <input type="range" min="0" max="0.25" step="0.01" value={volume} onChange={(event) => setVolume(Number(event.target.value))} />
@@ -207,18 +254,63 @@ export default function App() {
           <label>Binaural offset <span>{offset} Hz</span>
             <input type="range" min="0" max="12" step="1" value={offset} onChange={(event) => setOffset(Number(event.target.value))} />
           </label>
-          <p className="headphone-note">Headphones are recommended for the stereo offset. Start at a low volume.</p>
+          <p className="headphone-note">Headphones are recommended for the stereo offset. Start at a low volume and stop if the sound feels uncomfortable.</p>
         </article>
 
-        <article className="panel preset-panel">
-          <div className="panel-heading"><span>Session library</span><strong>Choose a starting point</strong></div>
-          <div className="preset-grid">
-            {PRESETS.map((preset) => (
-              <button key={preset.name} className={preset.name === selected.name ? 'preset active' : 'preset'} onClick={() => choosePreset(preset)}>
-                <span>{preset.name}</span><strong>{preset.hz} Hz</strong>
+        <article className="panel library-panel" id="frequency-library">
+          <div className="panel-heading"><span>Frequency library</span><strong>{FREQUENCY_LIBRARY.length} mindful starting points</strong></div>
+          <label className="search-label" htmlFor="frequency-search">Search by name, number, intention, or tag</label>
+          <div className="search-wrap">
+            <span aria-hidden="true">⌕</span>
+            <input
+              id="frequency-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Try “focus”, “440”, or “meditation”"
+            />
+            {query && <button className="clear-search" onClick={() => setQuery('')} aria-label="Clear frequency search">Clear</button>}
+          </div>
+          <div className="filter-row" aria-label="Filter frequency library">
+            {FREQUENCY_CATEGORIES.map((item) => (
+              <button
+                key={item}
+                className={category === item ? 'filter-chip active' : 'filter-chip'}
+                onClick={() => setCategory(item)}
+                aria-pressed={category === item}
+              >
+                {item}
               </button>
             ))}
           </div>
+          <p className="result-count" aria-live="polite">Showing {filteredEntries.length} of {FREQUENCY_LIBRARY.length} tones</p>
+          <div className="library-results">
+            {filteredEntries.map((entry) => (
+              <button
+                key={entry.id}
+                className={entry.id === selected.id ? 'library-card active' : 'library-card'}
+                onClick={() => chooseEntry(entry)}
+              >
+                <span className="library-card-top">
+                  <span>
+                    <strong>{entry.name}</strong>
+                    <small>{entry.category}</small>
+                  </span>
+                  <b>{formatHz(entry.hz)} Hz</b>
+                </span>
+                <span className="library-description">{entry.description}</span>
+                <span className="tag-row">{entry.tags.slice(0, 3).map((tag) => <small key={tag}>{tag}</small>)}</span>
+              </button>
+            ))}
+            {filteredEntries.length === 0 && (
+              <div className="empty-state">
+                <strong>No tones matched that search.</strong>
+                <p>Try a frequency number, a word such as “calm,” or choose a different label.</p>
+                <button className="wide-button" onClick={() => { setQuery(''); setCategory('All') }}>Show the full library</button>
+              </div>
+            )}
+          </div>
+          <p className="library-note"><strong>How labels work:</strong> “Audio feature” describes the sound itself, “Wellness practice” describes a mindful use, and “Traditional association” identifies a cultural or spiritual meaning without presenting it as medical evidence.</p>
         </article>
 
         <article className="panel timer-panel">
@@ -241,9 +333,9 @@ export default function App() {
         <p className="eyebrow">Built with care</p>
         <h2>A trustworthy wellness experience.</h2>
         <div className="principle-grid">
-          <article><span>01</span><h3>Local-first</h3><p>The MVP does not require an account and does not upload session data.</p></article>
-          <article><span>02</span><h3>Accessible controls</h3><p>Clear labels, keyboard-friendly buttons, and a low-motion visual foundation.</p></article>
-          <article><span>03</span><h3>Honest language</h3><p>Frequency traditions are presented as reflective practices, not medical cures.</p></article>
+          <article><span>01</span><h3>Searchable and local-first</h3><p>Explore the library without an account. Search activity and session choices stay in your browser.</p></article>
+          <article><span>02</span><h3>Accessible controls</h3><p>Clear labels, keyboard-friendly buttons, low-volume defaults, and reduced-motion support.</p></article>
+          <article><span>03</span><h3>Honest language</h3><p>Musical facts, wellness practices, and spiritual traditions are labeled separately instead of being presented as cures.</p></article>
         </div>
       </section>
 
