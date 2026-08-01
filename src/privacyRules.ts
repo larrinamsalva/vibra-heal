@@ -142,7 +142,9 @@ export function buildSectionViews(storedValues: Record<string, string>): Section
     }
   })
 
-  const otherKeys = Object.keys(storedValues).filter((key) => !KNOWN_KEYS.has(key)).sort()
+  const otherKeys = Object.keys(storedValues)
+    .filter((key) => key.startsWith(PREFIX) && !KNOWN_KEYS.has(key))
+    .sort()
   if (otherKeys.length === 0) return regular
 
   return [
@@ -197,10 +199,10 @@ export function buildTransparencyExport(
     version: 1 as const,
     restorableByBackupTool: false as const,
     exportedAt,
-    localStorage: exportValues(Object.keys(storedValues), storedValues),
+    localStorage: exportValues(getPersonalKeys(storedValues), storedValues),
     offlineCache: {
       included: false as const,
-      names: [...cacheScan.names],
+      names: getOfflineCacheNames(cacheScan.names),
       entries: cacheScan.entries,
       approximateBytes: cacheScan.bytes,
     },
@@ -217,7 +219,7 @@ export function getPersonalKeys(storedValues: Record<string, string>) {
 }
 
 export function getSectionKeysToClear(section: SectionView) {
-  return [...section.presentKeys]
+  return section.presentKeys.filter((key) => key.startsWith(PREFIX))
 }
 
 export function getOfflineCacheNames(names: string[]) {
