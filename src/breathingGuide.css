@@ -1,0 +1,186 @@
+.breathing-fab {
+  position: fixed;
+  top: 5.4rem;
+  left: 1rem;
+  z-index: 92;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  max-width: min(260px, calc(100vw - 2rem));
+  padding: .68rem .92rem;
+  border: 1px solid rgba(130, 241, 223, .38);
+  border-radius: 999px;
+  color: #effffb;
+  background: rgba(7, 16, 25, .94);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .42);
+  backdrop-filter: blur(18px);
+  cursor: pointer;
+}
+
+.breathing-fab > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  border: 1px solid rgba(130, 241, 223, .38);
+  border-radius: 50%;
+  color: #82f1df;
+  font-size: 1.35rem;
+}
+
+.breathing-fab > span:last-child { min-width: 0; text-align: left; }
+.breathing-fab strong, .breathing-fab small { display: block; }
+.breathing-fab strong { font-size: .82rem; }
+.breathing-fab small { max-width: 175px; margin-top: .1rem; overflow: hidden; color: #9ab7b3; font-size: .66rem; text-overflow: ellipsis; white-space: nowrap; }
+.breathing-fab.active > span:first-child { animation: breathing-fab-pulse 2.2s ease-in-out infinite; }
+.breathing-fab:hover { transform: translateY(-2px); border-color: rgba(130, 241, 223, .8); }
+.breathing-fab:focus-visible { outline: 3px solid #82f1df; outline-offset: 3px; }
+
+.breathing-guide-panel {
+  position: fixed;
+  top: 9.6rem;
+  left: 1rem;
+  z-index: 110;
+  width: min(760px, calc(100vw - 2rem));
+  max-height: calc(100vh - 11rem);
+  overflow: auto;
+  padding: 1.25rem;
+  border: 1px solid rgba(130, 241, 223, .25);
+  border-radius: 24px;
+  color: #edf7f6;
+  background: rgba(6, 15, 24, .98);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .62);
+  backdrop-filter: blur(24px);
+}
+
+.breathing-guide-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(130, 241, 223, .14);
+}
+
+.breathing-kicker {
+  margin: 0 0 .35rem;
+  color: #82f1df;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font: 700 .66rem 'Space Mono', monospace;
+}
+
+.breathing-guide-heading h2 { margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); }
+.breathing-close { width: 2.4rem; height: 2.4rem; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; color: #fff; background: rgba(255,255,255,.04); cursor: pointer; font-size: 1.4rem; }
+.breathing-close:focus-visible, .breathing-guide-panel button:focus-visible, .breathing-guide-panel input:focus-visible { outline: 3px solid #82f1df; outline-offset: 3px; }
+
+.breathing-current {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1.1rem;
+  padding: 1rem;
+  border: 1px solid rgba(130, 241, 223, .16);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(130, 241, 223, .08), rgba(126, 108, 255, .05));
+}
+
+.breathing-dial {
+  --breathing-progress: 0deg;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  background: conic-gradient(#82f1df var(--breathing-progress), rgba(130, 241, 223, .1) 0);
+}
+
+.breathing-dial::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(130,241,223,.16), #091722 70%);
+}
+
+.breathing-dial span { position: relative; z-index: 1; color: #bafff4; font: 700 2.8rem 'Space Mono', monospace; }
+.breathing-dial.active { box-shadow: 0 0 48px rgba(130, 241, 223, .16); }
+.breathing-current-copy p { margin: 0 0 .25rem; color: #91aaa8; text-transform: uppercase; letter-spacing: .12em; font: 700 .64rem 'Space Mono', monospace; }
+.breathing-current-copy h3 { margin: 0; color: #effffb; font-size: clamp(1.7rem, 5vw, 3rem); }
+.breathing-current-copy > strong { display: block; margin-top: .35rem; color: #82f1df; }
+.breathing-current-copy > span { display: block; margin-top: .65rem; color: #adc3c0; line-height: 1.55; }
+.breathing-progress { height: .48rem; margin-top: 1rem; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.08); }
+.breathing-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #82f1df, #9e91ff); transition: width .2s linear; }
+
+.breathing-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.breathing-actions button { padding: .72rem .95rem; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; color: #e8f5f2; background: rgba(255,255,255,.035); cursor: pointer; }
+.breathing-actions .breathing-primary { border-color: rgba(130,241,223,.5); color: #06100f; background: #82f1df; font-weight: 800; }
+
+.breathing-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65rem; margin-bottom: 1rem; }
+.breathing-meta span { padding: .72rem; border: 1px solid rgba(255,255,255,.08); border-radius: 13px; background: rgba(255,255,255,.025); }
+.breathing-meta small, .breathing-meta strong { display: block; }
+.breathing-meta small { color: #829b98; font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; }
+.breathing-meta strong { margin-top: .25rem; font-size: .82rem; }
+
+.breathing-patterns, .breathing-pace {
+  margin: 1rem 0 0;
+  padding: .9rem;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 17px;
+}
+
+.breathing-patterns legend, .breathing-pace legend { padding: 0 .35rem; color: #82f1df; font: 700 .7rem 'Space Mono', monospace; text-transform: uppercase; letter-spacing: .1em; }
+.breathing-patterns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.breathing-patterns legend { grid-column: 1 / -1; }
+.breathing-patterns label, .breathing-pace label { display: flex; align-items: flex-start; gap: .65rem; padding: .78rem; border: 1px solid rgba(255,255,255,.07); border-radius: 14px; background: rgba(255,255,255,.022); cursor: pointer; }
+.breathing-patterns label:has(input:checked), .breathing-pace label:has(input:checked) { border-color: rgba(130,241,223,.52); background: rgba(130,241,223,.08); }
+.breathing-patterns input, .breathing-pace input { margin-top: .2rem; accent-color: #82f1df; }
+.breathing-patterns span, .breathing-pace span { min-width: 0; }
+.breathing-patterns strong, .breathing-patterns small, .breathing-patterns em, .breathing-pace strong, .breathing-pace small { display: block; }
+.breathing-patterns small, .breathing-pace small { margin-top: .28rem; color: #91aaa8; font-size: .73rem; line-height: 1.45; }
+.breathing-patterns em { margin-top: .45rem; color: #bcb3ff; font: 700 .68rem 'Space Mono', monospace; font-style: normal; }
+.breathing-pace { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.breathing-pace legend { grid-column: 1 / -1; }
+
+.breathing-safety { margin-top: 1rem; padding: .9rem 1rem; border-left: 3px solid #ffe39a; border-radius: 0 14px 14px 0; background: rgba(255, 227, 154, .07); }
+.breathing-safety strong { color: #fff0bd; }
+.breathing-safety p { margin: .35rem 0 0; color: #c8c4b1; font-size: .78rem; line-height: 1.55; }
+.breathing-status, .breathing-session-note, .breathing-warning { margin: .85rem 0 0; font-size: .75rem; line-height: 1.55; }
+.breathing-status { color: #82f1df; }
+.breathing-session-note { padding-top: .8rem; border-top: 1px solid rgba(255,255,255,.08); color: #8fa7a4; }
+.breathing-warning { color: #ffd3c6; }
+
+@keyframes breathing-fab-pulse {
+  0%, 100% { transform: scale(.92); opacity: .78; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+html[data-motion='reduced'] .breathing-fab.active > span:first-child,
+@media (prefers-reduced-motion: reduce) {
+  .breathing-fab.active > span:first-child { animation: none; }
+}
+
+html[data-motion='reduced'] .breathing-progress i { transition: none; }
+html[data-contrast='high'] .breathing-guide-panel { border-color: #fff; background: #02080d; }
+html[data-contrast='high'] .breathing-current,
+html[data-contrast='high'] .breathing-patterns,
+html[data-contrast='high'] .breathing-pace,
+html[data-contrast='high'] .breathing-patterns label,
+html[data-contrast='high'] .breathing-pace label { border-color: rgba(255,255,255,.55); }
+
+@media (max-width: 720px) {
+  .breathing-fab { top: 4.65rem; left: .65rem; }
+  .breathing-fab small { max-width: 125px; }
+  .breathing-guide-panel { top: 8.8rem; left: .65rem; width: calc(100vw - 1.3rem); max-height: calc(100vh - 9.6rem); padding: 1rem; border-radius: 18px; }
+  .breathing-current { grid-template-columns: 1fr; text-align: center; }
+  .breathing-dial { width: 125px; height: 125px; margin: 0 auto; }
+  .breathing-patterns, .breathing-pace, .breathing-meta { grid-template-columns: 1fr; }
+}
+
+@media (forced-colors: active) {
+  .breathing-fab, .breathing-guide-panel, .breathing-current, .breathing-patterns, .breathing-pace, .breathing-patterns label, .breathing-pace label, .breathing-actions button { border: 1px solid CanvasText; }
+  .breathing-primary { forced-color-adjust: none; color: Canvas !important; background: CanvasText !important; }
+}
