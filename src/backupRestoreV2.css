@@ -1,0 +1,32 @@
+.backup-summary-grid-v2 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.backup-compatibility-note {
+  margin: 0 0 1rem;
+  padding: .8rem .9rem;
+  border-left: 3px solid #bcb3ff;
+  border-radius: 0 12px 12px 0;
+  color: #c8c2ef;
+  background: rgba(158, 145, 255, .08);
+  font-size: .78rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 720px) {
+  .backup-summary-grid-v2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px) {
+  .backup-summary-grid-v2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (forced-colors: active) {
+  .backup-compatibility-note {
+    border: 1px solid CanvasText;
+  }
+}
