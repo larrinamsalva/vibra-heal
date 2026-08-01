@@ -21,7 +21,7 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Test privacy, accessibility, tools, offline lifecycle, Device Check, Issue Report, and Release Checklist
+      - name: Test privacy, accessibility, tools, offline lifecycle, Device Check, Issue Report, Release Checklist, and Release History
         run: npm test
       - name: Build
         run: npm run build

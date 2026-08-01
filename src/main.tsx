@@ -12,6 +12,7 @@ import LocalDataPrivacyCenter from './LocalDataPrivacyCenter'
 import NatureMixer from './NatureMixer'
 import PwaInstall from './PwaInstall'
 import ReleaseChecklist from './ReleaseChecklist'
+import ReleaseHistory from './ReleaseHistory'
 import SessionJournal from './SessionJournal'
 import SessionSummary from './SessionSummary'
 import ToolCenter from './ToolCenter'
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')!).render(
     <DeviceCheck />
     <IssueReport />
     <ReleaseChecklist />
+    <ReleaseHistory />
     <ToolCenter />
   </StrictMode>,
 )
