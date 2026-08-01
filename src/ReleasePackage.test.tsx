@@ -217,6 +217,10 @@ describe('Release Package format rules', () => {
   it('rejects unsupported formats and unsafe privacy declarations', () => {
     expect(() => parseReleasePackageArtifact({ format: 'unknown', version: 1 })).toThrow(/not a supported/i)
 
+    const unsafeDevice = deviceCheck()
+    unsafeDevice.privacy.localOnly = false
+    expect(() => parseReleasePackageArtifact(unsafeDevice)).toThrow(/privacy declaration/i)
+
     const unsafeIssue = issueReport()
     unsafeIssue.privacy.submittedAutomatically = true
     expect(() => parseReleasePackageArtifact(unsafeIssue)).toThrow(/privacy declaration/i)
