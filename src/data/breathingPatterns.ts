@@ -63,10 +63,10 @@ export const BREATHING_PATTERNS: BreathingPattern[] = [
 
 export const DEFAULT_BREATHING_PATTERN_ID: BreathingPattern['id'] = 'long-exhale'
 
-export function getBreathingPattern(id: string | undefined) {
+export function getBreathingPattern(id: string | undefined): BreathingPattern {
   return BREATHING_PATTERNS.find((pattern) => pattern.id === id)
     ?? BREATHING_PATTERNS.find((pattern) => pattern.id === DEFAULT_BREATHING_PATTERN_ID)
-    ?? BREATHING_PATTERNS[0]
+    ?? BREATHING_PATTERNS[0]!
 }
 
 export function getPhaseDuration(seconds: number, pace: BreathingPace) {
