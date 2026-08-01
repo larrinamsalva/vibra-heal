@@ -18,6 +18,13 @@ type NavigatorWithStandalone = Navigator & {
   standalone?: boolean
 }
 
+type PwaInstallProps = {
+  production?: boolean
+  reloadPage?: () => void
+}
+
+const reloadCurrentPage = () => window.location.reload()
+
 function isStandaloneMode() {
   if (typeof window === 'undefined') return false
   return (
@@ -35,7 +42,10 @@ function detectPlatform() {
   return 'desktop'
 }
 
-export default function PwaInstall() {
+export default function PwaInstall({
+  production = import.meta.env.PROD,
+  reloadPage = reloadCurrentPage,
+}: PwaInstallProps = {}) {
   const [panelOpen, setPanelOpen] = useState(false)
   const [installPrompt, setInstallPrompt] = useState<AppInstallPromptEvent | null>(null)
   const [installed, setInstalled] = useState(isStandaloneMode)
@@ -82,7 +92,7 @@ export default function PwaInstall() {
   }, [])
 
   useEffect(() => {
-    if (!import.meta.env.PROD) {
+    if (!production) {
       setWorkerState('development')
       setMessage('Install and offline support become active in the production build.')
       return
@@ -99,7 +109,7 @@ export default function PwaInstall() {
     let hasWaitingUpdate = false
 
     const handleControllerChange = () => {
-      if (reloadForUpdateRef.current) window.location.reload()
+      if (reloadForUpdateRef.current) reloadPage()
       else {
         setWorkerState('ready')
         setMessage('Offline support is ready. VibraHeal can reopen after the app shell has been cached.')
@@ -165,7 +175,7 @@ export default function PwaInstall() {
       if (updateTimer !== undefined) window.clearInterval(updateTimer)
       navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange)
     }
-  }, [])
+  }, [production, reloadPage])
 
   async function requestInstall() {
     if (!installPrompt) {
