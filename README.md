@@ -1,10 +1,10 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive 3D visuals, human nature ambience, and species-sensitive animal calm guidance.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive 3D visuals, human nature ambience, species-sensitive animal calm guidance, and installable offline support.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
-## Current MVP 0.6
+## Current MVP 0.7
 
 - React 19 + TypeScript + Vite
 - Web Audio API stereo tone engine for consenting human listeners
@@ -21,6 +21,9 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Three.js / React Three Fiber visual field
 - Animal Calm profiles for dogs, cats, rabbits and small mammals, and companion birds
 - A silent five-minute animal observation planner with room-safety checks
+- Installable Progressive Web App manifest with 192 and 512 pixel icons
+- Versioned offline shell for the GitHub Pages `/vibra-heal/` path
+- User-approved app updates that do not interrupt an active session
 - Responsive design and reduced-motion support
 - Local-first operation with no account required
 
@@ -31,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Then open the local URL shown by Vite.
+Then open the local URL shown by Vite. Service-worker installation is intentionally enabled only in a production build.
 
 ## Production build
 
@@ -40,9 +43,21 @@ npm run build
 npm run preview
 ```
 
+## Installable app and offline shell
+
+The production build links a Web App Manifest and registers a small service worker. The service worker reads the built page, discovers its hashed Vite assets, and caches the app shell for later offline launches. Connected requests remain network-first so current files are preferred.
+
+A newer service worker waits instead of forcing a reload. VibraHeal shows an **Update and reopen** button, allowing the listener to finish any active sound session before changing versions.
+
+Installation does not add an account, analytics, cloud synchronization, or autoplay. Browser support and installation controls vary, so VibraHeal provides both a browser install prompt where available and manual home-screen guidance.
+
+See [`docs/pwa-installation.md`](docs/pwa-installation.md) for the architecture and release checklist.
+
 ## Local storage
 
 Favorites, saved sessions, and nature-mixer settings are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection. The app keeps up to 24 saved sessions per browser profile.
+
+Installing the app does not move this information to an account. Installed and browser versions use the storage profile provided by that browser and operating system.
 
 ## Human nature mixer
 
@@ -76,10 +91,10 @@ Future work may include:
 
 - more breathing patterns
 - low-power and non-WebGL visual modes
-- Progressive Web App support
 - accessibility testing
 - evidence-aware educational content and primary-source citations
 - optional export and import for locally saved sessions
+- cross-device synchronization only after a separate privacy and account-design review
 
 ## Safety and product principles
 
@@ -92,6 +107,7 @@ Future work may include:
 - The audio engine and visual engine should remain independent so the app works when motion or WebGL is disabled.
 - Saved sessions and wellness paths are convenience presets, not treatment plans or medical recommendations.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
+- PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
 
 ## Collaboration
 
