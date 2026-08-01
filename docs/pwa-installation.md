@@ -6,7 +6,7 @@ VibraHeal MVP 0.7 adds Progressive Web App support while preserving the existing
 
 - `public/manifest.webmanifest` describes the installed app name, scope, colors, icons, and shortcuts.
 - `public/sw.js` provides a versioned offline shell for the GitHub Pages path `/vibra-heal/`.
-- `public/icons/icon-192.png` and `public/icons/icon-512.png` provide non-transparent square app artwork.
+- `public/icons/icon-192.svg` and `public/icons/icon-512.svg` provide non-transparent square app artwork at the manifest's required display sizes.
 - `src/PwaInstall.tsx` handles install prompts, manual platform guidance, connection state, and user-approved updates.
 - `src/pwaInstall.css` provides responsive and reduced-motion-aware controls.
 
