@@ -149,6 +149,17 @@ const PANEL_TOOLS: PanelTool[] = [
     panelSelector: '#release-history-panel',
     closeSelector: '.release-history-close',
   },
+  {
+    kind: 'panel',
+    id: 'release-package',
+    label: 'Release Package',
+    description: 'Build a sanitized manifest from explicitly selected review artifacts.',
+    symbol: '▦',
+    group: 'Guidance',
+    triggerSelector: '.release-package-fab',
+    panelSelector: '#release-package-panel',
+    closeSelector: '.release-package-close',
+  },
 ]
 
 const JUMP_TOOLS: JumpTool[] = [
@@ -185,6 +196,7 @@ const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[8],
   PANEL_TOOLS[9],
   PANEL_TOOLS[10],
+  PANEL_TOOLS[11],
   JUMP_TOOLS[1],
 ]
 
@@ -482,7 +494,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, create or submit an issue report, certify or compare releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, create or submit an issue report, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
