@@ -1,5 +1,6 @@
 .device-check-fab,
 .issue-report-fab,
-.release-checklist-fab {
+.release-checklist-fab,
+.release-history-fab {
   display: none !important;
 }
