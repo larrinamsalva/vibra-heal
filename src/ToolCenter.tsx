@@ -127,6 +127,17 @@ const PANEL_TOOLS: PanelTool[] = [
     panelSelector: '#issue-report-panel',
     closeSelector: '.issue-report-close',
   },
+  {
+    kind: 'panel',
+    id: 'release-checklist',
+    label: 'Release Checklist',
+    description: 'Record local milestone review without claiming certification.',
+    symbol: '✓',
+    group: 'Guidance',
+    triggerSelector: '.release-checklist-fab',
+    panelSelector: '#release-checklist-panel',
+    closeSelector: '.release-checklist-close',
+  },
 ]
 
 const JUMP_TOOLS: JumpTool[] = [
@@ -161,6 +172,7 @@ const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[6],
   PANEL_TOOLS[7],
   PANEL_TOOLS[8],
+  PANEL_TOOLS[9],
   JUMP_TOOLS[1],
 ]
 
@@ -458,7 +470,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, create or submit an issue report, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, create or submit an issue report, certify a release, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
