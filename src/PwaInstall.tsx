@@ -96,6 +96,7 @@ export default function PwaInstall() {
 
     let updateTimer: number | undefined
     let disposed = false
+    let hasWaitingUpdate = false
 
     const handleControllerChange = () => {
       if (reloadForUpdateRef.current) window.location.reload()
@@ -107,15 +108,19 @@ export default function PwaInstall() {
 
     navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange)
 
+    function announceWaitingWorker(worker: ServiceWorker) {
+      hasWaitingUpdate = true
+      waitingWorkerRef.current = worker
+      setUpdateAvailable(true)
+      setMessage('A newer VibraHeal version is ready. Update only when your current session is finished.')
+    }
+
     function watchWorker(worker: ServiceWorker | null) {
       if (!worker) return
       worker.addEventListener('statechange', () => {
         if (worker.state !== 'installed' || disposed) return
-        if (navigator.serviceWorker.controller) {
-          waitingWorkerRef.current = worker
-          setUpdateAvailable(true)
-          setMessage('A newer VibraHeal version is ready. Update only when your current session is finished.')
-        } else {
+        if (navigator.serviceWorker.controller) announceWaitingWorker(worker)
+        else {
           setWorkerState('ready')
           setMessage('Offline support has been installed for future visits.')
         }
@@ -132,9 +137,7 @@ export default function PwaInstall() {
         if (disposed) return
 
         if (registration.waiting && navigator.serviceWorker.controller) {
-          waitingWorkerRef.current = registration.waiting
-          setUpdateAvailable(true)
-          setMessage('A newer VibraHeal version is ready. Update when your current session is finished.')
+          announceWaitingWorker(registration.waiting)
         }
 
         watchWorker(registration.installing)
@@ -143,7 +146,7 @@ export default function PwaInstall() {
         await navigator.serviceWorker.ready
         if (disposed) return
         setWorkerState('ready')
-        if (!updateAvailable) setMessage('Install and offline support are ready on this device.')
+        if (!hasWaitingUpdate) setMessage('Install and offline support are ready on this device.')
 
         updateTimer = window.setInterval(() => {
           registration.update().catch(() => undefined)
@@ -162,7 +165,7 @@ export default function PwaInstall() {
       if (updateTimer !== undefined) window.clearInterval(updateTimer)
       navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange)
     }
-  }, [updateAvailable])
+  }, [])
 
   async function requestInstall() {
     if (!installPrompt) {
