@@ -217,7 +217,13 @@ export default function PwaInstall() {
       </button>
 
       {panelOpen && (
-        <aside className="pwa-install-panel" id="pwa-install-panel" aria-labelledby="pwa-install-title">
+        <aside
+          className="pwa-install-panel"
+          id="pwa-install-panel"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="pwa-install-title"
+        >
           <div className="pwa-install-heading">
             <div>
               <p className="pwa-kicker">VibraHeal on this device</p>

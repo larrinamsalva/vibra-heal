@@ -11,6 +11,7 @@ import NatureMixer from './NatureMixer'
 import PwaInstall from './PwaInstall'
 import SessionJournal from './SessionJournal'
 import SessionSummary from './SessionSummary'
+import ToolCenter from './ToolCenter'
 import './styles.css'
 import './releaseCleanup.css'
 
@@ -28,5 +29,6 @@ createRoot(document.getElementById('root')!).render(
     <NatureMixer />
     <AnimalCalm />
     <PwaInstall />
+    <ToolCenter />
   </StrictMode>,
 )
