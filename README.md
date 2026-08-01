@@ -1,6 +1,6 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, and one accessible launcher for optional tools.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, one accessible launcher for optional tools, and a local real-device review helper.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
@@ -20,7 +20,8 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Opt-in private session journal with manual saves, export, disable, delete-one, and delete-all controls
 - Local Data & Privacy Center with section sizes, readable exports, clear controls, and offline-cache inspection
 - One accessible Tool Center with a predictable keyboard order and one-open-panel behavior
-- Automated tests for privacy, storage, backup schemas, accessibility interactions, and tool navigation
+- Local Device Check with coarse capability reporting, an 18-item hands-on checklist, and optional local JSON reports
+- Automated tests for privacy, storage, backup schemas, accessibility interactions, tool navigation, install updates, and the real service-worker lifecycle
 - Three.js visual field plus static low-power mode
 - Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
 - Silent Animal Calm education and observation planning for several companion-animal groups
@@ -51,11 +52,11 @@ npm run build
 npm run preview
 ```
 
-Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), and [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md) for covered rules and remaining real-browser checks.
+Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md), [`docs/pwa-installation.md`](docs/pwa-installation.md), and [`docs/real-device-review.md`](docs/real-device-review.md) for covered rules and remaining hands-on checks.
 
 ## Accessible Tool Center
 
-One floating **Tools** launcher organizes nine destinations:
+One floating **Tools** launcher organizes ten destinations:
 
 - Breathing
 - Nature mixer
@@ -65,11 +66,20 @@ One floating **Tools** launcher organizes nine destinations:
 - Backup and restore
 - Privacy and local data
 - Install and updates
+- Device Check
 - Animal Calm
 
 The Tool Center closes the current optional panel before opening another, moves focus to the opened panel, returns focus to **Tools** after closing, and supports Arrow keys, Home, End, Escape, Tab, and Shift+Tab. Nature Mixer and Animal Calm remain in-page destinations rather than overlapping panels.
 
-The launcher changes navigation only. It never starts audio, begins breathing, saves journal text, restores a backup, clears data, installs an update, or changes Animal Calm boundaries. See [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md).
+The launcher changes navigation only. It never starts audio, begins breathing, saves journal text, creates a device report, restores a backup, clears data, installs an update, or changes Animal Calm boundaries. See [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md).
+
+## Real-device review
+
+**Tools → Device Check** reports coarse browser and app capabilities without reading VibraHeal favorites, sessions, journal text, backup files, browser history, raw user-agent strings, exact viewport dimensions, or unrelated site data.
+
+The automatic snapshot includes broad support and state information for secure context, connection, service workers, offline-shell caches, Web Audio, installed display mode, touch input, viewport category, reduced motion, contrast assistance, and the current VibraHeal text preference. These signals show capability presence; they do not certify that the complete workflow passed.
+
+An 18-item manual checklist covers keyboard and focus, screen readers, visual presentation, installation and offline behavior, autoplay boundaries, and Animal Calm separation. Results and notes remain only in component memory. A JSON report is created only after **Download JSON review report** is pressed, and VibraHeal does not upload it. See [`docs/real-device-review.md`](docs/real-device-review.md).
 
 ## Guided breathing
 
@@ -97,7 +107,7 @@ Breathe naturally rather than as deeply as possible. Never force an inhale, exha
 
 Format v1 files remain importable with their original four sections. Restore validates every supported value, limits files to one megabyte, previews included sections, and requires explicit confirmation before replacing local settings. A failed write attempts to roll back previous values.
 
-Backup files do not include audio recordings, passwords, payment information, medical records, browser history, Animal Calm observations, or private journal entries. See [`docs/private-backup-v2.md`](docs/private-backup-v2.md).
+Backup files do not include audio recordings, passwords, payment information, medical records, browser history, Animal Calm observations, private journal entries, or Device Check results. See [`docs/private-backup-v2.md`](docs/private-backup-v2.md).
 
 ## Private session summaries
 
@@ -133,11 +143,13 @@ Visual choices include:
 - **Full 3D** — keeps the animated Three.js orb and sparkles active
 - **Static low-power** — replaces the WebGL canvas with a calm still visual and requests graphics-context release where supported
 
-Accessibility preferences change presentation only. They do not change frequency, volume, timers, saved sessions, journal text, or Animal Calm. See [`docs/accessibility-low-power.md`](docs/accessibility-low-power.md).
+Accessibility preferences change presentation only. They do not change frequency, volume, timers, saved sessions, journal text, Device Check results, or Animal Calm. See [`docs/accessibility-low-power.md`](docs/accessibility-low-power.md).
 
 ## Installable app and offline shell
 
 The production build links a Web App Manifest and registers a small service worker. The worker discovers hashed Vite assets and caches the app shell for later offline launches. A newer worker waits instead of forcing a reload, allowing the listener to open **Tools → Install and updates** and press **Update and reopen** after an active session is finished.
+
+Automated lifecycle tests execute the real `public/sw.js` file and cover precaching, optional-asset failure, old-cache cleanup, unrelated-cache preservation, network caching, offline navigation fallback, uncached offline responses, waiting workers, explicit update approval, and reload timing.
 
 Installation does not add accounts, analytics, cloud synchronization, or autoplay. Browser support and installation controls vary. See [`docs/pwa-installation.md`](docs/pwa-installation.md).
 
@@ -165,16 +177,16 @@ See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md).
 
 Favorites, saved sessions, nature settings, accessibility preferences, breathing choices, breathing-to-session links, and deliberately saved journal entries stay in the current browser profile. Clearing site data, changing browsers, or using another device does not transfer them automatically.
 
-Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. The Local Data & Privacy Center can inventory every VibraHeal-prefixed key, create readable transparency exports, and clear one or all personal sections. Installing the app does not move local information to an account.
+Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. Device Check results remain in memory unless a tester explicitly downloads a separate review report. The Local Data & Privacy Center can inventory every VibraHeal-prefixed key, create readable transparency exports, and clear one or all personal sections. Installing the app does not move local information to an account.
 
 ## Project direction
 
 Future work may include:
 
-- structured screen-reader and keyboard review across major browsers
+- turning verified real-device findings into focused regression tests
 - evidence-aware educational content with primary-source citations
 - journal import only after a strict validation and privacy review
-- service-worker and offline lifecycle integration tests
+- broader audio-output and installed-app testing across operating systems
 - cross-device synchronization only after a separate account, encryption, and consent design review
 
 ## Safety and product principles
@@ -186,11 +198,12 @@ Future work may include:
 - Breathe naturally, treat every hold as optional, and stop if you feel dizzy, strained, short of breath, or uncomfortable.
 - Breathing patterns are pacing timers, not medical or mental-health treatments.
 - Frequency traditions and user experiences must be separated from established medical evidence.
-- Saved sessions, summaries, and journals are convenience and reflection tools, not treatment plans or clinical records.
+- Saved sessions, summaries, journals, and device reports are convenience or review tools, not treatment plans or clinical records.
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
 - Backup restore must validate every supported value and require explicit confirmation.
 - Journal entry creation must remain manual, opt-in, local, exportable, and deletable.
 - Privacy-center exports must stay local, destructive actions must require clear confirmation, and those rules must remain covered by automated tests.
+- Device Check must avoid raw identifiers and private VibraHeal content, remain memory-only by default, and never imply conformance certification.
 - Optional panels must use the single Tool Center and preserve explicit user gestures and confirmations.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
