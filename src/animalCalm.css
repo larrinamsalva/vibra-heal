@@ -1,0 +1,322 @@
+.animal-calm-jump {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border: 1px solid rgba(130, 241, 223, .35);
+  border-radius: 999px;
+  color: #edf7f6;
+  background: rgba(7, 16, 25, .9);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .42), 0 0 28px rgba(130, 241, 223, .08);
+  backdrop-filter: blur(18px);
+  font-size: .78rem;
+}
+
+.animal-calm-jump span { font-size: 1.1rem; }
+.animal-calm-jump:hover { transform: translateY(-2px); border-color: rgba(130, 241, 223, .62); }
+.animal-calm-jump:focus-visible { outline: 2px solid #82f1df; outline-offset: 3px; }
+
+.animal-calm-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 92px 28px 108px;
+  scroll-margin-top: 20px;
+  color: #edf7f6;
+}
+
+.animal-calm-hero {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 28px;
+  align-items: end;
+  padding: 44px;
+  border: 1px solid rgba(130, 241, 223, .16);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(130, 241, 223, .12), transparent 32%),
+    linear-gradient(145deg, rgba(14, 35, 43, .9), rgba(9, 20, 31, .94));
+  box-shadow: 0 36px 100px rgba(0, 0, 0, .28);
+}
+
+.animal-eyebrow,
+.animal-kicker {
+  margin: 0 0 12px;
+  color: #82f1df;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font: 700 .68rem 'Space Mono', monospace;
+}
+
+.animal-calm-hero h2 {
+  margin: 0 0 18px;
+  max-width: 770px;
+  font-size: clamp(2.6rem, 5vw, 5.6rem);
+  line-height: .96;
+  letter-spacing: -.055em;
+}
+
+.animal-calm-hero > div > p:last-child {
+  margin: 0;
+  max-width: 720px;
+  color: #a9c0bd;
+  line-height: 1.75;
+}
+
+.animal-safety-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid rgba(255, 196, 126, .24);
+  border-radius: 22px;
+  background: rgba(255, 177, 91, .07);
+}
+
+.animal-safety-card > span { font-size: 2rem; }
+.animal-safety-card strong { display: block; margin-bottom: 8px; color: #ffd6a7; }
+.animal-safety-card p { margin: 0; color: #c7b29b; font-size: .86rem; line-height: 1.6; }
+
+.animal-species-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.animal-species-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 70px;
+  padding: 15px 17px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 18px;
+  color: #b9cbc8;
+  background: rgba(12, 27, 38, .72);
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.animal-species-tab span { font-size: 1.45rem; }
+.animal-species-tab:hover { transform: translateY(-2px); border-color: rgba(130, 241, 223, .3); }
+.animal-species-tab.active {
+  color: #06100f;
+  border-color: #82f1df;
+  background: linear-gradient(135deg, #b6fff3, #76decc);
+  box-shadow: 0 14px 34px rgba(130, 241, 223, .13);
+}
+.animal-species-tab:focus-visible { outline: 2px solid #82f1df; outline-offset: 3px; }
+
+.animal-profile-grid {
+  display: grid;
+  grid-template-columns: 1.3fr .7fr;
+  gap: 18px;
+}
+
+.animal-profile-card,
+.animal-planner-card {
+  border: 1px solid rgba(130, 241, 223, .14);
+  border-radius: 26px;
+  background: rgba(12, 27, 38, .78);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .2);
+  backdrop-filter: blur(18px);
+}
+
+.animal-profile-card { padding: 30px; }
+.animal-planner-card { padding: 28px; }
+
+.animal-profile-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.animal-profile-heading > span {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid rgba(130, 241, 223, .22);
+  border-radius: 20px;
+  background: rgba(130, 241, 223, .06);
+  font-size: 2rem;
+}
+
+.animal-profile-heading h3,
+.animal-planner-card h3 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.animal-summary {
+  margin: 22px 0;
+  color: #b4c7c4;
+  line-height: 1.75;
+}
+
+.animal-guidance-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.animal-guidance-columns section {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .018);
+}
+
+.animal-guidance-columns h4 { margin: 0 0 14px; font-size: .94rem; }
+.animal-guidance-columns ul { margin: 0; padding-left: 18px; }
+.animal-guidance-columns li { margin: 0 0 10px; color: #93aaa7; font-size: .82rem; line-height: 1.55; }
+
+.animal-signal-list { display: flex; flex-wrap: wrap; gap: 7px; }
+.animal-signal-list span {
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 183, 117, .16);
+  border-radius: 999px;
+  color: #d3b08f;
+  background: rgba(255, 183, 117, .045);
+  font-size: .72rem;
+}
+
+.animal-vet-box {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 17px 19px;
+  border-left: 3px solid #ffb775;
+  border-radius: 0 14px 14px 0;
+  background: rgba(255, 183, 117, .055);
+}
+
+.animal-vet-box strong { color: #ffd2a9; font-size: .82rem; }
+.animal-vet-box span { color: #bca996; font-size: .78rem; line-height: 1.55; }
+.animal-note { margin: 18px 0 0; color: #82f1df; font-size: .8rem; line-height: 1.55; }
+
+.animal-planner-card > p:not(.animal-kicker):not(.animal-status) { color: #95aaa7; line-height: 1.65; }
+
+.animal-checklist { display: grid; gap: 9px; margin: 22px 0; }
+.animal-checklist label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 11px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, .055);
+  border-radius: 13px;
+  color: #a9bcba;
+  background: rgba(255, 255, 255, .018);
+  cursor: pointer;
+  font-size: .78rem;
+  line-height: 1.45;
+}
+.animal-checklist input { margin-top: 2px; accent-color: #82f1df; }
+
+.animal-timer {
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  border: 1px solid rgba(130, 241, 223, .18);
+  border-radius: 18px;
+  background: radial-gradient(circle, rgba(130, 241, 223, .1), rgba(130, 241, 223, .015) 68%);
+}
+.animal-timer span { color: #82f1df; font: 700 3.2rem 'Space Mono', monospace; letter-spacing: -.06em; }
+.animal-timer small { color: #8ca4a1; }
+
+.animal-planner-actions { display: flex; gap: 10px; margin-top: 14px; }
+.animal-primary-button,
+.animal-text-button {
+  border-radius: 999px;
+  cursor: pointer;
+  transition: .2s ease;
+}
+.animal-primary-button {
+  flex: 1;
+  padding: 13px 17px;
+  border: 0;
+  color: #06100f;
+  background: linear-gradient(135deg, #b6fff3, #70dbc9);
+  font-weight: 800;
+}
+.animal-text-button {
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  color: #a8bcba;
+  background: rgba(255, 255, 255, .02);
+}
+.animal-primary-button:hover,
+.animal-text-button:hover { transform: translateY(-2px); }
+.animal-primary-button:focus-visible,
+.animal-text-button:focus-visible { outline: 2px solid #82f1df; outline-offset: 3px; }
+
+.animal-status {
+  min-height: 44px;
+  margin: 16px 0 0;
+  color: #89a19e;
+  font-size: .75rem;
+  line-height: 1.55;
+}
+
+.animal-boundaries-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.animal-boundaries-grid article {
+  padding: 22px;
+  border-top: 1px solid rgba(130, 241, 223, .2);
+  background: linear-gradient(180deg, rgba(130, 241, 223, .025), transparent);
+}
+.animal-boundaries-grid span { color: #82f1df; font: 700 .68rem 'Space Mono', monospace; }
+.animal-boundaries-grid h3 { margin: 17px 0 9px; }
+.animal-boundaries-grid p { margin: 0; color: #8fa5a2; line-height: 1.65; font-size: .84rem; }
+
+.animal-sources {
+  margin-top: 20px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .018);
+}
+.animal-sources summary {
+  padding: 17px 19px;
+  color: #a8bcba;
+  cursor: pointer;
+  font-size: .82rem;
+}
+.animal-sources > div { display: grid; gap: 8px; padding: 0 19px 19px; }
+.animal-sources a { color: #82f1df; font-size: .76rem; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animal-calm-jump,
+  .animal-species-tab,
+  .animal-primary-button,
+  .animal-text-button { transition: none; }
+}
+
+@media (max-width: 900px) {
+  .animal-calm-hero,
+  .animal-profile-grid { grid-template-columns: 1fr; }
+  .animal-species-tabs { grid-template-columns: repeat(2, 1fr); }
+  .animal-guidance-columns { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .animal-calm-shell { padding: 70px 16px 100px; }
+  .animal-calm-hero { padding: 25px 20px; border-radius: 24px; }
+  .animal-species-tabs { grid-template-columns: 1fr; }
+  .animal-profile-card,
+  .animal-planner-card { padding: 20px; border-radius: 20px; }
+  .animal-boundaries-grid { grid-template-columns: 1fr; }
+  .animal-calm-jump { right: 14px; bottom: 14px; padding: 10px 13px; }
+  .animal-calm-jump strong { display: none; }
+  .animal-timer span { font-size: 2.8rem; }
+  .animal-planner-actions { flex-direction: column; }
+}
