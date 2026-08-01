@@ -1,6 +1,6 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, and an opt-in local journal.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, and a browser-local privacy center.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
@@ -18,6 +18,7 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Backup Format v2 with strict validation and Format v1 compatibility
 - Printable or downloadable private session summaries
 - Opt-in private session journal with manual saves, export, disable, delete-one, and delete-all controls
+- Local Data & Privacy Center with section sizes, readable exports, clear controls, and offline-cache inspection
 - Three.js visual field plus static low-power mode
 - Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
 - Silent Animal Calm education and observation planning for several companion-animal groups
@@ -82,6 +83,16 @@ Disabling prevents new saves without silently erasing existing entries. Individu
 
 Journal entries are intentionally separate from Backup Format v2. VibraHeal does not diagnose, analyze, score, or recommend actions from journal text. See [`docs/private-session-journal.md`](docs/private-session-journal.md).
 
+## Local Data & Privacy Center
+
+The floating **Privacy** control scans only browser-storage keys beginning with `vibraheal:` and Cache Storage names beginning with `vibraheal-shell-`. The scan remains on the device.
+
+It shows approximate sizes for favorite tones, saved sessions and breathing links, nature settings, accessibility settings, breathing preferences, private journal data, future unrecognized VibraHeal keys, and the offline app shell. Each local-data section can be exported as readable JSON or cleared after a deliberate confirmation.
+
+An all-data transparency export includes every discovered VibraHeal local-storage value. It is not a Backup Format restore file and may contain sensitive journal reflections. Clearing every personal section requires typing `CLEAR LOCAL DATA` exactly. Offline app files use a separate clear action and may be cached again on a later online visit.
+
+The privacy center does not uninstall the app, unregister the service worker, clear unrelated browser data, or introduce analytics, accounts, or cloud synchronization. See [`docs/local-data-privacy-center.md`](docs/local-data-privacy-center.md).
+
 ## Accessibility and low-power visuals
 
 The floating **Accessibility** control offers device-aware defaults plus manual settings for visual performance, motion, text size, and contrast.
@@ -124,13 +135,13 @@ See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md).
 
 Favorites, saved sessions, nature settings, accessibility preferences, breathing choices, breathing-to-session links, and deliberately saved journal entries stay in the current browser profile. Clearing site data, changing browsers, or using another device does not transfer them automatically.
 
-Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. Installing the app does not move local information to an account.
+Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. The Local Data & Privacy Center can inventory every VibraHeal-prefixed key, create readable transparency exports, and clear one or all personal sections. Installing the app does not move local information to an account.
 
 ## Project direction
 
 Future work may include:
 
-- a consolidated local-data and privacy center
+- automated tests for local-storage schemas, destructive confirmations, and export safety
 - structured screen-reader and keyboard testing across major browsers
 - evidence-aware educational content with primary-source citations
 - journal import only after a strict validation and privacy review
@@ -149,6 +160,7 @@ Future work may include:
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
 - Backup restore must validate every supported value and require explicit confirmation.
 - Journal entry creation must remain manual, opt-in, local, exportable, and deletable.
+- Privacy-center exports must stay local, and destructive actions must require clear confirmation.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
 
