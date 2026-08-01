@@ -1,0 +1,355 @@
+.issue-report-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+}
+
+.issue-report-panel {
+  position: fixed;
+  inset: 16px 16px 16px auto;
+  z-index: 116;
+  width: min(900px, calc(100vw - 32px));
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid rgba(166, 222, 211, 0.34);
+  border-radius: 26px;
+  color: #f4fffc;
+  background: linear-gradient(165deg, rgba(13, 35, 41, 0.99), rgba(27, 30, 55, 0.99));
+  box-shadow: 0 28px 90px rgba(3, 11, 20, 0.58);
+  backdrop-filter: blur(22px);
+}
+
+.issue-report-heading,
+.issue-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.issue-report-heading p,
+.issue-report-heading h2,
+.issue-report-intro,
+.issue-import-card h3,
+.issue-import-card p,
+.issue-fields h3,
+.issue-inclusion h3,
+.issue-preview h3,
+.issue-report-status,
+.issue-report-note {
+  margin: 0;
+}
+
+.issue-report-heading p,
+.issue-import-card > div > span,
+.issue-section-heading span,
+.issue-inclusion > span {
+  display: block;
+  margin-bottom: 4px;
+  color: #98ead1;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.issue-report-heading h2 {
+  font-size: clamp(1.35rem, 4vw, 1.9rem);
+  line-height: 1.15;
+}
+
+.issue-report-close {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(221, 255, 247, 0.22);
+  border-radius: 13px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-size: 1.45rem;
+  cursor: pointer;
+}
+
+.issue-report-intro {
+  margin-top: 14px;
+  color: rgba(236, 255, 250, 0.72);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.issue-import-card,
+.issue-fields,
+.issue-inclusion,
+.issue-preview {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid rgba(210, 255, 246, 0.13);
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.issue-import-card {
+  display: grid;
+  gap: 14px;
+}
+
+.issue-import-card p,
+.issue-section-heading + p {
+  color: rgba(236, 255, 250, 0.67);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.issue-file-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed rgba(151, 229, 207, 0.42);
+  border-radius: 13px;
+  color: inherit;
+  background: rgba(8, 20, 28, 0.38);
+  font: inherit;
+}
+
+.issue-file-input::file-selector-button {
+  margin-right: 10px;
+  padding: 8px 11px;
+  border: 1px solid rgba(205, 255, 242, 0.24);
+  border-radius: 10px;
+  color: inherit;
+  background: rgba(141, 229, 203, 0.1);
+  font: inherit;
+  cursor: pointer;
+}
+
+.issue-import-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 13px;
+  background: rgba(75, 181, 150, 0.1);
+}
+
+.issue-import-summary span {
+  color: rgba(236, 255, 250, 0.66);
+  font-size: 0.75rem;
+}
+
+.issue-fields {
+  display: grid;
+  gap: 14px;
+}
+
+.issue-section-heading h3,
+.issue-import-card h3,
+.issue-inclusion h3,
+.issue-preview h3 {
+  font-size: 1rem;
+}
+
+.issue-section-heading > button,
+.issue-import-summary button,
+.issue-actions button {
+  border: 1px solid rgba(210, 255, 246, 0.2);
+  border-radius: 11px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.055);
+  font: inherit;
+  cursor: pointer;
+}
+
+.issue-section-heading > button,
+.issue-import-summary button {
+  padding: 8px 11px;
+  font-size: 0.78rem;
+}
+
+.issue-fields label,
+.issue-inclusion label {
+  display: grid;
+  gap: 6px;
+  color: rgba(242, 255, 252, 0.88);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.issue-fields input,
+.issue-fields select,
+.issue-fields textarea,
+.issue-preview textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid rgba(211, 255, 246, 0.18);
+  border-radius: 12px;
+  color: #f6fffd;
+  background: rgba(6, 17, 25, 0.5);
+  font: inherit;
+  line-height: 1.45;
+}
+
+.issue-fields textarea,
+.issue-preview textarea {
+  resize: vertical;
+}
+
+.issue-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.issue-inclusion {
+  display: grid;
+  gap: 10px;
+}
+
+.issue-inclusion label {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.issue-inclusion input {
+  width: 18px;
+  height: 18px;
+}
+
+.issue-preview textarea {
+  min-height: 330px;
+  margin-top: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  white-space: pre;
+}
+
+.issue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.issue-actions button {
+  min-height: 42px;
+  padding: 9px 13px;
+}
+
+.issue-actions .issue-primary {
+  border-color: rgba(133, 238, 207, 0.68);
+  background: rgba(61, 183, 145, 0.18);
+}
+
+.issue-report-status {
+  margin-top: 18px;
+  padding: 11px 13px;
+  border-radius: 13px;
+  color: #caffef;
+  background: rgba(64, 167, 137, 0.1);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.issue-report-note {
+  margin-top: 10px;
+  color: rgba(236, 255, 250, 0.58);
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+.issue-report-panel button:hover,
+.issue-report-panel input:hover,
+.issue-report-panel select:hover,
+.issue-report-panel textarea:hover {
+  border-color: rgba(129, 229, 200, 0.52);
+}
+
+.issue-report-panel button:focus-visible,
+.issue-report-panel input:focus-visible,
+.issue-report-panel select:focus-visible,
+.issue-report-panel textarea:focus-visible {
+  outline: 3px solid #d8fff4;
+  outline-offset: 3px;
+}
+
+html[data-text-size='large'] .issue-report-panel {
+  width: min(980px, calc(100vw - 24px));
+}
+
+html[data-contrast='high'] .issue-report-panel,
+html[data-contrast='high'] .issue-import-card,
+html[data-contrast='high'] .issue-fields,
+html[data-contrast='high'] .issue-inclusion,
+html[data-contrast='high'] .issue-preview,
+html[data-contrast='high'] .issue-report-panel button,
+html[data-contrast='high'] .issue-report-panel input,
+html[data-contrast='high'] .issue-report-panel select,
+html[data-contrast='high'] .issue-report-panel textarea {
+  border-color: currentColor;
+}
+
+@media (max-width: 720px) {
+  .issue-report-panel {
+    inset: 8px;
+    width: auto;
+    padding: 17px;
+    border-radius: 20px;
+  }
+
+  .issue-field-grid,
+  .issue-import-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .issue-section-heading {
+    display: grid;
+  }
+
+  .issue-section-heading > button {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .issue-report-panel button,
+  .issue-report-panel input,
+  .issue-report-panel select,
+  .issue-report-panel textarea {
+    transition: border-color 150ms ease, background-color 150ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .issue-report-panel button,
+  .issue-report-panel input,
+  .issue-report-panel select,
+  .issue-report-panel textarea {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .issue-report-panel,
+  .issue-import-card,
+  .issue-fields,
+  .issue-inclusion,
+  .issue-preview,
+  .issue-report-panel button,
+  .issue-report-panel input,
+  .issue-report-panel select,
+  .issue-report-panel textarea {
+    border: 2px solid ButtonText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  .issue-actions .issue-primary {
+    outline: 3px solid Highlight;
+  }
+}
