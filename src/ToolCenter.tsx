@@ -105,6 +105,17 @@ const PANEL_TOOLS: PanelTool[] = [
     panelSelector: '#pwa-install-panel',
     closeSelector: '.pwa-close-button',
   },
+  {
+    kind: 'panel',
+    id: 'device-check',
+    label: 'Device Check',
+    description: 'Run a local capability scan and structured real-device review.',
+    symbol: '✓?',
+    group: 'Guidance',
+    triggerSelector: '.device-check-fab',
+    panelSelector: '#device-check-panel',
+    closeSelector: '.device-check-close',
+  },
 ]
 
 const JUMP_TOOLS: JumpTool[] = [
@@ -137,6 +148,7 @@ const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[4],
   PANEL_TOOLS[5],
   PANEL_TOOLS[6],
+  PANEL_TOOLS[7],
   JUMP_TOOLS[1],
 ]
 
@@ -174,7 +186,7 @@ function prefersReducedMotion() {
 export default function ToolCenter() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeToolId, setActiveToolId] = useState<string | null>(null)
-  const [status, setStatus] = useState('Nine VibraHeal tools are available from one launcher.')
+  const [status, setStatus] = useState(`${TOOLS.length} VibraHeal tools are available from one launcher.`)
   const launcherRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLElement>(null)
   const firstItemRef = useRef<HTMLButtonElement>(null)
@@ -434,7 +446,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, create a device report, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
