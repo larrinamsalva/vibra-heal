@@ -1,0 +1,458 @@
+.release-checklist-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+}
+
+.release-checklist-panel {
+  position: fixed;
+  inset: 20px 20px 20px auto;
+  z-index: 116;
+  width: min(920px, calc(100vw - 40px));
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid rgba(169, 218, 209, 0.34);
+  border-radius: 26px;
+  color: #f4fffc;
+  background: linear-gradient(165deg, rgba(15, 37, 43, 0.995), rgba(25, 31, 56, 0.995));
+  box-shadow: 0 28px 80px rgba(3, 11, 20, 0.56);
+  backdrop-filter: blur(22px);
+}
+
+.release-checklist-heading,
+.release-section-heading,
+.release-state,
+.release-imported-review > div:first-child {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.release-checklist-heading p,
+.release-checklist-heading h2,
+.release-checklist-intro,
+.release-section-heading span,
+.release-section-heading h3,
+.release-state p,
+.release-groups h4,
+.release-notes > span,
+.release-notes h3,
+.release-import > div > span,
+.release-import h3,
+.release-checklist-status,
+.release-checklist-note {
+  margin: 0;
+}
+
+.release-checklist-heading p,
+.release-section-heading span,
+.release-notes > span,
+.release-import > div > span {
+  color: #93e8cf;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.release-checklist-heading h2 {
+  margin-top: 4px;
+  font-size: clamp(1.3rem, 4vw, 1.85rem);
+  line-height: 1.15;
+}
+
+.release-checklist-close,
+.release-section-heading > button,
+.release-imported-review button,
+.release-actions button {
+  border: 1px solid rgba(221, 255, 247, 0.22);
+  border-radius: 12px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  cursor: pointer;
+}
+
+.release-checklist-close {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  font-size: 1.5rem;
+}
+
+.release-checklist-intro {
+  margin-top: 14px;
+  color: rgba(235, 255, 250, 0.72);
+  line-height: 1.55;
+}
+
+.release-overview,
+.release-import,
+.release-checks,
+.release-notes,
+.release-preview {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid rgba(211, 255, 246, 0.13);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.release-section-heading h3,
+.release-notes h3,
+.release-import h3 {
+  margin-top: 3px;
+  font-size: 1.05rem;
+}
+
+.release-section-heading > button,
+.release-imported-review button,
+.release-actions button {
+  padding: 9px 12px;
+}
+
+.release-field-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(180px, 0.7fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.release-checklist-panel label {
+  display: grid;
+  gap: 6px;
+  color: rgba(240, 255, 251, 0.78);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.release-checklist-panel label span {
+  color: rgba(240, 255, 251, 0.52);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.release-checklist-panel input,
+.release-checklist-panel select,
+.release-checklist-panel textarea {
+  width: 100%;
+  border: 1px solid rgba(218, 255, 247, 0.2);
+  border-radius: 12px;
+  color: #f5fffc;
+  background: rgba(4, 14, 25, 0.44);
+  font: inherit;
+}
+
+.release-checklist-panel input,
+.release-checklist-panel select {
+  min-height: 44px;
+  padding: 9px 11px;
+}
+
+.release-checklist-panel textarea {
+  padding: 11px 12px;
+  line-height: 1.48;
+  resize: vertical;
+}
+
+.release-state {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(221, 255, 247, 0.16);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.release-state > div {
+  display: grid;
+  gap: 3px;
+}
+
+.release-state span {
+  color: rgba(235, 255, 250, 0.58);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.release-state strong {
+  font-size: 1.08rem;
+}
+
+.release-state p {
+  max-width: 520px;
+  color: rgba(235, 255, 250, 0.7);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.release-state.checklist-complete {
+  border-color: rgba(121, 229, 197, 0.52);
+  background: rgba(64, 167, 137, 0.1);
+}
+
+.release-state.needs-attention {
+  border-color: rgba(255, 209, 117, 0.52);
+  background: rgba(194, 126, 32, 0.1);
+}
+
+.release-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.release-summary article {
+  display: grid;
+  gap: 3px;
+  min-height: 82px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.release-summary span,
+.release-summary small {
+  color: rgba(235, 255, 250, 0.58);
+  font-size: 0.72rem;
+}
+
+.release-summary strong {
+  font-size: 1.12rem;
+}
+
+.release-import > div > p {
+  margin: 8px 0 0;
+  color: rgba(235, 255, 250, 0.68);
+  font-size: 0.82rem;
+  line-height: 1.48;
+}
+
+.release-file-label {
+  margin-top: 14px;
+}
+
+.release-imported-review {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(82, 180, 153, 0.09);
+}
+
+.release-imported-review > div:first-child {
+  align-items: center;
+}
+
+.release-imported-review > div:first-child > div,
+.release-imported-review > div:first-child {
+  min-width: 0;
+}
+
+.release-imported-review strong,
+.release-imported-review span {
+  display: block;
+}
+
+.release-imported-review span {
+  margin-top: 3px;
+  color: rgba(235, 255, 250, 0.64);
+  font-size: 0.75rem;
+}
+
+.release-imported-review label {
+  display: flex;
+  grid-template-columns: none;
+  align-items: flex-start;
+  gap: 9px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.release-imported-review input[type='checkbox'] {
+  flex: 0 0 auto;
+  width: 18px;
+  min-height: 18px;
+  margin-top: 1px;
+}
+
+.release-groups {
+  display: grid;
+  gap: 18px;
+  margin-top: 15px;
+}
+
+.release-groups > section {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.release-groups h4 {
+  margin-bottom: 8px;
+  color: rgba(235, 255, 250, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.release-list {
+  display: grid;
+  gap: 8px;
+}
+
+.release-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 190px);
+  gap: 14px;
+  align-items: center;
+  padding: 13px;
+  border: 1px solid rgba(211, 255, 246, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.release-list article strong {
+  font-size: 0.9rem;
+}
+
+.release-list article p {
+  margin: 5px 0 0;
+  color: rgba(235, 255, 250, 0.62);
+  font-size: 0.76rem;
+  line-height: 1.42;
+}
+
+.release-notes label {
+  margin-top: 12px;
+}
+
+.release-preview textarea {
+  margin-top: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.release-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.release-actions .release-primary {
+  border-color: rgba(121, 229, 197, 0.55);
+  background: rgba(64, 167, 137, 0.18);
+}
+
+.release-checklist-status {
+  margin-top: 18px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #caffef;
+  background: rgba(64, 167, 137, 0.1);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.release-checklist-note {
+  margin-top: 10px;
+  color: rgba(235, 255, 250, 0.56);
+  font-size: 0.72rem;
+  line-height: 1.48;
+}
+
+.release-checklist-panel button:focus-visible,
+.release-checklist-panel input:focus-visible,
+.release-checklist-panel select:focus-visible,
+.release-checklist-panel textarea:focus-visible {
+  outline: 3px solid #d8fff4;
+  outline-offset: 3px;
+}
+
+html[data-text-size='large'] .release-checklist-panel {
+  width: min(980px, calc(100vw - 32px));
+}
+
+html[data-contrast='high'] .release-checklist-panel,
+html[data-contrast='high'] .release-overview,
+html[data-contrast='high'] .release-import,
+html[data-contrast='high'] .release-checks,
+html[data-contrast='high'] .release-notes,
+html[data-contrast='high'] .release-preview,
+html[data-contrast='high'] .release-list article,
+html[data-contrast='high'] .release-checklist-panel input,
+html[data-contrast='high'] .release-checklist-panel select,
+html[data-contrast='high'] .release-checklist-panel textarea {
+  border-color: currentColor;
+}
+
+@media (max-width: 760px) {
+  .release-checklist-panel {
+    inset: 8px;
+    width: auto;
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .release-field-grid,
+  .release-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .release-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .release-state,
+  .release-section-heading,
+  .release-imported-review > div:first-child {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .release-checklist-panel button {
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .release-checklist-panel button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .release-checklist-panel *,
+  .release-checklist-panel *::before,
+  .release-checklist-panel *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .release-checklist-panel,
+  .release-overview,
+  .release-import,
+  .release-checks,
+  .release-notes,
+  .release-preview,
+  .release-state,
+  .release-list article,
+  .release-checklist-panel button,
+  .release-checklist-panel input,
+  .release-checklist-panel select,
+  .release-checklist-panel textarea {
+    border: 2px solid ButtonText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+}
