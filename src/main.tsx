@@ -13,6 +13,7 @@ import NatureMixer from './NatureMixer'
 import PwaInstall from './PwaInstall'
 import ReleaseChecklist from './ReleaseChecklist'
 import ReleaseHistory from './ReleaseHistory'
+import ReleasePackage from './ReleasePackage'
 import SessionJournal from './SessionJournal'
 import SessionSummary from './SessionSummary'
 import ToolCenter from './ToolCenter'
@@ -38,6 +39,7 @@ createRoot(document.getElementById('root')!).render(
     <IssueReport />
     <ReleaseChecklist />
     <ReleaseHistory />
+    <ReleasePackage />
     <ToolCenter />
   </StrictMode>,
 )
