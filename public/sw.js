@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vibraheal-shell-v0.20'
+const CACHE_NAME = 'vibraheal-shell-v0.21'
 const BASE_PATH = '/vibra-heal/'
 const REQUIRED_SHELL = [
   BASE_PATH,
