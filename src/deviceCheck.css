@@ -1,0 +1,402 @@
+.device-check-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+}
+
+.device-check-panel {
+  position: fixed;
+  inset: 20px 20px 20px auto;
+  z-index: 116;
+  width: min(860px, calc(100vw - 40px));
+  overflow: auto;
+  padding: 26px;
+  border: 1px solid rgba(162, 221, 207, 0.34);
+  border-radius: 28px;
+  color: #f5fffc;
+  background: linear-gradient(165deg, rgba(13, 36, 42, 0.995), rgba(27, 31, 57, 0.995));
+  box-shadow: 0 30px 90px rgba(3, 11, 20, 0.58);
+  backdrop-filter: blur(22px);
+}
+
+.device-check-heading,
+.device-check-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.device-check-heading p,
+.device-check-heading h2,
+.device-check-intro,
+.device-check-section-heading span,
+.device-check-section-heading h3,
+.device-check-fine,
+.device-check-status,
+.device-check-note,
+.device-check-export h3,
+.device-check-export p,
+.device-check-export > div > span,
+.device-review-groups h4,
+.device-review-list p,
+.device-capability p {
+  margin: 0;
+}
+
+.device-check-heading p,
+.device-check-section-heading span,
+.device-check-export > div > span {
+  margin-bottom: 5px;
+  color: #92e7cf;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.device-check-heading h2 {
+  font-size: clamp(1.45rem, 4vw, 2rem);
+  line-height: 1.12;
+}
+
+.device-check-close {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(224, 255, 248, 0.22);
+  border-radius: 13px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.device-check-intro {
+  margin-top: 14px;
+  max-width: 74ch;
+  color: rgba(238, 255, 251, 0.74);
+  line-height: 1.58;
+}
+
+.device-check-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.device-check-summary article {
+  display: grid;
+  gap: 4px;
+  min-height: 92px;
+  padding: 15px;
+  border: 1px solid rgba(207, 255, 245, 0.13);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.device-check-summary span,
+.device-check-summary small {
+  color: rgba(237, 255, 250, 0.63);
+  font-size: 0.72rem;
+}
+
+.device-check-summary strong {
+  align-self: end;
+  color: #caffef;
+  font-size: 1.45rem;
+}
+
+.device-check-capabilities,
+.device-check-manual,
+.device-check-export {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid rgba(207, 255, 245, 0.13);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.device-check-section-heading h3,
+.device-check-export h3 {
+  font-size: 1.08rem;
+}
+
+.device-check-section-heading button,
+.device-check-primary,
+.device-check-export button {
+  min-height: 40px;
+  padding: 9px 13px;
+  border: 1px solid rgba(205, 255, 244, 0.22);
+  border-radius: 12px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.device-check-section-heading button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.device-capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.device-capability {
+  padding: 14px;
+  border: 1px solid rgba(207, 255, 245, 0.12);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.device-capability > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.device-capability > div > span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: rgba(241, 255, 252, 0.78);
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.device-capability.active,
+.device-capability.available {
+  border-color: rgba(114, 225, 192, 0.34);
+}
+
+.device-capability.active > div > span,
+.device-capability.available > div > span {
+  color: #caffef;
+  background: rgba(72, 184, 150, 0.16);
+}
+
+.device-capability.unavailable,
+.device-capability.unknown {
+  border-color: rgba(240, 185, 94, 0.3);
+}
+
+.device-capability p {
+  margin-top: 8px;
+  color: rgba(237, 255, 250, 0.66);
+  font-size: 0.78rem;
+  line-height: 1.48;
+}
+
+.device-check-empty {
+  grid-column: 1 / -1;
+  color: rgba(237, 255, 250, 0.66);
+}
+
+.device-check-fine,
+.device-check-note {
+  margin-top: 12px;
+  color: rgba(237, 255, 250, 0.58);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.device-review-groups {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.device-review-groups > section {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.device-review-groups h4 {
+  margin-bottom: 8px;
+  color: rgba(237, 255, 250, 0.7);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.device-review-list {
+  display: grid;
+  gap: 8px;
+}
+
+.device-review-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 16px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid rgba(207, 255, 245, 0.11);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.device-review-list article > div {
+  display: grid;
+  gap: 5px;
+}
+
+.device-review-list p {
+  color: rgba(237, 255, 250, 0.64);
+  font-size: 0.78rem;
+  line-height: 1.48;
+}
+
+.device-review-list label,
+.device-check-export > label {
+  display: grid;
+  gap: 6px;
+  color: rgba(237, 255, 250, 0.7);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.device-review-list select,
+.device-check-export textarea {
+  width: 100%;
+  border: 1px solid rgba(207, 255, 245, 0.2);
+  border-radius: 11px;
+  color: #f5fffc;
+  background: rgba(7, 25, 31, 0.82);
+  font: inherit;
+}
+
+.device-review-list select {
+  min-height: 40px;
+  padding: 7px 9px;
+}
+
+.device-check-export {
+  display: grid;
+  gap: 12px;
+}
+
+.device-check-export p {
+  margin-top: 7px;
+  color: rgba(237, 255, 250, 0.65);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.device-check-export > label > span {
+  color: rgba(237, 255, 250, 0.5);
+  font-weight: 500;
+}
+
+.device-check-export textarea {
+  min-height: 96px;
+  padding: 11px;
+  resize: vertical;
+}
+
+.device-check-primary {
+  justify-self: start;
+  border-color: rgba(114, 225, 192, 0.55) !important;
+  background: rgba(68, 177, 145, 0.18) !important;
+}
+
+.device-check-status {
+  margin-top: 16px;
+  padding: 11px 13px;
+  border-radius: 13px;
+  color: #caffef;
+  background: rgba(64, 167, 137, 0.1);
+  font-size: 0.8rem;
+  line-height: 1.48;
+}
+
+.device-check-panel button:focus-visible,
+.device-check-panel select:focus-visible,
+.device-check-panel textarea:focus-visible {
+  outline: 3px solid #d8fff4;
+  outline-offset: 3px;
+}
+
+html[data-text-size='large'] .device-check-panel {
+  width: min(940px, calc(100vw - 40px));
+}
+
+html[data-contrast='high'] .device-check-panel,
+html[data-contrast='high'] .device-check-panel article,
+html[data-contrast='high'] .device-check-panel section,
+html[data-contrast='high'] .device-check-panel select,
+html[data-contrast='high'] .device-check-panel textarea,
+html[data-contrast='high'] .device-check-panel button {
+  border-color: currentColor;
+}
+
+@media (max-width: 760px) {
+  .device-check-panel {
+    inset: 8px;
+    width: auto;
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .device-check-summary,
+  .device-capability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .device-review-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .device-review-list label {
+    width: 100%;
+  }
+}
+
+@media (max-width: 470px) {
+  .device-check-heading,
+  .device-check-section-heading {
+    align-items: stretch;
+  }
+
+  .device-check-section-heading {
+    flex-direction: column;
+  }
+
+  .device-check-summary,
+  .device-capability-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .device-check-panel * {
+    scroll-behavior: auto;
+  }
+}
+
+@media (forced-colors: active) {
+  .device-check-panel,
+  .device-check-panel article,
+  .device-check-panel section,
+  .device-check-panel select,
+  .device-check-panel textarea,
+  .device-check-panel button {
+    border: 2px solid ButtonText;
+    color: CanvasText;
+    background: Canvas;
+    forced-color-adjust: auto;
+  }
+}
