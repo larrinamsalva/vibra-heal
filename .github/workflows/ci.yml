@@ -21,7 +21,7 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Test privacy, storage, accessibility, and tool-center interactions
+      - name: Test privacy, accessibility, tools, and offline lifecycle
         run: npm test
       - name: Build
         run: npm run build
