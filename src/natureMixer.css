@@ -1,0 +1,307 @@
+.nature-mixer-fab {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(109, 232, 220, 0.35);
+  border-radius: 999px;
+  background: rgba(8, 15, 30, 0.9);
+  color: #ecfffb;
+  font-weight: 750;
+  text-decoration: none;
+  box-shadow: 0 16px 45px rgba(2, 8, 23, 0.42);
+  backdrop-filter: blur(16px);
+}
+
+.nature-mixer-fab:hover,
+.nature-mixer-fab:focus-visible {
+  border-color: rgba(109, 232, 220, 0.8);
+  transform: translateY(-2px);
+}
+
+.nature-mixer-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 3rem auto;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  border: 1px solid rgba(109, 232, 220, 0.2);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(68, 211, 188, 0.14), transparent 34%),
+    radial-gradient(circle at 95% 20%, rgba(104, 122, 255, 0.13), transparent 34%),
+    rgba(10, 18, 35, 0.94);
+  box-shadow: 0 30px 90px rgba(3, 9, 24, 0.38);
+  color: #e9fffb;
+  scroll-margin-top: 2rem;
+}
+
+.nature-mixer-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.nature-mixer-heading h2 {
+  margin: 0.25rem 0 0.7rem;
+  font-size: clamp(1.8rem, 4vw, 3.1rem);
+  line-height: 1.05;
+}
+
+.nature-mixer-heading p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 0;
+  color: rgba(232, 255, 251, 0.72);
+  line-height: 1.7;
+}
+
+.nature-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: max-content;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(235, 255, 251, 0.64);
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.nature-live-badge span {
+  color: #8c96a8;
+}
+
+.nature-live-badge.active {
+  border-color: rgba(109, 232, 220, 0.36);
+  color: #eafffb;
+  background: rgba(62, 202, 178, 0.12);
+}
+
+.nature-live-badge.active span {
+  color: #6de8dc;
+  text-shadow: 0 0 14px rgba(109, 232, 220, 0.85);
+}
+
+.nature-preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 1.6rem 0;
+}
+
+.nature-preset-row button,
+.nature-mute-button {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #eafffb;
+  padding: 0.65rem 0.85rem;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 720;
+  cursor: pointer;
+}
+
+.nature-preset-row button:hover,
+.nature-preset-row button:focus-visible,
+.nature-mute-button:hover,
+.nature-mute-button:focus-visible {
+  border-color: rgba(109, 232, 220, 0.62);
+  background: rgba(109, 232, 220, 0.1);
+}
+
+.nature-preset-row .nature-reset-button {
+  margin-left: auto;
+  color: rgba(235, 255, 251, 0.72);
+}
+
+.nature-layer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.nature-layer {
+  min-width: 0;
+  padding: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.nature-layer.active {
+  border-color: rgba(109, 232, 220, 0.28);
+  background: linear-gradient(145deg, rgba(109, 232, 220, 0.09), rgba(112, 123, 255, 0.055));
+}
+
+.nature-layer:hover {
+  transform: translateY(-2px);
+}
+
+.nature-layer-title {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.nature-layer-title > span {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 1.25rem;
+}
+
+.nature-layer-title strong,
+.nature-layer-title small {
+  display: block;
+}
+
+.nature-layer-title strong {
+  margin-bottom: 0.3rem;
+}
+
+.nature-layer-title small {
+  color: rgba(231, 255, 250, 0.62);
+  line-height: 1.45;
+}
+
+.nature-layer label,
+.nature-master-panel label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: rgba(238, 255, 252, 0.82);
+  font-size: 0.87rem;
+  font-weight: 690;
+}
+
+.nature-layer label span,
+.nature-master-panel label span {
+  color: #8ff8e9;
+}
+
+.nature-layer input[type='range'],
+.nature-master-panel input[type='range'] {
+  width: 100%;
+  margin: 0.75rem 0 1rem;
+  accent-color: #6de8dc;
+}
+
+.nature-mute-button {
+  width: 100%;
+}
+
+.nature-master-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(1, 7, 19, 0.28);
+}
+
+.nature-start-button {
+  min-width: 210px;
+}
+
+.nature-safety-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem 1rem;
+  align-items: start;
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid rgba(109, 232, 220, 0.7);
+  border-radius: 0 16px 16px 0;
+  background: rgba(109, 232, 220, 0.055);
+}
+
+.nature-safety-note strong {
+  color: #a2fff2;
+}
+
+.nature-safety-note p {
+  margin: 0;
+  color: rgba(234, 255, 251, 0.68);
+  line-height: 1.6;
+}
+
+.nature-status,
+.nature-storage-warning {
+  margin: 1rem 0 0;
+  min-height: 1.3rem;
+  color: rgba(231, 255, 251, 0.65);
+  font-size: 0.88rem;
+}
+
+.nature-storage-warning {
+  color: #ffd9a1;
+}
+
+@media (max-width: 900px) {
+  .nature-layer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nature-mixer-heading,
+  .nature-master-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .nature-live-badge {
+    justify-self: start;
+  }
+
+  .nature-start-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .nature-mixer-shell {
+    width: min(100% - 1rem, 1180px);
+    margin: 1.5rem auto 5.5rem;
+    border-radius: 22px;
+  }
+
+  .nature-mixer-fab {
+    left: 0.65rem;
+    bottom: 0.65rem;
+    padding: 0.7rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  .nature-preset-row .nature-reset-button {
+    margin-left: 0;
+  }
+
+  .nature-safety-note {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nature-mixer-fab,
+  .nature-layer {
+    transition: none;
+  }
+
+  .nature-mixer-fab:hover,
+  .nature-layer:hover {
+    transform: none;
+  }
+}
