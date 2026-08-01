@@ -20,6 +20,7 @@ const HARNESS_PANELS: HarnessPanel[] = [
   { triggerClass: 'backup-fab', panelId: 'backup-panel', closeClass: 'backup-close', name: 'Backup panel' },
   { triggerClass: 'privacy-center-fab', panelId: 'privacy-center-panel', closeClass: 'privacy-center-close', name: 'Privacy panel' },
   { triggerClass: 'pwa-install-fab', panelId: 'pwa-install-panel', closeClass: 'pwa-close-button', name: 'Install panel' },
+  { triggerClass: 'device-check-fab', panelId: 'device-check-panel', closeClass: 'device-check-close', name: 'Device Check panel' },
 ]
 
 function addPanelHarness(definition: HarnessPanel) {
@@ -110,15 +111,17 @@ afterEach(() => {
 })
 
 describe('ToolCenter', () => {
-  it('opens a named menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
+  it('opens a named ten-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
     render(<ToolCenter />)
 
     const launcher = screen.getByRole('button', { name: /Tools/i })
+    expect(launcher).toHaveTextContent('10 tools')
     fireEvent.click(launcher)
 
     const menu = screen.getByRole('dialog', { name: 'Choose one tool at a time.' })
     const breathing = screen.getByRole('button', { name: /Breathing/i })
     const animal = screen.getByRole('button', { name: /Animal Calm/i })
+    expect(screen.getByRole('button', { name: /Device Check/i })).toBeInTheDocument()
 
     await waitFor(() => expect(breathing).toHaveFocus())
 
@@ -136,7 +139,7 @@ describe('ToolCenter', () => {
     await waitFor(() => expect(launcher).toHaveFocus())
   })
 
-  it('closes the current panel before opening another panel', async () => {
+  it('closes the current panel before opening Device Check', async () => {
     render(<ToolCenter />)
     const launcher = screen.getByRole('button', { name: /Tools/i })
 
@@ -145,11 +148,11 @@ describe('ToolCenter', () => {
     expect(await screen.findByRole('dialog', { name: 'Accessibility panel' })).toBeInTheDocument()
 
     fireEvent.click(launcher)
-    fireEvent.click(screen.getByRole('button', { name: /Privacy and local data/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Device Check/i }))
 
     await waitFor(() => {
       expect(screen.queryByRole('dialog', { name: 'Accessibility panel' })).not.toBeInTheDocument()
-      expect(screen.getByRole('dialog', { name: 'Privacy panel' })).toBeInTheDocument()
+      expect(screen.getByRole('dialog', { name: 'Device Check panel' })).toBeInTheDocument()
     })
 
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
@@ -191,7 +194,7 @@ describe('ToolCenter', () => {
     expect(screen.queryByRole('dialog', { name: 'Accessibility panel' })).not.toBeInTheDocument()
   })
 
-  it('removes the legacy launchers from keyboard and assistive-technology navigation', async () => {
+  it('removes every legacy launcher from keyboard and assistive-technology navigation', async () => {
     render(<ToolCenter />)
 
     await waitFor(() => {
