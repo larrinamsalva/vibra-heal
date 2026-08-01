@@ -23,6 +23,7 @@ const HARNESS_PANELS: HarnessPanel[] = [
   { triggerClass: 'device-check-fab', panelId: 'device-check-panel', closeClass: 'device-check-close', name: 'Device Check panel' },
   { triggerClass: 'issue-report-fab', panelId: 'issue-report-panel', closeClass: 'issue-report-close', name: 'Issue Report panel' },
   { triggerClass: 'release-checklist-fab', panelId: 'release-checklist-panel', closeClass: 'release-checklist-close', name: 'Release Checklist panel' },
+  { triggerClass: 'release-history-fab', panelId: 'release-history-panel', closeClass: 'release-history-close', name: 'Release History panel' },
 ]
 
 function addPanelHarness(definition: HarnessPanel) {
@@ -113,11 +114,11 @@ afterEach(() => {
 })
 
 describe('ToolCenter', () => {
-  it('opens a named twelve-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
+  it('opens a named thirteen-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
     render(<ToolCenter />)
 
     const launcher = screen.getByRole('button', { name: /Tools/i })
-    expect(launcher).toHaveTextContent('12 tools')
+    expect(launcher).toHaveTextContent('13 tools')
     fireEvent.click(launcher)
 
     const menu = screen.getByRole('dialog', { name: 'Choose one tool at a time.' })
@@ -126,6 +127,7 @@ describe('ToolCenter', () => {
     expect(screen.getByRole('button', { name: /Device Check/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Issue Report/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Release Checklist/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Release History/i })).toBeInTheDocument()
 
     await waitFor(() => expect(breathing).toHaveFocus())
 
@@ -143,20 +145,20 @@ describe('ToolCenter', () => {
     await waitFor(() => expect(launcher).toHaveFocus())
   })
 
-  it('closes Issue Report before opening Release Checklist', async () => {
+  it('closes Release Checklist before opening Release History', async () => {
     render(<ToolCenter />)
     const launcher = screen.getByRole('button', { name: /Tools/i })
 
     fireEvent.click(launcher)
-    fireEvent.click(screen.getByRole('button', { name: /Issue Report/i }))
-    expect(await screen.findByRole('dialog', { name: 'Issue Report panel' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Release Checklist/i }))
+    expect(await screen.findByRole('dialog', { name: 'Release Checklist panel' })).toBeInTheDocument()
 
     fireEvent.click(launcher)
-    fireEvent.click(screen.getByRole('button', { name: /Release Checklist/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Release History/i }))
 
     await waitFor(() => {
-      expect(screen.queryByRole('dialog', { name: 'Issue Report panel' })).not.toBeInTheDocument()
-      expect(screen.getByRole('dialog', { name: 'Release Checklist panel' })).toBeInTheDocument()
+      expect(screen.queryByRole('dialog', { name: 'Release Checklist panel' })).not.toBeInTheDocument()
+      expect(screen.getByRole('dialog', { name: 'Release History panel' })).toBeInTheDocument()
     })
 
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
