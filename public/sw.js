@@ -3,8 +3,8 @@ const BASE_PATH = '/vibra-heal/'
 const REQUIRED_SHELL = [
   BASE_PATH,
   `${BASE_PATH}manifest.webmanifest`,
-  `${BASE_PATH}icons/icon-192.png`,
-  `${BASE_PATH}icons/icon-512.png`,
+  `${BASE_PATH}icons/icon-192.svg`,
+  `${BASE_PATH}icons/icon-512.svg`,
 ]
 
 function isCacheable(response) {
