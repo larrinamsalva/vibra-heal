@@ -4,7 +4,7 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
-## Current MVP 0.9
+## Current MVP 0.10
 
 - React 19 + TypeScript + Vite
 - Web Audio API stereo tone engine for consenting human listeners
@@ -15,11 +15,13 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Filters for audio features, wellness practices, and traditional associations
 - Six non-medical wellness paths: wind down, steady focus, grounding pause, creative reset, quiet reflection, and connection & gratitude
 - Goal-specific tone recommendations, starter timers, and optional breathing guidance
+- Four text-first breathing patterns with standard and slower pacing
+- Pause, reset, cycle counting, and optional hold skipping
+- Breathing choices linked to newly saved sessions and restored in a paused state
 - Favorite tones stored locally in the browser
 - Saved custom sessions containing the active goal, frequency, volume, offset, and timer settings
 - Private JSON export and restore for favorites, sessions, nature settings, and accessibility preferences
 - Strict one-megabyte import validation with section-by-section preview and confirmation
-- 4–4–6 breathing guide
 - Three.js / React Three Fiber visual field
 - Static low-power visual mode that replaces the WebGL canvas and releases its graphics context where supported
 - Automatic reduced-motion and data-saving visual selection
@@ -48,6 +50,21 @@ npm run build
 npm run preview
 ```
 
+## Guided breathing
+
+The floating **Breathing** control provides four optional rhythms:
+
+- **Even breath** — four-count inhale and four-count exhale, with no holds
+- **Long exhale** — four-count inhale, optional two-count pause, and six-count exhale
+- **Box rhythm** — four equal inhale, pause, exhale, and pause phases
+- **Gentle reset** — three-count inhale and five-count exhale, with no holds
+
+The current phase, seconds remaining, written instruction, progress, and completed cycles are available without relying on animation. Standard and slower pacing are supported. Holds are always optional, and a **Skip hold** button appears during hold phases.
+
+Newly saved sessions remember whether the breathing guide was enabled, its pattern, and its pace. Loading a session restores those choices in a paused state so breathing never begins unexpectedly. Sessions created before MVP 0.10 continue to work without a linked breathing choice.
+
+Breathe naturally rather than as deeply as possible. Never force an inhale, exhale, or hold. Stop if you feel dizzy, short of breath, strained, or uncomfortable. See [`docs/guided-breathing.md`](docs/guided-breathing.md) for the timing design, local-storage behavior, safety boundaries, and review checklist.
+
 ## Private backup and restore
 
 The floating **Backup** control creates a plain JSON file containing only supported local VibraHeal settings:
@@ -60,6 +77,8 @@ The floating **Backup** control creates a plain JSON file containing only suppor
 The file is generated entirely in the browser. VibraHeal does not upload it, open an account, or include audio recordings, passwords, payment information, medical records, or Animal Calm observations.
 
 Restore accepts files up to one megabyte, validates the format and every supported value, and displays a section-by-section preview. Nothing changes until the user selects the sections, confirms that local values will be replaced, and presses **Restore and reopen**. A failed write attempts to roll back the previous browser values.
+
+The MVP 0.9 backup schema remains unchanged in this release, so breathing preferences and breathing-session links stay local to the current browser. A future versioned backup-format update can add them without weakening validation for older files.
 
 Backup files may contain personal session names and preferences, so they should be stored somewhere trusted. See [`docs/private-backup-restore.md`](docs/private-backup-restore.md) for the format, validation rules, and review checklist.
 
@@ -89,7 +108,7 @@ See [`docs/pwa-installation.md`](docs/pwa-installation.md) for the architecture 
 
 ## Local storage
 
-Favorites, saved sessions, nature-mixer settings, and accessibility preferences are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection unless the user creates and restores a local backup file. The app keeps up to 24 saved sessions per browser profile.
+Favorites, saved sessions, nature-mixer settings, accessibility preferences, current breathing choices, and breathing-to-session links are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection. The app keeps up to 24 saved sessions per browser profile.
 
 Installing the app does not move this information to an account. Installed and browser versions use the storage profile provided by that browser and operating system.
 
@@ -123,7 +142,7 @@ See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md) for the reviewed 
 
 Future work may include:
 
-- more breathing patterns
+- a versioned backup-format update for breathing choices and session links
 - structured screen-reader and keyboard testing across major browsers
 - evidence-aware educational content and primary-source citations
 - optional printable session summaries
@@ -135,7 +154,8 @@ Future work may include:
 - Headphones are recommended only for a consenting human using the stereo-offset experience.
 - Keep the nature ambience and tone-player volumes low when using them together.
 - Never put headphones or wearable audio devices on an animal.
-- Stop a breathing exercise if you feel uncomfortable or lightheaded.
+- Breathe naturally, treat every hold as optional, and stop a breathing exercise if you feel dizzy, strained, short of breath, or uncomfortable.
+- Breathing patterns are pacing timers, not medical or mental-health treatments.
 - Frequency traditions and user experiences must be clearly separated from established medical evidence.
 - The audio engine and visual engine should remain independent so the app works when motion or WebGL is disabled.
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
