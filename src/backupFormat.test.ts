@@ -66,9 +66,14 @@ describe('Backup Format v2', () => {
   })
 
   it('rejects breathing links that point to a missing saved session', () => {
-    const invalid = structuredClone(v2Backup)
-    invalid.data.breathingSessionLinks = {
-      'missing-session': { enabled: true, patternId: 'box', pace: 'slower' },
+    const invalid: unknown = {
+      ...v2Backup,
+      data: {
+        ...v2Backup.data,
+        breathingSessionLinks: {
+          'missing-session': { enabled: true, patternId: 'box', pace: 'slower' },
+        },
+      },
     }
 
     expect(() => parseBackupDocument(invalid, 'invalid.json')).toThrow(
