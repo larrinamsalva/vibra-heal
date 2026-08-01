@@ -69,10 +69,16 @@ beforeEach(() => {
     configurable: true,
     value: { writeText: vi.fn().mockResolvedValue(undefined) },
   })
+  Object.defineProperty(window, 'fetch', {
+    configurable: true,
+    writable: true,
+    value: vi.fn().mockRejectedValue(new Error('network should not be used')),
+  })
 })
 
 afterEach(() => {
   cleanup()
+  Reflect.deleteProperty(window, 'fetch')
   vi.restoreAllMocks()
 })
 
@@ -138,7 +144,7 @@ describe('Issue Report format rules', () => {
 describe('IssueReport component', () => {
   it('opens as a named dialog, avoids storage and network access, and restores focus after Escape', async () => {
     const storageRead = vi.spyOn(Storage.prototype, 'getItem')
-    const fetchSpy = vi.spyOn(window, 'fetch').mockRejectedValue(new Error('network should not be used'))
+    const fetchSpy = vi.mocked(window.fetch)
 
     render(<IssueReport />)
     const trigger = screen.getByRole('button', { name: /Issue report/i })
