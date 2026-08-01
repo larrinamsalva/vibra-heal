@@ -1,0 +1,311 @@
+/* Tool Center owns the visible launcher. Existing feature launchers remain in the DOM
+   as private compatibility bridges so their tested component logic does not need to be duplicated. */
+.accessibility-fab,
+.backup-fab,
+.breathing-fab,
+.summary-fab,
+.journal-fab,
+.privacy-center-fab,
+.pwa-install-fab,
+.nature-mixer-fab,
+.animal-calm-jump {
+  display: none !important;
+}
+
+.tool-center-launcher {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 154px;
+  min-height: 54px;
+  padding: 10px 16px;
+  border: 1px solid rgba(169, 218, 209, 0.42);
+  border-radius: 18px;
+  color: #f6fffd;
+  background: linear-gradient(145deg, rgba(25, 61, 67, 0.98), rgba(33, 45, 75, 0.98));
+  box-shadow: 0 18px 52px rgba(4, 14, 25, 0.38);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+}
+
+.tool-center-launcher:hover {
+  transform: translateY(-2px);
+}
+
+.tool-center-launcher.active {
+  border-color: rgba(121, 229, 197, 0.82);
+  box-shadow: 0 0 0 3px rgba(86, 218, 180, 0.12), 0 18px 52px rgba(4, 14, 25, 0.42);
+}
+
+.tool-center-launcher-symbol {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(213, 255, 244, 0.12);
+  font-size: 1.1rem;
+}
+
+.tool-center-launcher > span:last-child {
+  display: grid;
+  gap: 1px;
+}
+
+.tool-center-launcher strong {
+  font-size: 0.98rem;
+}
+
+.tool-center-launcher small {
+  color: rgba(237, 255, 250, 0.72);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.tool-center-menu {
+  position: fixed;
+  right: 20px;
+  bottom: 86px;
+  z-index: 121;
+  width: min(440px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 112px));
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid rgba(164, 219, 209, 0.34);
+  border-radius: 24px;
+  color: #f4fffc;
+  background: linear-gradient(165deg, rgba(15, 37, 43, 0.99), rgba(25, 31, 56, 0.99));
+  box-shadow: 0 28px 80px rgba(3, 11, 20, 0.52);
+  backdrop-filter: blur(22px);
+}
+
+.tool-center-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tool-center-heading p,
+.tool-center-heading h2,
+.tool-center-intro,
+.tool-center-status,
+.tool-center-note,
+.tool-center-groups h3 {
+  margin: 0;
+}
+
+.tool-center-heading p {
+  margin-bottom: 4px;
+  color: #93e8cf;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tool-center-heading h2 {
+  font-size: clamp(1.25rem, 4vw, 1.65rem);
+  line-height: 1.16;
+}
+
+.tool-center-heading > button {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(221, 255, 247, 0.22);
+  border-radius: 12px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-size: 1.45rem;
+  cursor: pointer;
+}
+
+.tool-center-intro {
+  margin-top: 12px;
+  color: rgba(235, 255, 250, 0.72);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.tool-center-groups {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.tool-center-groups section {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.tool-center-groups h3 {
+  margin-bottom: 8px;
+  color: rgba(235, 255, 250, 0.65);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tool-center-list {
+  display: grid;
+  gap: 7px;
+}
+
+.tool-center-list > button {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 62px;
+  padding: 10px 12px;
+  border: 1px solid rgba(211, 255, 246, 0.13);
+  border-radius: 15px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.045);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tool-center-list > button:hover,
+.tool-center-list > button.active {
+  border-color: rgba(117, 225, 194, 0.55);
+  background: rgba(89, 194, 164, 0.12);
+}
+
+.tool-center-item-symbol {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  color: #bdffeb;
+  background: rgba(147, 232, 207, 0.1);
+  font-weight: 800;
+}
+
+.tool-center-list > button > span:nth-child(2) {
+  display: grid;
+  gap: 3px;
+}
+
+.tool-center-list strong {
+  font-size: 0.9rem;
+}
+
+.tool-center-list small {
+  color: rgba(235, 255, 250, 0.66);
+  font-size: 0.74rem;
+  line-height: 1.34;
+}
+
+.tool-center-item-action {
+  color: #93e8cf;
+  font-size: 1.15rem;
+}
+
+.tool-center-status {
+  margin-top: 18px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #caffef;
+  background: rgba(64, 167, 137, 0.1);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.tool-center-note {
+  margin-top: 10px;
+  color: rgba(235, 255, 250, 0.58);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.tool-center-global-status {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.tool-center-launcher:focus-visible,
+.tool-center-menu button:focus-visible {
+  outline: 3px solid #d8fff4;
+  outline-offset: 3px;
+}
+
+html[data-text-size='large'] .tool-center-menu {
+  width: min(500px, calc(100vw - 32px));
+}
+
+html[data-contrast='high'] .tool-center-launcher,
+html[data-contrast='high'] .tool-center-menu,
+html[data-contrast='high'] .tool-center-list > button {
+  border-color: currentColor;
+}
+
+@media (max-width: 700px) {
+  .tool-center-launcher {
+    right: 12px;
+    bottom: 12px;
+    min-width: 0;
+    min-height: 52px;
+    padding: 9px 13px;
+  }
+
+  .tool-center-launcher small {
+    display: none;
+  }
+
+  .tool-center-menu {
+    right: 8px;
+    bottom: 74px;
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 90px);
+    padding: 18px;
+    border-radius: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tool-center-launcher,
+  .tool-center-list > button {
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-center-launcher,
+  .tool-center-list > button {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .tool-center-launcher,
+  .tool-center-menu,
+  .tool-center-list > button,
+  .tool-center-heading > button {
+    border: 2px solid ButtonText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  .tool-center-list > button.active {
+    outline: 3px solid Highlight;
+  }
+}
