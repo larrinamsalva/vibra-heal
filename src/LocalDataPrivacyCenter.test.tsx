@@ -86,14 +86,15 @@ describe('LocalDataPrivacyCenter', () => {
     )).toBeInTheDocument()
   })
 
-  it('exposes labels and live status text for local privacy actions', async () => {
+  it('exposes scan progress, action labels, and live status text', async () => {
     render(<LocalDataPrivacyCenter />)
     fireEvent.click(screen.getByRole('button', { name: /Privacy/i }))
 
-    expect(screen.getByRole('button', { name: 'Refresh scan' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Scanning…' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Export all local data' })).toBeInTheDocument()
 
     await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Refresh scan' })).toBeEnabled()
       expect(screen.getByText('Local data scan refreshed.')).toHaveAttribute('aria-live', 'polite')
     })
   })
