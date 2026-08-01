@@ -1,10 +1,10 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, and device-friendly accessibility controls.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, device-friendly accessibility controls, and private local backup and restore.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
-## Current MVP 0.8
+## Current MVP 0.9
 
 - React 19 + TypeScript + Vite
 - Web Audio API stereo tone engine for consenting human listeners
@@ -17,6 +17,8 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Goal-specific tone recommendations, starter timers, and optional breathing guidance
 - Favorite tones stored locally in the browser
 - Saved custom sessions containing the active goal, frequency, volume, offset, and timer settings
+- Private JSON export and restore for favorites, sessions, nature settings, and accessibility preferences
+- Strict one-megabyte import validation with section-by-section preview and confirmation
 - 4–4–6 breathing guide
 - Three.js / React Three Fiber visual field
 - Static low-power visual mode that replaces the WebGL canvas and releases its graphics context where supported
@@ -46,6 +48,21 @@ npm run build
 npm run preview
 ```
 
+## Private backup and restore
+
+The floating **Backup** control creates a plain JSON file containing only supported local VibraHeal settings:
+
+- favorite tone ids
+- up to 24 saved sessions
+- nature-mixer master and layer volumes
+- accessibility and visual-performance preferences
+
+The file is generated entirely in the browser. VibraHeal does not upload it, open an account, or include audio recordings, passwords, payment information, medical records, or Animal Calm observations.
+
+Restore accepts files up to one megabyte, validates the format and every supported value, and displays a section-by-section preview. Nothing changes until the user selects the sections, confirms that local values will be replaced, and presses **Restore and reopen**. A failed write attempts to roll back the previous browser values.
+
+Backup files may contain personal session names and preferences, so they should be stored somewhere trusted. See [`docs/private-backup-restore.md`](docs/private-backup-restore.md) for the format, validation rules, and review checklist.
+
 ## Accessibility and low-power visuals
 
 The floating **Accessibility** control offers device-aware defaults plus manual settings for visual performance, motion, text size, and contrast.
@@ -72,7 +89,7 @@ See [`docs/pwa-installation.md`](docs/pwa-installation.md) for the architecture 
 
 ## Local storage
 
-Favorites, saved sessions, nature-mixer settings, and accessibility preferences are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection. The app keeps up to 24 saved sessions per browser profile.
+Favorites, saved sessions, nature-mixer settings, and accessibility preferences are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection unless the user creates and restores a local backup file. The app keeps up to 24 saved sessions per browser profile.
 
 Installing the app does not move this information to an account. Installed and browser versions use the storage profile provided by that browser and operating system.
 
@@ -109,7 +126,7 @@ Future work may include:
 - more breathing patterns
 - structured screen-reader and keyboard testing across major browsers
 - evidence-aware educational content and primary-source citations
-- optional export and import for locally saved sessions
+- optional printable session summaries
 - cross-device synchronization only after a separate privacy and account-design review
 
 ## Safety and product principles
@@ -122,6 +139,7 @@ Future work may include:
 - Frequency traditions and user experiences must be clearly separated from established medical evidence.
 - The audio engine and visual engine should remain independent so the app works when motion or WebGL is disabled.
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
+- Backup restore must validate every supported value and require explicit confirmation before replacing local settings.
 - Saved sessions and wellness paths are convenience presets, not treatment plans or medical recommendations.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
