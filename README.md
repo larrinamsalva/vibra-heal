@@ -19,6 +19,7 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Printable or downloadable private session summaries
 - Opt-in private session journal with manual saves, export, disable, delete-one, and delete-all controls
 - Local Data & Privacy Center with section sizes, readable exports, clear controls, and offline-cache inspection
+- Automated tests for privacy namespaces, exports, destructive confirmations, and backup schemas
 - Three.js visual field plus static low-power mode
 - Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
 - Silent Animal Calm education and observation planning for several companion-animal groups
@@ -34,12 +35,22 @@ npm run dev
 
 Then open the local URL shown by Vite. Service-worker installation is intentionally enabled only in a production build.
 
-## Production build
+## Tests and production build
+
+Run the automated privacy and storage tests:
+
+```bash
+npm test
+```
+
+Run the TypeScript and Vite production build:
 
 ```bash
 npm run build
 npm run preview
 ```
+
+Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md) for the covered rules and remaining manual browser checks.
 
 ## Guided breathing
 
@@ -91,7 +102,7 @@ It shows approximate sizes for favorite tones, saved sessions and breathing link
 
 An all-data transparency export includes every discovered VibraHeal local-storage value. It is not a Backup Format restore file and may contain sensitive journal reflections. Clearing every personal section requires typing `CLEAR LOCAL DATA` exactly. Offline app files use a separate clear action and may be cached again on a later online visit.
 
-The privacy center does not uninstall the app, unregister the service worker, clear unrelated browser data, or introduce analytics, accounts, or cloud synchronization. See [`docs/local-data-privacy-center.md`](docs/local-data-privacy-center.md).
+The privacy center does not uninstall the app, unregister the service worker, clear unrelated browser data, or introduce analytics, accounts, or cloud synchronization. Its inventory, export, and destructive-action rules are shared with the automated test suite. See [`docs/local-data-privacy-center.md`](docs/local-data-privacy-center.md).
 
 ## Accessibility and low-power visuals
 
@@ -141,10 +152,10 @@ Backup Format v2 transfers supported settings. Journal entries use their own exp
 
 Future work may include:
 
-- automated tests for local-storage schemas, destructive confirmations, and export safety
-- structured screen-reader and keyboard testing across major browsers
+- structured component, screen-reader, and keyboard interaction tests across major browsers
 - evidence-aware educational content with primary-source citations
 - journal import only after a strict validation and privacy review
+- service-worker and offline lifecycle integration tests
 - cross-device synchronization only after a separate account, encryption, and consent design review
 
 ## Safety and product principles
@@ -160,7 +171,7 @@ Future work may include:
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
 - Backup restore must validate every supported value and require explicit confirmation.
 - Journal entry creation must remain manual, opt-in, local, exportable, and deletable.
-- Privacy-center exports must stay local, and destructive actions must require clear confirmation.
+- Privacy-center exports must stay local, destructive actions must require clear confirmation, and those rules must remain covered by automated tests.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
 
