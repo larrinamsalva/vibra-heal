@@ -1,3 +1,4 @@
-.device-check-fab {
+.device-check-fab,
+.issue-report-fab {
   display: none !important;
 }
