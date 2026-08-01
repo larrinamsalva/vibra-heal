@@ -1,85 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  CLEAR_PHRASE,
+  PREFIX,
+  buildSectionExport,
+  buildSectionViews,
+  buildTransparencyExport,
+  canClearAllPersonalData,
+  countBytes,
+  formatBytes,
+  getOfflineCacheNames,
+  getPersonalKeys,
+  getSectionKeysToClear,
+  type CacheScan,
+  type SectionId,
+  type SectionView,
+} from './privacyRules'
 import './localDataPrivacyCenter.css'
-
-type SectionId =
-  | 'favorites'
-  | 'sessions'
-  | 'nature'
-  | 'accessibility'
-  | 'breathing'
-  | 'journal'
-  | 'other'
-
-type SectionDefinition = {
-  id: SectionId
-  name: string
-  description: string
-  keys: string[]
-  sensitive?: boolean
-}
-
-type SectionView = SectionDefinition & {
-  presentKeys: string[]
-  bytes: number
-  summary: string
-}
-
-type CacheScan = {
-  supported: boolean
-  names: string[]
-  entries: number
-  bytes: number
-}
 
 type OriginEstimate = {
   usage?: number
   quota?: number
 }
-
-const PREFIX = 'vibraheal:'
-const CLEAR_PHRASE = 'CLEAR LOCAL DATA'
-
-const SECTION_DEFINITIONS: SectionDefinition[] = [
-  {
-    id: 'favorites',
-    name: 'Favorite tones',
-    description: 'Tone ids deliberately starred in the frequency library.',
-    keys: ['vibraheal:favorites:v1'],
-  },
-  {
-    id: 'sessions',
-    name: 'Saved sessions',
-    description: 'Named sound setups and the breathing choices linked to them.',
-    keys: ['vibraheal:saved-sessions:v1', 'vibraheal:breathing-session-links:v1'],
-  },
-  {
-    id: 'nature',
-    name: 'Nature mixer',
-    description: 'Configured rain, ocean, wind, and nature-master levels.',
-    keys: ['vibraheal:nature-mixer:v1'],
-  },
-  {
-    id: 'accessibility',
-    name: 'Accessibility preferences',
-    description: 'Visual mode, motion, text-size, and contrast choices.',
-    keys: ['vibraheal:accessibility:v1'],
-  },
-  {
-    id: 'breathing',
-    name: 'Breathing preferences',
-    description: 'Current breathing pattern, pace, and enabled or paused state.',
-    keys: ['vibraheal:breathing:v1'],
-  },
-  {
-    id: 'journal',
-    name: 'Private session journal',
-    description: 'The opt-in setting and entries deliberately saved in the journal.',
-    keys: ['vibraheal:journal-enabled:v1', 'vibraheal:journal-entries:v1'],
-    sensitive: true,
-  },
-]
-
-const KNOWN_KEYS = new Set(SECTION_DEFINITIONS.flatMap((section) => section.keys))
 
 function readStoredValues() {
   const values: Record<string, string> = {}
@@ -96,63 +37,11 @@ function readStoredValues() {
   }
 }
 
-function parseStoredValue(value: string | undefined): unknown {
-  if (value === undefined) return undefined
-  try {
-    return JSON.parse(value) as unknown
-  } catch {
-    return value
-  }
-}
-
-function countBytes(entries: Array<[string, string]>) {
-  const encoder = new TextEncoder()
-  return entries.reduce((total, [key, value]) => total + encoder.encode(key).length + encoder.encode(value).length, 0)
-}
-
-function formatBytes(bytes?: number) {
-  if (bytes === undefined || !Number.isFinite(bytes)) return 'Unavailable'
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(bytes < 10 * 1024 ? 1 : 0)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function listLength(value: unknown) {
-  return Array.isArray(value) ? value.length : 0
-}
-
-function objectLength(value: unknown) {
-  return value && typeof value === 'object' && !Array.isArray(value)
-    ? Object.keys(value as Record<string, unknown>).length
-    : 0
-}
-
-function describeSection(id: SectionId, values: Record<string, string>, keys: string[]) {
-  if (id === 'favorites') {
-    return `${listLength(parseStoredValue(values[keys[0]]))} favorite tone${listLength(parseStoredValue(values[keys[0]])) === 1 ? '' : 's'}`
-  }
-
-  if (id === 'sessions') {
-    const sessions = listLength(parseStoredValue(values['vibraheal:saved-sessions:v1']))
-    const links = objectLength(parseStoredValue(values['vibraheal:breathing-session-links:v1']))
-    return `${sessions} saved session${sessions === 1 ? '' : 's'} • ${links} breathing link${links === 1 ? '' : 's'}`
-  }
-
-  if (id === 'journal') {
-    const enabled = parseStoredValue(values['vibraheal:journal-enabled:v1']) === true
-    const entries = listLength(parseStoredValue(values['vibraheal:journal-entries:v1']))
-    return `${entries} journal entr${entries === 1 ? 'y' : 'ies'} • ${enabled ? 'new saves enabled' : 'new saves disabled'}`
-  }
-
-  if (id === 'other') return `${keys.length} additional VibraHeal key${keys.length === 1 ? '' : 's'}`
-  return keys.some((key) => values[key] !== undefined) ? 'Preferences saved in this browser' : 'Using built-in defaults'
-}
-
 async function scanCaches(): Promise<CacheScan> {
   if (!('caches' in window)) return { supported: false, names: [], entries: 0, bytes: 0 }
 
   try {
-    const names = (await window.caches.keys()).filter((name) => name.startsWith('vibraheal-shell-'))
+    const names = getOfflineCacheNames(await window.caches.keys())
     let entries = 0
     let bytes = 0
 
@@ -200,15 +89,6 @@ function downloadJson(value: unknown, fileName: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
-function exportValues(keys: string[], values: Record<string, string>) {
-  return Object.fromEntries(
-    keys
-      .filter((key) => values[key] !== undefined)
-      .sort()
-      .map((key) => [key, parseStoredValue(values[key])]),
-  )
-}
-
 export default function LocalDataPrivacyCenter() {
   const initial = readStoredValues()
   const [panelOpen, setPanelOpen] = useState(false)
@@ -224,34 +104,7 @@ export default function LocalDataPrivacyCenter() {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  const sections = useMemo<SectionView[]>(() => {
-    const regular = SECTION_DEFINITIONS.map((definition) => {
-      const presentKeys = definition.keys.filter((key) => storedValues[key] !== undefined)
-      const entries = presentKeys.map((key) => [key, storedValues[key]] as [string, string])
-      return {
-        ...definition,
-        presentKeys,
-        bytes: countBytes(entries),
-        summary: describeSection(definition.id, storedValues, definition.keys),
-      }
-    })
-
-    const otherKeys = Object.keys(storedValues).filter((key) => !KNOWN_KEYS.has(key)).sort()
-    if (otherKeys.length === 0) return regular
-
-    return [
-      ...regular,
-      {
-        id: 'other',
-        name: 'Other VibraHeal local data',
-        description: 'Future or unrecognized VibraHeal-prefixed browser keys discovered by this scan.',
-        keys: otherKeys,
-        presentKeys: otherKeys,
-        bytes: countBytes(otherKeys.map((key) => [key, storedValues[key]])),
-        summary: describeSection('other', storedValues, otherKeys),
-      },
-    ]
-  }, [storedValues])
+  const sections = useMemo<SectionView[]>(() => buildSectionViews(storedValues), [storedValues])
 
   const totalLocalBytes = useMemo(
     () => countBytes(Object.entries(storedValues)),
@@ -306,39 +159,22 @@ export default function LocalDataPrivacyCenter() {
       return
     }
 
-    const date = new Date().toISOString().slice(0, 10)
-    downloadJson({
-      format: 'vibraheal-local-data-section',
-      version: 1,
-      restorableByBackupTool: false,
-      section: section.id,
-      sectionName: section.name,
-      exportedAt: new Date().toISOString(),
-      localStorage: exportValues(section.presentKeys, storedValues),
-      privacyNote: section.sensitive
-        ? 'This export may contain private journal reflections. Store it somewhere trusted.'
-        : 'This export was created locally and was not uploaded by VibraHeal.',
-    }, `vibraheal-${section.id}-data-${date}.json`)
+    const exportedAt = new Date().toISOString()
+    const date = exportedAt.slice(0, 10)
+    downloadJson(
+      buildSectionExport(section, storedValues, exportedAt),
+      `vibraheal-${section.id}-data-${date}.json`,
+    )
     setStatus(`${section.name} exported as a readable JSON copy. It is not a restore file.`)
   }
 
   function exportAll() {
-    const keys = Object.keys(storedValues).sort()
-    const date = new Date().toISOString().slice(0, 10)
-    downloadJson({
-      format: 'vibraheal-local-data-transparency-export',
-      version: 1,
-      restorableByBackupTool: false,
-      exportedAt: new Date().toISOString(),
-      localStorage: exportValues(keys, storedValues),
-      offlineCache: {
-        included: false,
-        names: cacheScan.names,
-        entries: cacheScan.entries,
-        approximateBytes: cacheScan.bytes,
-      },
-      privacyNote: 'This file may contain journal reflections and personal session names. Store it somewhere trusted.',
-    }, `vibraheal-all-local-data-${date}.json`)
+    const exportedAt = new Date().toISOString()
+    const date = exportedAt.slice(0, 10)
+    downloadJson(
+      buildTransparencyExport(storedValues, cacheScan, exportedAt),
+      `vibraheal-all-local-data-${date}.json`,
+    )
     setStatus('All VibraHeal local-storage values exported. Offline app files were described but not copied.')
   }
 
@@ -355,7 +191,7 @@ export default function LocalDataPrivacyCenter() {
     }
 
     try {
-      section.presentKeys.forEach((key) => window.localStorage.removeItem(key))
+      getSectionKeysToClear(section).forEach((key) => window.localStorage.removeItem(key))
       setStatus(`${section.name} cleared. VibraHeal is reopening so every tool shows the change.`)
       window.setTimeout(() => window.location.reload(), 450)
     } catch {
@@ -381,11 +217,9 @@ export default function LocalDataPrivacyCenter() {
   }
 
   function clearAllPersonalData() {
-    if (clearPhrase !== CLEAR_PHRASE) return
+    if (!canClearAllPersonalData(clearPhrase)) return
     try {
-      Object.keys(storedValues).forEach((key) => {
-        if (key.startsWith(PREFIX)) window.localStorage.removeItem(key)
-      })
+      getPersonalKeys(storedValues).forEach((key) => window.localStorage.removeItem(key))
       setStatus('All VibraHeal local personal data cleared. The app is reopening with built-in defaults.')
       window.setTimeout(() => window.location.reload(), 500)
     } catch {
@@ -524,7 +358,7 @@ export default function LocalDataPrivacyCenter() {
             <label htmlFor="privacy-clear-phrase">Type <strong>{CLEAR_PHRASE}</strong> to unlock the button.</label>
             <div>
               <input id="privacy-clear-phrase" value={clearPhrase} onChange={(event) => setClearPhrase(event.target.value)} autoComplete="off" />
-              <button className="danger" type="button" onClick={clearAllPersonalData} disabled={clearPhrase !== CLEAR_PHRASE || storageBlocked}>Clear all local personal data</button>
+              <button className="danger" type="button" onClick={clearAllPersonalData} disabled={!canClearAllPersonalData(clearPhrase) || storageBlocked}>Clear all local personal data</button>
             </div>
           </section>
 
