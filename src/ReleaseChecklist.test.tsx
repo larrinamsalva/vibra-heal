@@ -185,7 +185,7 @@ describe('ReleaseChecklist component', () => {
 
     await screen.findByText('1 Needs review')
     expect(screen.getByLabelText('Status for Device Check reviewed')).toHaveValue('needs-attention')
-    expect(screen.getByText('Needs attention')).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Needs attention')
 
     fireEvent.click(screen.getByLabelText(/Imported Needs review findings have been resolved/i))
     expect(screen.getByLabelText('Status for Device Check reviewed')).toHaveValue('ready')
@@ -199,11 +199,11 @@ describe('ReleaseChecklist component', () => {
     fireEvent.change(screen.getByLabelText('Milestone name'), {
       target: { value: 'Preview milestone' },
     })
-    const preview = screen.getByLabelText('Generated release checklist Markdown')
+    const preview = screen.getByLabelText('Generated release checklist Markdown') as HTMLTextAreaElement
     fireEvent.click(screen.getByRole('button', { name: 'Copy Markdown' }))
 
     await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1))
-    expect(vi.mocked(navigator.clipboard.writeText).mock.calls[0][0]).toBe(preview.getAttribute('value') ?? (preview as HTMLTextAreaElement).value)
+    expect(vi.mocked(navigator.clipboard.writeText).mock.calls[0][0]).toBe(preview.value)
 
     fireEvent.click(screen.getByRole('button', { name: 'Reset checklist' }))
     expect(screen.getByLabelText('Milestone name')).toHaveValue('')
