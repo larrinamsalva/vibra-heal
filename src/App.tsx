@@ -9,6 +9,8 @@ import {
   type FrequencyCategory,
   type FrequencyEntry,
 } from './data/frequencyLibrary'
+import { WELLNESS_GOALS, type WellnessGoal } from './data/wellnessGoals'
+import './wellnessGoals.css'
 
 const DEFAULT_ENTRY = FREQUENCY_LIBRARY.find((entry) => entry.id === 'open') ?? FREQUENCY_LIBRARY[0]
 const FAVORITES_STORAGE_KEY = 'vibraheal:favorites:v1'
@@ -21,6 +23,7 @@ type SavedSession = {
   id: string
   name: string
   entryId: string
+  goalId?: string
   frequency: number
   volume: number
   offset: number
@@ -51,6 +54,7 @@ function isSavedSession(value: unknown): value is SavedSession {
     typeof candidate.id === 'string' &&
     typeof candidate.name === 'string' &&
     typeof candidate.entryId === 'string' &&
+    (candidate.goalId === undefined || typeof candidate.goalId === 'string') &&
     typeof candidate.frequency === 'number' &&
     typeof candidate.volume === 'number' &&
     typeof candidate.offset === 'number' &&
@@ -189,12 +193,19 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<CategoryFilter>('All')
   const [favoritesOnly, setFavoritesOnly] = useState(false)
+  const [activeGoalId, setActiveGoalId] = useState<string | null>(null)
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => readStoredStringArray(FAVORITES_STORAGE_KEY))
   const [savedSessions, setSavedSessions] = useState<SavedSession[]>(readSavedSessions)
   const [sessionName, setSessionName] = useState('')
   const [collectionMessage, setCollectionMessage] = useState('')
+  const [goalMessage, setGoalMessage] = useState('Choose a path to narrow the library without making a medical claim.')
   const [storageAvailable, setStorageAvailable] = useState(true)
   const audioRef = useRef<AudioGraph | null>(null)
+
+  const activeGoal = useMemo(
+    () => WELLNESS_GOALS.find((goal) => goal.id === activeGoalId) ?? null,
+    [activeGoalId],
+  )
 
   const timeLabel = useMemo(() => {
     const mins = Math.floor(secondsLeft / 60)
@@ -207,12 +218,20 @@ export default function App() {
     [favoriteIds],
   )
 
+  const activeGoalEntries = useMemo(() => {
+    if (!activeGoal) return []
+    return activeGoal.entryIds
+      .map((id) => FREQUENCY_LIBRARY.find((entry) => entry.id === id))
+      .filter((entry): entry is FrequencyEntry => Boolean(entry))
+  }, [activeGoal])
+
   const filteredEntries = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
     return FREQUENCY_LIBRARY.filter((entry) => {
       const matchesCategory = category === 'All' || entry.category === category
       const matchesFavorite = !favoritesOnly || favoriteIds.includes(entry.id)
-      if (!matchesCategory || !matchesFavorite) return false
+      const matchesGoal = !activeGoal || activeGoal.entryIds.includes(entry.id)
+      if (!matchesCategory || !matchesFavorite || !matchesGoal) return false
       if (!normalizedQuery) return true
       const searchable = [
         entry.name,
@@ -224,7 +243,7 @@ export default function App() {
       ].join(' ').toLowerCase()
       return searchable.includes(normalizedQuery)
     })
-  }, [category, favoriteIds, favoritesOnly, query])
+  }, [activeGoal, category, favoriteIds, favoritesOnly, query])
 
   useEffect(() => {
     if (!persistLocalValue(FAVORITES_STORAGE_KEY, favoriteIds)) setStorageAvailable(false)
@@ -306,6 +325,33 @@ export default function App() {
     if (!playing) setSecondsLeft(next * 60)
   }
 
+  function selectGoal(goal: WellnessGoal) {
+    setActiveGoalId(goal.id)
+    setQuery('')
+    setCategory('All')
+    setFavoritesOnly(false)
+    setGoalMessage(`${goal.name} is active. The library now shows ${goal.entryIds.length} matching starting points.`)
+  }
+
+  function applyGoalStarter(goal: WellnessGoal) {
+    stopPlayback()
+    selectGoal(goal)
+    const starter = FREQUENCY_LIBRARY.find((entry) => entry.id === goal.starterEntryId)
+    if (starter) chooseEntry(starter)
+    setMinutes(goal.minutes)
+    setSecondsLeft(goal.minutes * 60)
+    setBreathing(goal.breathing)
+    setGoalMessage(`${goal.name} starter loaded. Review the controls, then begin when ready.`)
+    window.setTimeout(() => {
+      document.getElementById('session-controls')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 80)
+  }
+
+  function clearGoal() {
+    setActiveGoalId(null)
+    setGoalMessage('Wellness-goal filter cleared. The full library is available again.')
+  }
+
   function toggleFavorite(entry: FrequencyEntry) {
     const removing = favoriteIds.includes(entry.id)
     setFavoriteIds((current) => (
@@ -321,6 +367,7 @@ export default function App() {
       id: createSessionId(),
       name,
       entryId: selected.id,
+      goalId: activeGoal?.id,
       frequency,
       volume,
       offset,
@@ -335,7 +382,9 @@ export default function App() {
   function loadSavedSession(session: SavedSession) {
     stopPlayback()
     const matchingEntry = FREQUENCY_LIBRARY.find((entry) => entry.id === session.entryId)
+    const matchingGoal = WELLNESS_GOALS.find((goal) => goal.id === session.goalId)
     if (matchingEntry) setSelected(matchingEntry)
+    setActiveGoalId(matchingGoal?.id ?? null)
     setFrequency(Math.min(1200, Math.max(40, session.frequency)))
     setVolume(Math.min(0.25, Math.max(0, session.volume)))
     setOffset(Math.min(12, Math.max(0, session.offset)))
@@ -357,27 +406,93 @@ export default function App() {
           <span className="brand-mark">◉</span>
           <span><strong>VibraHeal</strong><small>sound • breath • visual rhythm</small></span>
         </a>
-        <span className="status-pill">MVP 0.3</span>
+        <span className="status-pill">MVP 0.4</span>
       </header>
 
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="eyebrow">A calm place to reconnect</p>
-          <h1>Find a tone. Keep what works for you.</h1>
-          <p className="lede">Explore clearly labeled tones, favorite meaningful starting points, and save your own frequency, volume, timer, and stereo settings privately on this device.</p>
+          <h1>Choose how you want the moment to feel.</h1>
+          <p className="lede">Browse gentle wellness goals, explore clearly labeled tones, and keep personal setups privately on this device. Each path is an invitation for mindful listening—not a diagnosis or treatment.</p>
           <div className="hero-actions">
             <button className="primary-button" onClick={togglePlayback}>{playing ? 'Pause session' : 'Begin session'}</button>
+            <a className="secondary-button" href="#wellness-goals">Browse by goal</a>
             <a className="secondary-button" href="#frequency-library">Explore the library</a>
             <a className="secondary-button" href="#my-collection">Open my collection</a>
-            <button className="secondary-button" onClick={() => setBreathing((value) => !value)}>{breathing ? 'Hide breathing guide' : 'Open breathing guide'}</button>
           </div>
         </div>
         <Visualizer active={playing} intensity={Math.min(1, volume * 5 + 0.25)} />
       </section>
 
       <section className="dashboard" aria-label="VibraHeal session controls">
-        <article className="panel session-panel">
+        <article className="panel goal-panel" id="wellness-goals">
+          <div className="goal-intro">
+            <div>
+              <p className="eyebrow">Browse by wellness goal</p>
+              <h2>Start with an intention, not a condition.</h2>
+            </div>
+            <p>These paths organize the existing library around everyday practices such as resting, focusing, reflecting, and creating. They do not diagnose symptoms or promise health outcomes.</p>
+          </div>
+
+          <div className="goal-grid">
+            {WELLNESS_GOALS.map((goal) => (
+              <button
+                key={goal.id}
+                className={activeGoalId === goal.id ? 'goal-card active' : 'goal-card'}
+                onClick={() => selectGoal(goal)}
+                aria-pressed={activeGoalId === goal.id}
+              >
+                <span className="goal-symbol" aria-hidden="true">{goal.symbol}</span>
+                <span className="goal-card-copy">
+                  <small>{goal.eyebrow}</small>
+                  <strong>{goal.name}</strong>
+                  <span>{goal.description}</span>
+                </span>
+                <b>{goal.entryIds.length} tones</b>
+              </button>
+            ))}
+          </div>
+
+          {activeGoal ? (
+            <div className="goal-detail" aria-live="polite">
+              <div className="goal-detail-copy">
+                <span className="goal-detail-symbol" aria-hidden="true">{activeGoal.symbol}</span>
+                <div>
+                  <p className="section-kicker">Active path</p>
+                  <h3>{activeGoal.name}</h3>
+                  <p>{activeGoal.guidance}</p>
+                  <div className="goal-detail-meta">
+                    <span>{activeGoal.minutes} minute starter</span>
+                    <span>{activeGoal.breathing ? 'Breathing guide included' : 'Open listening'}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="goal-tone-list" aria-label={`${activeGoal.name} recommended tones`}>
+                {activeGoalEntries.map((entry) => (
+                  <button key={entry.id} onClick={() => chooseEntry(entry)}>
+                    <span>{entry.name}</span>
+                    <strong>{formatHz(entry.hz)} Hz</strong>
+                  </button>
+                ))}
+              </div>
+              <div className="goal-actions">
+                <button className="primary-button" onClick={() => applyGoalStarter(activeGoal)}>Load {activeGoal.name} starter</button>
+                <a className="secondary-button" href="#frequency-library">Open filtered library</a>
+                <button className="text-button" onClick={clearGoal}>Clear goal</button>
+              </div>
+            </div>
+          ) : (
+            <div className="goal-empty">
+              <strong>Choose a path above.</strong>
+              <p>The library will narrow to a small set of related tones, and you can still adjust every setting yourself.</p>
+            </div>
+          )}
+          <p className="goal-message" aria-live="polite">{goalMessage}</p>
+        </article>
+
+        <article className="panel session-panel" id="session-controls">
           <div className="panel-heading"><span>Now playing</span><strong>{selected.name}</strong></div>
+          {activeGoal && <div className="goal-context-banner"><span>{activeGoal.symbol}</span><strong>{activeGoal.name}</strong><button onClick={clearGoal}>Clear</button></div>}
           <div className="now-playing-meta">
             <span className={`content-label ${selected.category.toLowerCase().replaceAll(' ', '-')}`}>{selected.category}</span>
             <button
@@ -406,6 +521,13 @@ export default function App() {
 
         <article className="panel library-panel" id="frequency-library">
           <div className="panel-heading"><span>Frequency library</span><strong>{FREQUENCY_LIBRARY.length} mindful starting points</strong></div>
+          {activeGoal && (
+            <div className="library-goal-filter">
+              <span>{activeGoal.symbol}</span>
+              <div><small>Filtering by wellness goal</small><strong>{activeGoal.name}</strong></div>
+              <button onClick={clearGoal}>Show all tones</button>
+            </div>
+          )}
           <label className="search-label" htmlFor="frequency-search">Search by name, number, intention, or tag</label>
           <div className="search-wrap">
             <span aria-hidden="true">⌕</span>
@@ -437,7 +559,7 @@ export default function App() {
               ★ Favorites ({favoriteIds.length})
             </button>
           </div>
-          <p className="result-count" aria-live="polite">Showing {filteredEntries.length} of {FREQUENCY_LIBRARY.length} tones</p>
+          <p className="result-count" aria-live="polite">Showing {filteredEntries.length} of {FREQUENCY_LIBRARY.length} tones{activeGoal ? ` for ${activeGoal.name}` : ''}</p>
           <div className="library-results">
             {filteredEntries.map((entry) => {
               const favorite = favoriteIds.includes(entry.id)
@@ -468,9 +590,9 @@ export default function App() {
             })}
             {filteredEntries.length === 0 && (
               <div className="empty-state">
-                <strong>{favoritesOnly && favoriteIds.length === 0 ? 'Your favorites are waiting.' : 'No tones matched that search.'}</strong>
-                <p>{favoritesOnly && favoriteIds.length === 0 ? 'Tap a star beside any tone to build your personal list.' : 'Try a frequency number, a word such as “calm,” or choose a different label.'}</p>
-                <button className="wide-button" onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false) }}>Show the full library</button>
+                <strong>{favoritesOnly && favoriteIds.length === 0 ? 'Your favorites are waiting.' : 'No tones matched those filters.'}</strong>
+                <p>{favoritesOnly && favoriteIds.length === 0 ? 'Tap a star beside any tone to build your personal list.' : 'Clear the search, category, favorite, or wellness-goal filter to see more options.'}</p>
+                <button className="wide-button" onClick={() => { setQuery(''); setCategory('All'); setFavoritesOnly(false); clearGoal() }}>Show the full library</button>
               </div>
             )}
           </div>
@@ -488,6 +610,7 @@ export default function App() {
 
         <article className={breathing ? 'panel breath-panel active' : 'panel breath-panel'}>
           <div className="panel-heading"><span>Breathing guide</span><strong>4 • 4 • 6 rhythm</strong></div>
+          <button className="breath-toggle" onClick={() => setBreathing((value) => !value)} aria-pressed={breathing}>{breathing ? 'Pause breathing animation' : 'Start breathing animation'}</button>
           <div className="breath-orb"><span>Inhale<br /><small>4 seconds</small></span></div>
           <p>Inhale for four, pause for four, and exhale slowly for six. Stop if you feel uncomfortable or lightheaded.</p>
         </article>
@@ -520,7 +643,7 @@ export default function App() {
             <section className="collection-section save-section">
               <p className="section-kicker">Save current setup</p>
               <h3>Keep this exact session</h3>
-              <p>The carrier, safe volume setting, stereo offset, timer, and library starting point stay in this browser.</p>
+              <p>The carrier, safe volume setting, stereo offset, timer, library starting point, and active wellness goal stay in this browser.</p>
               <form className="save-session-form" onSubmit={saveCurrentSession}>
                 <label htmlFor="session-name">Session name <span>optional</span></label>
                 <input
@@ -536,6 +659,7 @@ export default function App() {
                   <span><small>Offset</small><strong>{offset} Hz</strong></span>
                   <span><small>Timer</small><strong>{minutes} min</strong></span>
                 </div>
+                {activeGoal && <p className="saved-goal-preview"><span>{activeGoal.symbol}</span> This setup includes the <strong>{activeGoal.name}</strong> path.</p>}
                 <button className="primary-button save-session-button" type="submit">Save session on this device</button>
               </form>
               {!storageAvailable && <p className="storage-warning" role="alert">Browser storage is unavailable, so favorites and sessions may not remain after this tab closes.</p>}
@@ -549,18 +673,22 @@ export default function App() {
             </div>
             {savedSessions.length > 0 ? (
               <div className="saved-session-list">
-                {savedSessions.map((session) => (
-                  <article className="saved-session-card" key={session.id}>
-                    <div className="saved-session-copy">
-                      <strong>{session.name}</strong>
-                      <span>{formatHz(session.frequency)} Hz • {Math.round(session.volume * 100)}% volume • {session.offset} Hz offset • {session.minutes} min</span>
-                    </div>
-                    <div className="saved-session-actions">
-                      <button className="load-session-button" onClick={() => loadSavedSession(session)}>Load</button>
-                      <button className="remove-session-button" onClick={() => removeSavedSession(session)} aria-label={`Remove saved session ${session.name}`}>Remove</button>
-                    </div>
-                  </article>
-                ))}
+                {savedSessions.map((session) => {
+                  const savedGoal = WELLNESS_GOALS.find((goal) => goal.id === session.goalId)
+                  return (
+                    <article className="saved-session-card" key={session.id}>
+                      <div className="saved-session-copy">
+                        <strong>{session.name}</strong>
+                        {savedGoal && <small>{savedGoal.symbol} {savedGoal.name}</small>}
+                        <span>{formatHz(session.frequency)} Hz • {Math.round(session.volume * 100)}% volume • {session.offset} Hz offset • {session.minutes} min</span>
+                      </div>
+                      <div className="saved-session-actions">
+                        <button className="load-session-button" onClick={() => loadSavedSession(session)}>Load</button>
+                        <button className="remove-session-button" onClick={() => removeSavedSession(session)} aria-label={`Remove saved session ${session.name}`}>Remove</button>
+                      </div>
+                    </article>
+                  )
+                })}
               </div>
             ) : (
               <div className="collection-empty"><strong>No saved sessions yet.</strong><p>Adjust the controls, give the setup a name, and save it above.</p></div>
@@ -574,8 +702,8 @@ export default function App() {
         <p className="eyebrow">Built with care</p>
         <h2>A trustworthy wellness experience.</h2>
         <div className="principle-grid">
-          <article><span>01</span><h3>Private by default</h3><p>Favorites and saved sessions stay in local browser storage. VibraHeal does not require an account or upload this collection.</p></article>
-          <article><span>02</span><h3>Accessible controls</h3><p>Clear labels, keyboard-friendly buttons, low-volume defaults, and reduced-motion support.</p></article>
+          <article><span>01</span><h3>Intentions, not diagnoses</h3><p>Wellness paths describe everyday practices such as rest, focus, reflection, and creativity without matching symptoms or conditions.</p></article>
+          <article><span>02</span><h3>Private by default</h3><p>Favorites and saved sessions stay in local browser storage. VibraHeal does not require an account or upload this collection.</p></article>
           <article><span>03</span><h3>Honest language</h3><p>Musical facts, wellness practices, and spiritual traditions are labeled separately instead of being presented as cures.</p></article>
         </div>
       </section>
