@@ -127,7 +127,7 @@ describe('PwaInstall service-worker lifecycle', () => {
     fireEvent.click(screen.getByRole('button', { name: /Install app/i }))
 
     await waitFor(() => {
-      expect(mock.register).toHaveBeenCalledWith('/sw.js', { scope: '/' })
+      expect(mock.register).toHaveBeenCalledWith('/vibra-heal/sw.js', { scope: '/vibra-heal/' })
       expect(screen.getByText('Offline shell ready')).toBeInTheDocument()
       expect(screen.getByText('Install and offline support are ready on this device.')).toBeInTheDocument()
     })
