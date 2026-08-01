@@ -116,6 +116,17 @@ const PANEL_TOOLS: PanelTool[] = [
     panelSelector: '#device-check-panel',
     closeSelector: '.device-check-close',
   },
+  {
+    kind: 'panel',
+    id: 'issue-report',
+    label: 'Issue Report',
+    description: 'Format a focused local bug report without submitting it.',
+    symbol: '!',
+    group: 'Guidance',
+    triggerSelector: '.issue-report-fab',
+    panelSelector: '#issue-report-panel',
+    closeSelector: '.issue-report-close',
+  },
 ]
 
 const JUMP_TOOLS: JumpTool[] = [
@@ -149,6 +160,7 @@ const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[5],
   PANEL_TOOLS[6],
   PANEL_TOOLS[7],
+  PANEL_TOOLS[8],
   JUMP_TOOLS[1],
 ]
 
@@ -446,7 +458,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, create a device report, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, create or submit an issue report, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
