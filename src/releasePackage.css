@@ -1,0 +1,367 @@
+.release-package-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 42;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.94);
+  color: #f8fafc;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.release-package-panel {
+  position: fixed;
+  inset: 1rem;
+  z-index: 90;
+  width: min(72rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 1.25rem;
+  padding: 1.1rem;
+  background: rgba(2, 6, 23, 0.98);
+  color: #e2e8f0;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.58);
+}
+
+.release-package-panel button,
+.release-package-panel input,
+.release-package-panel textarea {
+  font: inherit;
+}
+
+.release-package-heading,
+.release-package-preview-heading,
+.release-package-import,
+.release-package-actions,
+.release-package-card {
+  display: flex;
+  gap: 1rem;
+}
+
+.release-package-heading,
+.release-package-preview-heading,
+.release-package-import,
+.release-package-card {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.release-package-heading p,
+.release-package-card > div > p:first-child {
+  margin: 0 0 0.25rem;
+  color: #93c5fd;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.release-package-heading h2,
+.release-package-card h3,
+.release-package-preview h3,
+.release-package-import h3 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.release-package-heading h2 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.release-package-close {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.release-package-intro,
+.release-package-boundary,
+.release-package-status {
+  line-height: 1.6;
+}
+
+.release-package-intro {
+  margin: 1rem 0;
+  max-width: 72ch;
+  color: #cbd5e1;
+}
+
+.release-package-import,
+.release-package-preview,
+.release-package-boundary {
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.76);
+}
+
+.release-package-import,
+.release-package-preview {
+  padding: 1rem;
+}
+
+.release-package-import p,
+.release-package-preview p {
+  margin: 0.35rem 0 0;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.release-package-file-label {
+  display: grid;
+  flex: 0 0 min(24rem, 100%);
+  gap: 0.45rem;
+  min-width: 0;
+  font-weight: 750;
+}
+
+.release-package-file-label input {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  border-radius: 0.75rem;
+  padding: 0.55rem;
+  background: rgba(2, 6, 23, 0.85);
+  color: inherit;
+}
+
+.release-package-count {
+  margin: 0.8rem 0;
+  font-weight: 800;
+}
+
+.release-package-empty {
+  margin: 0;
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+  border-radius: 0.9rem;
+  padding: 1.2rem;
+  color: #cbd5e1;
+  text-align: center;
+}
+
+.release-package-artifacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.release-package-card {
+  min-width: 0;
+  border: 1px solid rgba(96, 165, 250, 0.32);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.72);
+}
+
+.release-package-card h3 {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+}
+
+.release-package-card dl {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.8rem 0 0;
+}
+
+.release-package-card dl div {
+  display: grid;
+  grid-template-columns: minmax(6rem, 0.45fr) 1fr;
+  gap: 0.6rem;
+}
+
+.release-package-card dt {
+  color: #94a3b8;
+  font-weight: 750;
+}
+
+.release-package-card dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.release-package-card-note {
+  margin: 0.75rem 0 0 !important;
+  color: #94a3b8 !important;
+  font-size: 0.9rem;
+}
+
+.release-package-card button,
+.release-package-actions button,
+.release-package-preview-heading button {
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(30, 41, 59, 0.95);
+  color: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.release-package-card button {
+  flex: 0 0 auto;
+}
+
+.release-package-preview {
+  margin-top: 0.9rem;
+}
+
+.release-package-preview textarea {
+  display: block;
+  width: 100%;
+  min-height: 20rem;
+  margin-top: 0.9rem;
+  resize: vertical;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 0.8rem;
+  padding: 0.9rem;
+  background: rgba(2, 6, 23, 0.86);
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.release-package-actions {
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+
+.release-package-actions button:first-child {
+  background: #dbeafe;
+  color: #0f172a;
+}
+
+.release-package-panel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.release-package-panel button:hover:not(:disabled),
+.release-package-panel button:focus-visible,
+.release-package-panel input:focus-visible,
+.release-package-panel textarea:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.release-package-status {
+  min-height: 1.5rem;
+  margin: 0.9rem 0 0;
+  font-weight: 750;
+}
+
+.release-package-boundary {
+  margin: 0.75rem 0 0;
+  padding: 0.85rem 1rem;
+  color: #cbd5e1;
+}
+
+html[data-vh-text='large'] .release-package-panel {
+  font-size: 1.15rem;
+}
+
+html[data-vh-contrast='high'] .release-package-panel,
+html[data-vh-contrast='high'] .release-package-import,
+html[data-vh-contrast='high'] .release-package-preview,
+html[data-vh-contrast='high'] .release-package-card,
+html[data-vh-contrast='high'] .release-package-boundary {
+  border-color: currentColor;
+  background: #000;
+  color: #fff;
+}
+
+html[data-vh-contrast='high'] .release-package-panel button,
+html[data-vh-contrast='high'] .release-package-panel input,
+html[data-vh-contrast='high'] .release-package-panel textarea {
+  border-color: currentColor;
+  background: #000;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .release-package-panel {
+    inset: 0.5rem;
+    width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+    border-radius: 1rem;
+    padding: 0.85rem;
+  }
+
+  .release-package-heading,
+  .release-package-preview-heading,
+  .release-package-import,
+  .release-package-card {
+    align-items: stretch;
+  }
+
+  .release-package-import,
+  .release-package-preview-heading,
+  .release-package-card {
+    flex-direction: column;
+  }
+
+  .release-package-file-label {
+    flex-basis: auto;
+  }
+
+  .release-package-artifacts {
+    grid-template-columns: 1fr;
+  }
+
+  .release-package-card button,
+  .release-package-preview-heading button,
+  .release-package-actions button {
+    width: 100%;
+  }
+
+  .release-package-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .release-package-panel,
+  .release-package-panel * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .release-package-panel,
+  .release-package-import,
+  .release-package-preview,
+  .release-package-card,
+  .release-package-boundary,
+  .release-package-panel button,
+  .release-package-panel input,
+  .release-package-panel textarea {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  .release-package-panel button:focus-visible,
+  .release-package-panel input:focus-visible,
+  .release-package-panel textarea:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
