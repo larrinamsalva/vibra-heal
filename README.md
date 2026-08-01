@@ -1,6 +1,6 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, and a browser-local privacy center.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, and one accessible launcher for optional tools.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
@@ -19,7 +19,8 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Printable or downloadable private session summaries
 - Opt-in private session journal with manual saves, export, disable, delete-one, and delete-all controls
 - Local Data & Privacy Center with section sizes, readable exports, clear controls, and offline-cache inspection
-- Automated tests for privacy namespaces, exports, destructive confirmations, and backup schemas
+- One accessible Tool Center with a predictable keyboard order and one-open-panel behavior
+- Automated tests for privacy, storage, backup schemas, accessibility interactions, and tool navigation
 - Three.js visual field plus static low-power mode
 - Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
 - Silent Animal Calm education and observation planning for several companion-animal groups
@@ -37,7 +38,7 @@ Then open the local URL shown by Vite. Service-worker installation is intentiona
 
 ## Tests and production build
 
-Run the automated privacy and storage tests:
+Run the full automated test suite:
 
 ```bash
 npm test
@@ -50,11 +51,29 @@ npm run build
 npm run preview
 ```
 
-Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md) for the covered rules and remaining manual browser checks.
+Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), and [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md) for covered rules and remaining real-browser checks.
+
+## Accessible Tool Center
+
+One floating **Tools** launcher organizes nine destinations:
+
+- Breathing
+- Nature mixer
+- Session summary
+- Journal
+- Accessibility
+- Backup and restore
+- Privacy and local data
+- Install and updates
+- Animal Calm
+
+The Tool Center closes the current optional panel before opening another, moves focus to the opened panel, returns focus to **Tools** after closing, and supports Arrow keys, Home, End, Escape, Tab, and Shift+Tab. Nature Mixer and Animal Calm remain in-page destinations rather than overlapping panels.
+
+The launcher changes navigation only. It never starts audio, begins breathing, saves journal text, restores a backup, clears data, installs an update, or changes Animal Calm boundaries. See [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md).
 
 ## Guided breathing
 
-The floating **Breathing** control provides four optional rhythms:
+**Tools → Breathing** provides four optional rhythms:
 
 - **Even breath** — four-count inhale and four-count exhale, with no holds
 - **Long exhale** — four-count inhale, optional two-count pause, and six-count exhale
@@ -67,7 +86,7 @@ Breathe naturally rather than as deeply as possible. Never force an inhale, exha
 
 ## Private backup and restore
 
-The floating **Backup** control creates a plain Backup Format v2 JSON file containing six supported local sections:
+**Tools → Backup and restore** creates a plain Backup Format v2 JSON file containing six supported local sections:
 
 - favorite tone ids
 - up to 24 saved sessions
@@ -82,13 +101,13 @@ Backup files do not include audio recordings, passwords, payment information, me
 
 ## Private session summaries
 
-The floating **Session summary** control can capture the current controls or a saved session and produce a print-focused page containing tone, frequency, volume, stereo offset, timer, wellness path, breathing choice, configured nature levels, optional personal notes, and safety reminders.
+**Tools → Session summary** can capture the current controls or a saved session and produce a print-focused page containing tone, frequency, volume, stereo offset, timer, wellness path, breathing choice, configured nature levels, optional personal notes, and safety reminders.
 
 People can use the browser print dialog to print or save a PDF, or download a self-contained HTML copy. Summaries are created locally and are not uploaded. See [`docs/session-summaries.md`](docs/session-summaries.md).
 
 ## Private session journal
 
-The floating **Journal** control is off by default. Enabling it permits manual saves but never creates automatic listening history. Each entry requires a press of **Save journal entry** and may contain a title, a reflection, and an optional current-session snapshot.
+**Tools → Journal** is off by default. Enabling it permits manual saves but never creates automatic listening history. Each entry requires a press of **Save journal entry** and may contain a title, a reflection, and an optional current-session snapshot.
 
 Disabling prevents new saves without silently erasing existing entries. Individual entries can be deleted, all entries can be cleared with a separate confirmation, and the journal can be exported as JSON or readable HTML. Journal files may contain sensitive reflections and should be stored somewhere trusted.
 
@@ -96,7 +115,7 @@ Journal entries are intentionally separate from Backup Format v2. VibraHeal does
 
 ## Local Data & Privacy Center
 
-The floating **Privacy** control scans only browser-storage keys beginning with `vibraheal:` and Cache Storage names beginning with `vibraheal-shell-`. The scan remains on the device.
+**Tools → Privacy and local data** scans only browser-storage keys beginning with `vibraheal:` and Cache Storage names beginning with `vibraheal-shell-`. The scan remains on the device.
 
 It shows approximate sizes for favorite tones, saved sessions and breathing links, nature settings, accessibility settings, breathing preferences, private journal data, future unrecognized VibraHeal keys, and the offline app shell. Each local-data section can be exported as readable JSON or cleared after a deliberate confirmation.
 
@@ -106,7 +125,7 @@ The privacy center does not uninstall the app, unregister the service worker, cl
 
 ## Accessibility and low-power visuals
 
-The floating **Accessibility** control offers device-aware defaults plus manual settings for visual performance, motion, text size, and contrast.
+**Tools → Accessibility** offers device-aware defaults plus manual settings for visual performance, motion, text size, and contrast.
 
 Visual choices include:
 
@@ -118,19 +137,19 @@ Accessibility preferences change presentation only. They do not change frequency
 
 ## Installable app and offline shell
 
-The production build links a Web App Manifest and registers a small service worker. The worker discovers hashed Vite assets and caches the app shell for later offline launches. A newer worker waits instead of forcing a reload, allowing the listener to press **Update and reopen** after an active session is finished.
+The production build links a Web App Manifest and registers a small service worker. The worker discovers hashed Vite assets and caches the app shell for later offline launches. A newer worker waits instead of forcing a reload, allowing the listener to open **Tools → Install and updates** and press **Update and reopen** after an active session is finished.
 
 Installation does not add accounts, analytics, cloud synchronization, or autoplay. Browser support and installation controls vary. See [`docs/pwa-installation.md`](docs/pwa-installation.md).
 
 ## Human nature mixer
 
-The nature mixer synthesizes rain, ocean, and wind textures locally with the Web Audio API. It does not download recordings or contact a media service. It starts only after a user action and remains separate from Animal Calm.
+**Tools → Nature mixer** moves focus to the in-page mixer. It synthesizes rain, ocean, and wind textures locally with the Web Audio API. It does not download recordings or contact a media service. It starts only after a user action and remains separate from Animal Calm.
 
 Keep combined tone and ambience levels low. Never use headphones, earbuds, wearable speakers, or vibration devices on animals. See [`docs/nature-mixer.md`](docs/nature-mixer.md).
 
 ## Animal Calm design
 
-Animal Calm is a separate, silent education and observation feature. It does not connect the human tone generator to an animal session, prescribe frequencies, or claim to treat fear or anxiety.
+**Tools → Animal Calm** moves focus to a separate, silent education and observation feature. It does not connect the human tone generator to an animal session, prescribe frequencies, or claim to treat fear or anxiety.
 
 Its safety boundaries include:
 
@@ -152,7 +171,7 @@ Backup Format v2 transfers supported settings. Journal entries use their own exp
 
 Future work may include:
 
-- structured component, screen-reader, and keyboard interaction tests across major browsers
+- structured screen-reader and keyboard review across major browsers
 - evidence-aware educational content with primary-source citations
 - journal import only after a strict validation and privacy review
 - service-worker and offline lifecycle integration tests
@@ -172,6 +191,7 @@ Future work may include:
 - Backup restore must validate every supported value and require explicit confirmation.
 - Journal entry creation must remain manual, opt-in, local, exportable, and deletable.
 - Privacy-center exports must stay local, destructive actions must require clear confirmation, and those rules must remain covered by automated tests.
+- Optional panels must use the single Tool Center and preserve explicit user gestures and confirmations.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
 
