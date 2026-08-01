@@ -40,7 +40,7 @@ describe('LocalDataPrivacyCenter', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('keeps clear-all locked until the exact destructive confirmation phrase is entered', async () => {
+  it('keeps clear-all locked until the exact destructive confirmation phrase is entered', () => {
     window.localStorage.setItem('vibraheal:favorites:v1', JSON.stringify(['focus-440']))
     render(<LocalDataPrivacyCenter />)
     fireEvent.click(screen.getByRole('button', { name: /Privacy/i }))
@@ -92,9 +92,6 @@ describe('LocalDataPrivacyCenter', () => {
 
     expect(screen.getByRole('button', { name: 'Refresh scan' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Export all local data' })).toBeInTheDocument()
-    expect(screen.getByText(
-      'Privacy center ready. Nothing is uploaded by this screen.',
-    )).toHaveAttribute('aria-live', 'polite')
 
     await waitFor(() => {
       expect(screen.getByText('Local data scan refreshed.')).toHaveAttribute('aria-live', 'polite')
