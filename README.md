@@ -1,38 +1,28 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, device-friendly accessibility controls, and private local backup and restore.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, and an opt-in local journal.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
-## Current MVP 0.10
+## Current capabilities
 
 - React 19 + TypeScript + Vite
 - Web Audio API stereo tone engine for consenting human listeners
-- Adjustable carrier frequency, binaural offset, and volume
+- Adjustable carrier frequency, binaural offset, conservative volume, and session timer
 - Human-only nature mixer with locally generated rain, ocean, and soft wind
-- Independent ambience layer volumes, master volume, and quick mixes
 - Searchable, evidence-aware frequency library
-- Filters for audio features, wellness practices, and traditional associations
-- Six non-medical wellness paths: wind down, steady focus, grounding pause, creative reset, quiet reflection, and connection & gratitude
-- Goal-specific tone recommendations, starter timers, and optional breathing guidance
-- Four text-first breathing patterns with standard and slower pacing
-- Pause, reset, cycle counting, and optional hold skipping
+- Six non-medical wellness paths for rest, focus, grounding, creativity, reflection, and gratitude
+- Four text-first breathing patterns with optional holds, two pacing choices, pause, reset, and cycle counting
+- Favorite tones and up to 24 saved sessions stored locally
 - Breathing choices linked to newly saved sessions and restored in a paused state
-- Favorite tones stored locally in the browser
-- Saved custom sessions containing the active goal, frequency, volume, offset, and timer settings
-- Private JSON export and restore for favorites, sessions, nature settings, and accessibility preferences
-- Strict one-megabyte import validation with section-by-section preview and confirmation
-- Three.js / React Three Fiber visual field
-- Static low-power visual mode that replaces the WebGL canvas and releases its graphics context where supported
-- Automatic reduced-motion and data-saving visual selection
-- Larger-text and high-contrast presentation choices
-- Keyboard skip link, strong focus indicators, Escape-to-close behavior, and native form controls
-- Animal Calm profiles for dogs, cats, rabbits and small mammals, and companion birds
-- A silent five-minute animal observation planner with room-safety checks
-- Installable Progressive Web App manifest with app icons
-- Versioned offline shell for the GitHub Pages `/vibra-heal/` path
-- User-approved app updates that do not interrupt an active session
-- Local-first operation with no account required
+- Backup Format v2 with strict validation and Format v1 compatibility
+- Printable or downloadable private session summaries
+- Opt-in private session journal with manual saves, export, disable, delete-one, and delete-all controls
+- Three.js visual field plus static low-power mode
+- Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
+- Silent Animal Calm education and observation planning for several companion-animal groups
+- Installable Progressive Web App with an offline shell and user-approved updates
+- No account, analytics, hidden synchronization, or autoplay
 
 ## Run locally
 
@@ -59,28 +49,38 @@ The floating **Breathing** control provides four optional rhythms:
 - **Box rhythm** — four equal inhale, pause, exhale, and pause phases
 - **Gentle reset** — three-count inhale and five-count exhale, with no holds
 
-The current phase, seconds remaining, written instruction, progress, and completed cycles are available without relying on animation. Standard and slower pacing are supported. Holds are always optional, and a **Skip hold** button appears during hold phases.
+The current phase, seconds remaining, written instruction, progress, and completed cycles remain available without relying on animation. Loading a saved session restores linked breathing choices in a paused state so breathing never begins unexpectedly.
 
-Newly saved sessions remember whether the breathing guide was enabled, its pattern, and its pace. Loading a session restores those choices in a paused state so breathing never begins unexpectedly. Sessions created before MVP 0.10 continue to work without a linked breathing choice.
-
-Breathe naturally rather than as deeply as possible. Never force an inhale, exhale, or hold. Stop if you feel dizzy, short of breath, strained, or uncomfortable. See [`docs/guided-breathing.md`](docs/guided-breathing.md) for the timing design, local-storage behavior, safety boundaries, and review checklist.
+Breathe naturally rather than as deeply as possible. Never force an inhale, exhale, or hold. Stop if you feel dizzy, short of breath, strained, or uncomfortable. See [`docs/guided-breathing.md`](docs/guided-breathing.md).
 
 ## Private backup and restore
 
-The floating **Backup** control creates a plain JSON file containing only supported local VibraHeal settings:
+The floating **Backup** control creates a plain Backup Format v2 JSON file containing six supported local sections:
 
 - favorite tone ids
 - up to 24 saved sessions
 - nature-mixer master and layer volumes
 - accessibility and visual-performance preferences
+- current breathing pattern, pace, and enabled state
+- breathing choices linked to saved-session ids
 
-The file is generated entirely in the browser. VibraHeal does not upload it, open an account, or include audio recordings, passwords, payment information, medical records, or Animal Calm observations.
+Format v1 files remain importable with their original four sections. Restore validates every supported value, limits files to one megabyte, previews included sections, and requires explicit confirmation before replacing local settings. A failed write attempts to roll back previous values.
 
-Restore accepts files up to one megabyte, validates the format and every supported value, and displays a section-by-section preview. Nothing changes until the user selects the sections, confirms that local values will be replaced, and presses **Restore and reopen**. A failed write attempts to roll back the previous browser values.
+Backup files do not include audio recordings, passwords, payment information, medical records, browser history, Animal Calm observations, or private journal entries. See [`docs/private-backup-v2.md`](docs/private-backup-v2.md).
 
-The MVP 0.9 backup schema remains unchanged in this release, so breathing preferences and breathing-session links stay local to the current browser. A future versioned backup-format update can add them without weakening validation for older files.
+## Private session summaries
 
-Backup files may contain personal session names and preferences, so they should be stored somewhere trusted. See [`docs/private-backup-restore.md`](docs/private-backup-restore.md) for the format, validation rules, and review checklist.
+The floating **Session summary** control can capture the current controls or a saved session and produce a print-focused page containing tone, frequency, volume, stereo offset, timer, wellness path, breathing choice, configured nature levels, optional personal notes, and safety reminders.
+
+People can use the browser print dialog to print or save a PDF, or download a self-contained HTML copy. Summaries are created locally and are not uploaded. See [`docs/session-summaries.md`](docs/session-summaries.md).
+
+## Private session journal
+
+The floating **Journal** control is off by default. Enabling it permits manual saves but never creates automatic listening history. Each entry requires a press of **Save journal entry** and may contain a title, a reflection, and an optional current-session snapshot.
+
+Disabling prevents new saves without silently erasing existing entries. Individual entries can be deleted, all entries can be cleared with a separate confirmation, and the journal can be exported as JSON or readable HTML. Journal files may contain sensitive reflections and should be stored somewhere trusted.
+
+Journal entries are intentionally separate from Backup Format v2. VibraHeal does not diagnose, analyze, score, or recommend actions from journal text. See [`docs/private-session-journal.md`](docs/private-session-journal.md).
 
 ## Accessibility and low-power visuals
 
@@ -90,39 +90,21 @@ Visual choices include:
 
 - **Auto** — uses the static visual when the device requests reduced motion or data saving
 - **Full 3D** — keeps the animated Three.js orb and sparkles active
-- **Static low-power** — hides the WebGL canvas, displays a calm CSS visual, and requests graphics-context release where the browser supports `WEBGL_lose_context`
+- **Static low-power** — replaces the WebGL canvas with a calm still visual and requests graphics-context release where supported
 
-Reduced motion also stops decorative CSS animation and smooth scrolling. Larger text raises the root text scale, while high contrast strengthens text, borders, controls, and keyboard focus. Preferences remain in local browser storage and do not affect audio, timers, saved sessions, or Animal Calm.
-
-See [`docs/accessibility-low-power.md`](docs/accessibility-low-power.md) for product rules and the manual review checklist.
+Accessibility preferences change presentation only. They do not change frequency, volume, timers, saved sessions, journal text, or Animal Calm. See [`docs/accessibility-low-power.md`](docs/accessibility-low-power.md).
 
 ## Installable app and offline shell
 
-The production build links a Web App Manifest and registers a small service worker. The service worker reads the built page, discovers its hashed Vite assets, and caches the app shell for later offline launches. Connected requests remain network-first so current files are preferred.
+The production build links a Web App Manifest and registers a small service worker. The worker discovers hashed Vite assets and caches the app shell for later offline launches. A newer worker waits instead of forcing a reload, allowing the listener to press **Update and reopen** after an active session is finished.
 
-A newer service worker waits instead of forcing a reload. VibraHeal shows an **Update and reopen** button, allowing the listener to finish any active sound session before changing versions.
-
-Installation does not add an account, analytics, cloud synchronization, or autoplay. Browser support and installation controls vary, so VibraHeal provides both a browser install prompt where available and manual home-screen guidance.
-
-See [`docs/pwa-installation.md`](docs/pwa-installation.md) for the architecture and release checklist.
-
-## Local storage
-
-Favorites, saved sessions, nature-mixer settings, accessibility preferences, current breathing choices, and breathing-to-session links are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection. The app keeps up to 24 saved sessions per browser profile.
-
-Installing the app does not move this information to an account. Installed and browser versions use the storage profile provided by that browser and operating system.
+Installation does not add accounts, analytics, cloud synchronization, or autoplay. Browser support and installation controls vary. See [`docs/pwa-installation.md`](docs/pwa-installation.md).
 
 ## Human nature mixer
 
-The nature mixer synthesizes rain, ocean, and wind textures locally with the Web Audio API. It does not download audio recordings, contact a media service, or add tracking. The ambience engine starts only after a user presses the start button and can run alone or underneath the human tone player.
+The nature mixer synthesizes rain, ocean, and wind textures locally with the Web Audio API. It does not download recordings or contact a media service. It starts only after a user action and remains separate from Animal Calm.
 
-The mixer has its own conservative layer and master-volume limits. It remains separate from Animal Calm and must not be used with headphones, earbuds, wearable speakers, or vibration devices on animals.
-
-See [`docs/nature-mixer.md`](docs/nature-mixer.md) for the audio design and safety boundaries.
-
-## Wellness-goal design
-
-Wellness paths organize the existing tone library around everyday intentions rather than symptoms or conditions. Selecting a path narrows the library and offers an adjustable starter setup. The paths are convenience guides for mindful listening, not treatment plans, medical recommendations, or guaranteed outcomes.
+Keep combined tone and ambience levels low. Never use headphones, earbuds, wearable speakers, or vibration devices on animals. See [`docs/nature-mixer.md`](docs/nature-mixer.md).
 
 ## Animal Calm design
 
@@ -136,31 +118,37 @@ Its safety boundaries include:
 - observe species-specific body language and stop at the first sign of discomfort
 - contact a veterinarian for sudden hearing changes, ear pain, balance problems, breathing changes, appetite changes, or other concerning signs
 
-See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md) for the reviewed sources and product rules.
+See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md).
+
+## Local storage
+
+Favorites, saved sessions, nature settings, accessibility preferences, breathing choices, breathing-to-session links, and deliberately saved journal entries stay in the current browser profile. Clearing site data, changing browsers, or using another device does not transfer them automatically.
+
+Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. Installing the app does not move local information to an account.
 
 ## Project direction
 
 Future work may include:
 
-- a versioned backup-format update for breathing choices and session links
+- a consolidated local-data and privacy center
 - structured screen-reader and keyboard testing across major browsers
-- evidence-aware educational content and primary-source citations
-- optional printable session summaries
-- cross-device synchronization only after a separate privacy and account-design review
+- evidence-aware educational content with primary-source citations
+- journal import only after a strict validation and privacy review
+- cross-device synchronization only after a separate account, encryption, and consent design review
 
 ## Safety and product principles
 
 - Start human listening sessions at a low volume.
 - Headphones are recommended only for a consenting human using the stereo-offset experience.
-- Keep the nature ambience and tone-player volumes low when using them together.
+- Keep nature ambience and tone-player volumes low when using them together.
 - Never put headphones or wearable audio devices on an animal.
-- Breathe naturally, treat every hold as optional, and stop a breathing exercise if you feel dizzy, strained, short of breath, or uncomfortable.
+- Breathe naturally, treat every hold as optional, and stop if you feel dizzy, strained, short of breath, or uncomfortable.
 - Breathing patterns are pacing timers, not medical or mental-health treatments.
-- Frequency traditions and user experiences must be clearly separated from established medical evidence.
-- The audio engine and visual engine should remain independent so the app works when motion or WebGL is disabled.
+- Frequency traditions and user experiences must be separated from established medical evidence.
+- Saved sessions, summaries, and journals are convenience and reflection tools, not treatment plans or clinical records.
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
-- Backup restore must validate every supported value and require explicit confirmation before replacing local settings.
-- Saved sessions and wellness paths are convenience presets, not treatment plans or medical recommendations.
+- Backup restore must validate every supported value and require explicit confirmation.
+- Journal entry creation must remain manual, opt-in, local, exportable, and deletable.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
 

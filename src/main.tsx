@@ -8,6 +8,7 @@ import BreathingGuide from './BreathingGuide'
 import { installBreathingSessionBridge } from './breathingSessionBridge'
 import NatureMixer from './NatureMixer'
 import PwaInstall from './PwaInstall'
+import SessionJournal from './SessionJournal'
 import SessionSummary from './SessionSummary'
 import './styles.css'
 import './releaseCleanup.css'
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
     <BackupRestoreV2 />
     <BreathingGuide />
     <SessionSummary />
+    <SessionJournal />
     <NatureMixer />
     <AnimalCalm />
     <PwaInstall />
