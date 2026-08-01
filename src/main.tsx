@@ -6,6 +6,7 @@ import App from './App'
 import BackupRestoreV2 from './BackupRestoreV2'
 import BreathingGuide from './BreathingGuide'
 import { installBreathingSessionBridge } from './breathingSessionBridge'
+import DeviceCheck from './DeviceCheck'
 import LocalDataPrivacyCenter from './LocalDataPrivacyCenter'
 import NatureMixer from './NatureMixer'
 import PwaInstall from './PwaInstall'
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
     <NatureMixer />
     <AnimalCalm />
     <PwaInstall />
+    <DeviceCheck />
     <ToolCenter />
   </StrictMode>,
 )
