@@ -106,6 +106,9 @@ function countValues(values: string[]) {
 }
 
 function parseDeviceCheck(value: unknown, sourceName: string) {
+  if (!isRecord(value) || !isRecord(value.privacy) || value.privacy.localOnly !== true) {
+    throw new Error('The Device Check privacy declaration is unsupported or unsafe.')
+  }
   const review = parseDeviceReviewReport(value)
   const createdAt = cleanDate(review.exportedAt, 'Device Check export time')
   const checkCounts = countValues(review.checks.map((check) => check.result))
@@ -248,12 +251,13 @@ function parseHistory(value: unknown, sourceName: string) {
       throw new Error(`History record ${index + 1} overall state is unsupported.`)
     }
     if (!isRecord(entry.statuses)) throw new Error(`History record ${index + 1} statuses are invalid.`)
-    const keys = Object.keys(entry.statuses)
+    const rawStatuses = entry.statuses
+    const keys = Object.keys(rawStatuses)
     if (keys.length !== expectedIds.length || keys.some((id) => !expectedIds.includes(id))) {
       throw new Error(`History record ${index + 1} must contain exactly the current checklist row ids.`)
     }
     const statuses = Object.fromEntries(expectedIds.map((id) => {
-      const status = entry.statuses?.[id]
+      const status = rawStatuses[id]
       if (typeof status !== 'string' || !RELEASE_STATUSES.has(status as ReleaseItemStatus)) {
         throw new Error(`History record ${index + 1} status for “${id}” is unsupported.`)
       }
