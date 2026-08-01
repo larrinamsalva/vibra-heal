@@ -1,14 +1,16 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive 3D visuals, and species-sensitive animal calm guidance.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive 3D visuals, human nature ambience, and species-sensitive animal calm guidance.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
-## Current MVP 0.5
+## Current MVP 0.6
 
 - React 19 + TypeScript + Vite
 - Web Audio API stereo tone engine for consenting human listeners
 - Adjustable carrier frequency, binaural offset, and volume
+- Human-only nature mixer with locally generated rain, ocean, and soft wind
+- Independent ambience layer volumes, master volume, and quick mixes
 - Searchable, evidence-aware frequency library
 - Filters for audio features, wellness practices, and traditional associations
 - Six non-medical wellness paths: wind down, steady focus, grounding pause, creative reset, quiet reflection, and connection & gratitude
@@ -40,7 +42,15 @@ npm run preview
 
 ## Local storage
 
-Favorites and saved sessions are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection. The app keeps up to 24 saved sessions per browser profile.
+Favorites, saved sessions, and nature-mixer settings are stored in the current browser and are not uploaded by VibraHeal. Clearing browser site data, switching browsers, or using another device will not transfer that collection. The app keeps up to 24 saved sessions per browser profile.
+
+## Human nature mixer
+
+The nature mixer synthesizes rain, ocean, and wind textures locally with the Web Audio API. It does not download audio recordings, contact a media service, or add tracking. The ambience engine starts only after a user presses the start button and can run alone or underneath the human tone player.
+
+The mixer has its own conservative layer and master-volume limits. It remains separate from Animal Calm and must not be used with headphones, earbuds, wearable speakers, or vibration devices on animals.
+
+See [`docs/nature-mixer.md`](docs/nature-mixer.md) for the audio design and safety boundaries.
 
 ## Wellness-goal design
 
@@ -64,7 +74,6 @@ See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md) for the reviewed 
 
 Future work may include:
 
-- richer human audio layers and nature sounds
 - more breathing patterns
 - low-power and non-WebGL visual modes
 - Progressive Web App support
@@ -76,6 +85,7 @@ Future work may include:
 
 - Start human listening sessions at a low volume.
 - Headphones are recommended only for a consenting human using the stereo-offset experience.
+- Keep the nature ambience and tone-player volumes low when using them together.
 - Never put headphones or wearable audio devices on an animal.
 - Stop a breathing exercise if you feel uncomfortable or lightheaded.
 - Frequency traditions and user experiences must be clearly separated from established medical evidence.
