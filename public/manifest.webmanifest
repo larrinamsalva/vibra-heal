@@ -15,15 +15,15 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "icons/icon-192.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "icons/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
@@ -33,14 +33,14 @@
       "short_name": "Frequencies",
       "description": "Browse VibraHeal's clearly labeled frequency starting points.",
       "url": "/vibra-heal/#frequency-library",
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     },
     {
       "name": "Open nature mixer",
       "short_name": "Nature mixer",
       "description": "Open the human-only rain, ocean, and soft-wind ambience mixer.",
       "url": "/vibra-heal/#nature-mixer",
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     }
   ]
 }
