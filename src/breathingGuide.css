@@ -158,12 +158,14 @@
   50% { transform: scale(1.06); opacity: 1; }
 }
 
-html[data-motion='reduced'] .breathing-fab.active > span:first-child,
+html[data-motion='reduced'] .breathing-fab.active > span:first-child { animation: none; }
+html[data-motion='reduced'] .breathing-progress i { transition: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .breathing-fab.active > span:first-child { animation: none; }
+  .breathing-progress i { transition: none; }
 }
 
-html[data-motion='reduced'] .breathing-progress i { transition: none; }
 html[data-contrast='high'] .breathing-guide-panel { border-color: #fff; background: #02080d; }
 html[data-contrast='high'] .breathing-current,
 html[data-contrast='high'] .breathing-patterns,
