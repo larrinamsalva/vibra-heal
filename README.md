@@ -1,6 +1,6 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, one accessible launcher for optional tools, a real-device review helper, a local issue formatter, and a local release checklist.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, one accessible launcher for optional tools, a real-device review helper, a local issue formatter, a local release checklist, a local release-history comparison, and a sanitized release-package manifest.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
@@ -23,7 +23,9 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Local Device Check with coarse capability reporting, an 18-item hands-on checklist, and optional local JSON reports
 - Local Issue Report formatter with strict Device Check import, Markdown preview, copy, and local downloads
 - Local Release Checklist with deliberate readiness states, optional Device Check evidence, and non-certifying local exports
-- Automated tests for privacy, storage, backup schemas, accessibility interactions, tool navigation, install updates, the real service-worker lifecycle, device review, issue formatting, and release-checklist rules
+- Local Release History with strict checklist import, chronological comparison, and non-approving local exports
+- Sanitized Local Release Package manifests that exclude original files, filenames, notes, titles, and generated bodies
+- Automated tests for privacy, storage, backup schemas, accessibility interactions, tool navigation, install updates, the real service-worker lifecycle, device review, issue formatting, release-checklist rules, release-history comparison, and package sanitization
 - Three.js visual field plus static low-power mode
 - Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
 - Silent Animal Calm education and observation planning for several companion-animal groups
@@ -54,7 +56,7 @@ npm run build
 npm run preview
 ```
 
-Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md), [`docs/pwa-installation.md`](docs/pwa-installation.md), [`docs/real-device-review.md`](docs/real-device-review.md), [`docs/local-issue-report.md`](docs/local-issue-report.md), and [`docs/local-release-checklist.md`](docs/local-release-checklist.md) for covered rules and remaining hands-on checks.
+Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md), [`docs/pwa-installation.md`](docs/pwa-installation.md), [`docs/real-device-review.md`](docs/real-device-review.md), [`docs/local-issue-report.md`](docs/local-issue-report.md), [`docs/local-release-checklist.md`](docs/local-release-checklist.md), [`docs/local-release-history.md`](docs/local-release-history.md), and [`docs/local-release-package.md`](docs/local-release-package.md) for covered rules and remaining hands-on checks.
 
 ## Accessible Tool Center
 
@@ -71,11 +73,13 @@ One floating **Tools** launcher organizes these destinations:
 - Device Check
 - Issue Report
 - Release Checklist
+- Release History
+- Release Package
 - Animal Calm
 
 The Tool Center closes the current optional panel before opening another, moves focus to the opened panel, returns focus to **Tools** after closing, and supports Arrow keys, Home, End, Escape, Tab, and Shift+Tab. Nature Mixer and Animal Calm remain in-page destinations rather than overlapping panels.
 
-The launcher changes navigation only. It never starts audio, begins breathing, saves journal text, creates a device report, submits an issue, certifies a release, restores a backup, clears data, installs an update, or changes Animal Calm boundaries. See [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md).
+The launcher changes navigation only. It never starts audio, begins breathing, saves journal text, creates a device report, submits an issue, certifies, compares, packages, signs, publishes, or deploys a release, restores a backup, clears data, installs an update, or changes Animal Calm boundaries. See [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md).
 
 ## Real-device review
 
@@ -98,6 +102,18 @@ A tester may write the report manually or explicitly select a privacy-safe Devic
 Rows can be marked **Not reviewed**, **Ready**, **Needs attention**, or **Not applicable**. A privacy-safe Device Check v1 file can be explicitly imported as optional evidence. Unresolved imported findings keep the checklist in the attention state until a reviewer deliberately records that they were resolved or accepted.
 
 The phrase **Checklist complete** describes the local record only. It is not an accessibility, medical, veterinary, security, privacy, legal, or browser-compatibility certification. Drafts remain in page memory and exports occur only after a copy or download action. See [`docs/local-release-checklist.md`](docs/local-release-checklist.md).
+
+## Local release history
+
+**Tools → Release History** compares up to four explicitly selected Release Checklist Format v1 JSON files. Records are ordered chronologically and the comparison marks checklist-row statuses that differ from the previous imported record.
+
+Release notes are excluded by default. A changed row means only that the recorded status is different; it is not automatically an improvement, regression, approval, deployment result, or certification. Imported files stay in page memory unless a person deliberately downloads a local Markdown or JSON comparison. See [`docs/local-release-history.md`](docs/local-release-history.md).
+
+## Sanitized local release packages
+
+**Tools → Release Package** accepts explicitly selected Device Check, Issue Report, Release Checklist, and Release History Format v1 JSON files and creates one manifest-only Markdown or JSON package.
+
+The sanitizer keeps structured dates, status ids, state counts, and coarse review summaries. It removes original filenames, issue content, milestone names, notes, capability details, generated Markdown bodies, and original file bytes. The resulting package is not a ZIP, backup, signature, publication, approval, deployment, or certification. See [`docs/local-release-package.md`](docs/local-release-package.md).
 
 ## Guided breathing
 
@@ -125,7 +141,7 @@ Breathe naturally rather than as deeply as possible. Never force an inhale, exha
 
 Format v1 files remain importable with their original four sections. Restore validates every supported value, limits files to one megabyte, previews included sections, and requires explicit confirmation before replacing local settings. A failed write attempts to roll back previous values.
 
-Backup files do not include audio recordings, passwords, payment information, medical records, browser history, Animal Calm observations, private journal entries, Device Check results, issue drafts, or release-checklist drafts. See [`docs/private-backup-v2.md`](docs/private-backup-v2.md).
+Backup files do not include audio recordings, passwords, payment information, medical records, browser history, Animal Calm observations, private journal entries, Device Check results, issue drafts, release-checklist drafts, release-history imports, or release-package selections. See [`docs/private-backup-v2.md`](docs/private-backup-v2.md).
 
 ## Private session summaries
 
@@ -161,7 +177,7 @@ Visual choices include:
 - **Full 3D** — keeps the animated Three.js orb and sparkles active
 - **Static low-power** — replaces the WebGL canvas with a calm still visual and requests graphics-context release where supported
 
-Accessibility preferences change presentation only. They do not change frequency, volume, timers, saved sessions, journal text, device findings, issue drafts, release-checklist decisions, or Animal Calm. See [`docs/accessibility-low-power.md`](docs/accessibility-low-power.md).
+Accessibility preferences change presentation only. They do not change frequency, volume, timers, saved sessions, journal text, device findings, issue drafts, release-checklist decisions, release-history imports, package selections, or Animal Calm. See [`docs/accessibility-low-power.md`](docs/accessibility-low-power.md).
 
 ## Installable app and offline shell
 
@@ -195,7 +211,7 @@ See [`docs/animal-calm-safety.md`](docs/animal-calm-safety.md).
 
 Favorites, saved sessions, nature settings, accessibility preferences, breathing choices, breathing-to-session links, and deliberately saved journal entries stay in the current browser profile. Clearing site data, changing browsers, or using another device does not transfer them automatically.
 
-Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. Device Check results, Issue Report drafts, and Release Checklist drafts remain in memory unless a person explicitly downloads a separate file. The Local Data & Privacy Center can inventory every VibraHeal-prefixed key, create readable transparency exports, and clear one or all personal sections. Installing the app does not move local information to an account.
+Backup Format v2 transfers supported settings. Journal entries use their own explicit export because personal reflections require a separate privacy decision. Device Check results, Issue Report drafts, Release Checklist drafts, Release History imports, and Release Package selections remain in memory unless a person explicitly downloads a separate file. The Local Data & Privacy Center can inventory every VibraHeal-prefixed key, create readable transparency exports, and clear one or all personal sections. Installing the app does not move local information to an account.
 
 ## Project direction
 
@@ -216,7 +232,7 @@ Future work may include:
 - Breathe naturally, treat every hold as optional, and stop if you feel dizzy, strained, short of breath, or uncomfortable.
 - Breathing patterns are pacing timers, not medical or mental-health treatments.
 - Frequency traditions and user experiences must be separated from established medical evidence.
-- Saved sessions, summaries, journals, device reports, issue reports, and release checklists are convenience or review tools, not treatment plans, clinical records, compliance certificates, or automatic approvals.
+- Saved sessions, summaries, journals, device reports, issue reports, release checklists, release comparisons, and release packages are convenience or review tools, not treatment plans, clinical records, compliance certificates, signatures, publications, deployments, or automatic approvals.
 - Accessibility settings must change presentation only, never audio values or safety boundaries.
 - Backup restore must validate every supported value and require explicit confirmation.
 - Journal entry creation must remain manual, opt-in, local, exportable, and deletable.
@@ -224,6 +240,8 @@ Future work may include:
 - Device Check must avoid raw identifiers and private VibraHeal content, remain memory-only by default, and never imply conformance certification.
 - Issue Report must not submit automatically or include imported notes and capabilities without explicit selection.
 - Release Checklist must distinguish incomplete review from attention and completion without claiming certification.
+- Release History must show differences without ranking, approving, deploying, or certifying milestones.
+- Release Package must strip original files, filenames, and free text, remain manifest-only, and never claim signing, publication, approval, deployment, or certification.
 - Optional panels must use the single Tool Center and preserve explicit user gestures and confirmations.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
