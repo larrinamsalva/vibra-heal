@@ -1,0 +1,247 @@
+.pwa-install-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 4.9rem;
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem 0.92rem;
+  border: 1px solid rgba(122, 194, 255, 0.38);
+  border-radius: 999px;
+  background: rgba(7, 16, 25, 0.92);
+  color: #edf7ff;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.42), 0 0 26px rgba(80, 163, 255, 0.08);
+  backdrop-filter: blur(18px);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.pwa-install-fab span {
+  color: #8fd4ff;
+  font-size: 1rem;
+}
+
+.pwa-install-fab em {
+  padding: 0.18rem 0.38rem;
+  border-radius: 999px;
+  background: rgba(255, 205, 126, 0.12);
+  color: #ffd99c;
+  font-size: 0.62rem;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pwa-install-fab:hover,
+.pwa-install-fab:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(143, 212, 255, 0.78);
+}
+
+.pwa-install-fab:focus-visible,
+.pwa-close-button:focus-visible,
+.pwa-primary-button:focus-visible,
+.pwa-update-card button:focus-visible {
+  outline: 2px solid #8fd4ff;
+  outline-offset: 3px;
+}
+
+.pwa-install-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 8.8rem;
+  z-index: 54;
+  width: min(420px, calc(100vw - 2rem));
+  max-height: min(690px, calc(100vh - 10rem));
+  overflow: auto;
+  padding: 1.2rem;
+  border: 1px solid rgba(143, 212, 255, 0.22);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(82, 155, 255, 0.16), transparent 35%),
+    rgba(7, 16, 29, 0.97);
+  color: #eef8ff;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(22px);
+}
+
+.pwa-install-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.pwa-kicker {
+  margin: 0 0 0.45rem;
+  color: #8fd4ff;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.pwa-install-heading h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 4vw, 1.9rem);
+  line-height: 1.08;
+}
+
+.pwa-close-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  color: #d8e8f4;
+  font-size: 1.35rem;
+  cursor: pointer;
+}
+
+.pwa-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+
+.pwa-status-grid div {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.pwa-status-grid span,
+.pwa-update-card span {
+  display: block;
+  margin-bottom: 0.28rem;
+  color: rgba(221, 239, 252, 0.55);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pwa-status-grid strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #edf8ff;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.pwa-install-actions {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.pwa-primary-button,
+.pwa-update-card button {
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #b9e7ff, #76bfff);
+  color: #06101a;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.pwa-manual-steps {
+  padding: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.pwa-manual-steps p,
+.pwa-message,
+.pwa-privacy-note {
+  margin: 0;
+  color: rgba(223, 239, 250, 0.68);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.pwa-manual-steps em {
+  color: #dff4ff;
+}
+
+.pwa-update-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(255, 205, 126, 0.22);
+  border-radius: 16px;
+  background: rgba(255, 205, 126, 0.055);
+}
+
+.pwa-update-card strong {
+  color: #fff1d7;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.pwa-update-card button {
+  background: linear-gradient(135deg, #ffe2ad, #ffbf6e);
+}
+
+.pwa-message {
+  min-height: 1.2rem;
+  margin-top: 0.9rem;
+  color: #acd9f7;
+}
+
+.pwa-privacy-note {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: rgba(214, 229, 239, 0.52);
+}
+
+@media (max-width: 620px) {
+  .pwa-install-fab {
+    right: 0.85rem;
+    bottom: 4.2rem;
+    padding: 0.68rem 0.78rem;
+  }
+
+  .pwa-install-fab strong {
+    display: none;
+  }
+
+  .pwa-install-panel {
+    right: 0.5rem;
+    bottom: 7.8rem;
+    width: calc(100vw - 1rem);
+    max-height: calc(100vh - 9rem);
+    border-radius: 20px;
+  }
+
+  .pwa-status-grid,
+  .pwa-update-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pwa-update-card button,
+  .pwa-primary-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwa-install-fab,
+  .pwa-primary-button,
+  .pwa-update-card button {
+    transition: none;
+  }
+
+  .pwa-install-fab:hover {
+    transform: none;
+  }
+}
