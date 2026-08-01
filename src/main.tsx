@@ -15,6 +15,7 @@ import SessionSummary from './SessionSummary'
 import ToolCenter from './ToolCenter'
 import './styles.css'
 import './releaseCleanup.css'
+import './toolCenterDeviceCheck.css'
 
 installBreathingSessionBridge()
 
