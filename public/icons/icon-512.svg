@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">VibraHeal app icon</title>
+  <desc id="desc">A glowing aqua V inside concentric sound and breath rings on a deep navy background.</desc>
+  <rect width="512" height="512" rx="92" fill="#050e19"/>
+  <circle cx="256" cy="256" r="198" fill="none" stroke="#1c5069" stroke-width="20"/>
+  <circle cx="256" cy="256" r="152" fill="none" stroke="#2c96a0" stroke-width="16"/>
+  <circle cx="256" cy="256" r="106" fill="none" stroke="#6de8dc" stroke-width="13"/>
+  <path d="M184 200 L256 338 L328 200" fill="none" stroke="#ebfffb" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="16" fill="#6de8dc"/>
+</svg>

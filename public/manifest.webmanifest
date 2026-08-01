@@ -1,0 +1,46 @@
+{
+  "id": "/vibra-heal/",
+  "name": "VibraHeal — Sound, Breath & Nature",
+  "short_name": "VibraHeal",
+  "description": "A local-first relaxation and mindfulness experience with sound, breathing, nature ambience, personal collections, and careful Animal Calm guidance.",
+  "start_url": "/vibra-heal/",
+  "scope": "/vibra-heal/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050e19",
+  "theme_color": "#071019",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["lifestyle", "music", "utilities"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Open frequency library",
+      "short_name": "Frequencies",
+      "description": "Browse VibraHeal's clearly labeled frequency starting points.",
+      "url": "/vibra-heal/#frequency-library",
+      "icons": [{ "src": "icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Open nature mixer",
+      "short_name": "Nature mixer",
+      "description": "Open the human-only rain, ocean, and soft-wind ambience mixer.",
+      "url": "/vibra-heal/#nature-mixer",
+      "icons": [{ "src": "icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    }
+  ]
+}
