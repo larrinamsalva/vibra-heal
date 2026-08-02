@@ -1,0 +1,333 @@
+.artifact-version-guide-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 110;
+}
+
+.artifact-version-guide-panel {
+  position: fixed;
+  inset: 4vh max(16px, calc((100vw - 1180px) / 2));
+  z-index: 150;
+  overflow: auto;
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid rgba(170, 226, 213, 0.34);
+  border-radius: 26px;
+  color: #f4fffc;
+  background: linear-gradient(160deg, rgba(14, 37, 43, 0.99), rgba(27, 31, 58, 0.99));
+  box-shadow: 0 30px 90px rgba(2, 10, 19, 0.58);
+  backdrop-filter: blur(22px);
+}
+
+.artifact-version-guide-header,
+.artifact-version-guide-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.artifact-version-guide-header p,
+.artifact-version-guide-header h2,
+.artifact-version-guide-intro,
+.artifact-version-guide-boundary,
+.artifact-version-guide-current h3,
+.artifact-version-guide-rules h3,
+.artifact-version-guide-changes h3,
+.artifact-version-guide-migration h3,
+.artifact-version-guide-change-grid h4,
+.artifact-version-guide-change-grid h5,
+.artifact-version-guide-migration-grid h4,
+.artifact-version-guide-current p,
+.artifact-version-guide-rules p,
+.artifact-version-guide-changes p,
+.artifact-version-guide-migration p,
+.artifact-version-guide-current dl,
+.artifact-version-guide-rules ol,
+.artifact-version-guide-change-grid ul,
+.artifact-version-guide-migration-grid ol,
+.artifact-version-guide-migration-grid ul {
+  margin: 0;
+}
+
+.artifact-version-guide-header p,
+.artifact-version-guide-current > .artifact-version-guide-section-heading p,
+.artifact-version-guide-rules > p,
+.artifact-version-guide-changes > p,
+.artifact-version-guide-migration > .artifact-version-guide-section-heading p {
+  margin-bottom: 5px;
+  color: #91e5ce;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.artifact-version-guide-header h2 {
+  font-size: clamp(1.45rem, 4vw, 2.2rem);
+  line-height: 1.12;
+}
+
+.artifact-version-guide-close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(225, 255, 248, 0.24);
+  border-radius: 13px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.artifact-version-guide-intro {
+  max-width: 84ch;
+  margin-top: 14px;
+  color: rgba(238, 255, 251, 0.75);
+  line-height: 1.6;
+}
+
+.artifact-version-guide-totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 0;
+}
+
+.artifact-version-guide-totals > div {
+  padding: 14px;
+  border: 1px solid rgba(210, 255, 246, 0.13);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-version-guide-totals dt {
+  color: rgba(237, 255, 251, 0.65);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.artifact-version-guide-totals dd {
+  margin: 5px 0 0;
+  color: #bdffeb;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.artifact-version-guide-current,
+.artifact-version-guide-rules,
+.artifact-version-guide-changes,
+.artifact-version-guide-migration {
+  margin-top: 20px;
+  padding: clamp(16px, 2.5vw, 24px);
+  border: 1px solid rgba(203, 255, 244, 0.16);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-version-guide-current h3,
+.artifact-version-guide-rules h3,
+.artifact-version-guide-changes h3,
+.artifact-version-guide-migration h3 {
+  font-size: clamp(1.12rem, 3vw, 1.5rem);
+}
+
+.artifact-version-guide-section-heading > strong {
+  flex: 0 0 auto;
+  max-width: 250px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: #caffef;
+  background: rgba(85, 192, 160, 0.13);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.artifact-version-guide-table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+  border: 1px solid rgba(203, 255, 244, 0.13);
+  border-radius: 16px;
+}
+
+.artifact-version-guide-table-wrap table {
+  width: 100%;
+  min-width: 880px;
+  border-collapse: collapse;
+}
+
+.artifact-version-guide-table-wrap caption {
+  padding: 12px 14px;
+  color: rgba(238, 255, 251, 0.7);
+  background: rgba(5, 15, 25, 0.24);
+  line-height: 1.5;
+  text-align: left;
+}
+
+.artifact-version-guide-table-wrap th,
+.artifact-version-guide-table-wrap td {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(203, 255, 244, 0.12);
+  color: rgba(239, 255, 252, 0.78);
+  line-height: 1.45;
+  text-align: left;
+  vertical-align: top;
+}
+
+.artifact-version-guide-table-wrap thead th,
+.artifact-version-guide-table-wrap tbody th {
+  color: #eafff8;
+  font-weight: 800;
+}
+
+.artifact-version-guide-table-wrap code {
+  color: #bdffeb;
+  overflow-wrap: anywhere;
+}
+
+.artifact-version-guide-rules ol,
+.artifact-version-guide-change-grid ul,
+.artifact-version-guide-migration-grid ol,
+.artifact-version-guide-migration-grid ul {
+  padding-left: 21px;
+}
+
+.artifact-version-guide-rules ol {
+  margin-top: 14px;
+}
+
+.artifact-version-guide-rules li,
+.artifact-version-guide-change-grid li,
+.artifact-version-guide-change-grid p,
+.artifact-version-guide-migration-grid li {
+  color: rgba(239, 255, 252, 0.76);
+  line-height: 1.58;
+}
+
+.artifact-version-guide-rules li + li,
+.artifact-version-guide-change-grid li + li,
+.artifact-version-guide-migration-grid li + li {
+  margin-top: 6px;
+}
+
+.artifact-version-guide-change-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.artifact-version-guide-change-grid article,
+.artifact-version-guide-migration-grid > section {
+  padding: 15px;
+  border-radius: 16px;
+  background: rgba(5, 15, 25, 0.24);
+}
+
+.artifact-version-guide-change-grid h4,
+.artifact-version-guide-migration-grid h4 {
+  color: #eafff8;
+  font-size: 0.95rem;
+}
+
+.artifact-version-guide-change-grid h5 {
+  margin-top: 13px;
+  color: rgba(237, 255, 251, 0.68);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+}
+
+.artifact-version-guide-change-grid h4 + p,
+.artifact-version-guide-change-grid h5 + ul,
+.artifact-version-guide-migration-grid h4 + ol,
+.artifact-version-guide-migration-grid h4 + ul {
+  margin-top: 8px;
+}
+
+.artifact-version-guide-migration-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.85fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.artifact-version-guide-boundary {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 15px;
+  color: rgba(239, 255, 252, 0.68);
+  background: rgba(85, 192, 160, 0.08);
+  line-height: 1.55;
+}
+
+.artifact-version-guide-close:focus-visible {
+  outline: 3px solid #dcfff5;
+  outline-offset: 3px;
+}
+
+html[data-text-size='large'] .artifact-version-guide-panel {
+  inset-inline: max(10px, calc((100vw - 1260px) / 2));
+}
+
+html[data-contrast='high'] .artifact-version-guide-panel,
+html[data-contrast='high'] .artifact-version-guide-current,
+html[data-contrast='high'] .artifact-version-guide-rules,
+html[data-contrast='high'] .artifact-version-guide-changes,
+html[data-contrast='high'] .artifact-version-guide-migration,
+html[data-contrast='high'] .artifact-version-guide-totals > div,
+html[data-contrast='high'] .artifact-version-guide-close,
+html[data-contrast='high'] .artifact-version-guide-table-wrap {
+  border-color: currentColor;
+}
+
+@media (max-width: 820px) {
+  .artifact-version-guide-panel {
+    inset: 8px;
+    padding: 17px;
+    border-radius: 20px;
+  }
+
+  .artifact-version-guide-totals,
+  .artifact-version-guide-change-grid,
+  .artifact-version-guide-migration-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-version-guide-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .artifact-version-guide-section-heading > strong {
+    max-width: none;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artifact-version-guide-panel,
+  .artifact-version-guide-close {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .artifact-version-guide-panel,
+  .artifact-version-guide-current,
+  .artifact-version-guide-rules,
+  .artifact-version-guide-changes,
+  .artifact-version-guide-migration,
+  .artifact-version-guide-totals > div,
+  .artifact-version-guide-change-grid article,
+  .artifact-version-guide-migration-grid > section,
+  .artifact-version-guide-table-wrap,
+  .artifact-version-guide-close {
+    border: 2px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+}
