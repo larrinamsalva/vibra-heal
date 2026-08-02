@@ -79,6 +79,7 @@ const PANEL_TOOLS: PanelTool[] = [
   panel('artifact-glossary', 'Artifact Glossary', 'Explain each registered review format and its privacy boundary.', 'ABC', 'Guidance', '.artifact-glossary-fab', '#artifact-glossary-panel', '.artifact-glossary-close'),
   panel('artifact-version-guide', 'Artifact Version Guide', 'Explain current v1 compatibility and future migration rules.', 'v1', 'Guidance', '.artifact-version-guide-fab', '#artifact-version-guide-panel', '.artifact-version-guide-close'),
   panel('artifact-support-status', 'Artifact Support Status', 'Show current producer, validator, and importer coverage.', '✓✓', 'Guidance', '.artifact-support-status-fab', '#artifact-support-status-panel', '.artifact-support-status-close'),
+  panel('artifact-responsibility-map', 'Artifact Responsibility Map', 'Separate human judgment from software format and revalidation duties.', 'R', 'Guidance', '.artifact-responsibility-map-fab', '#artifact-responsibility-map-panel', '.artifact-responsibility-map-close'),
 ]
 
 const NATURE_TOOL = jump(
@@ -397,7 +398,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, or support guidance into validation or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, support, or responsibility guidance into validation, ownership transfer, or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
