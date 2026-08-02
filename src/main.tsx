@@ -5,6 +5,7 @@ import AnimalCalm from './AnimalCalm'
 import App from './App'
 import ArtifactGlossary from './ArtifactGlossary'
 import ArtifactInspector from './ArtifactInspector'
+import ArtifactResponsibilityMap from './ArtifactResponsibilityMap'
 import ArtifactSupportStatus from './ArtifactSupportStatus'
 import ArtifactVersionGuide from './ArtifactVersionGuide'
 import ArtifactWorkflowMap from './ArtifactWorkflowMap'
@@ -50,6 +51,7 @@ createRoot(document.getElementById('root')!).render(
     <ArtifactGlossary />
     <ArtifactVersionGuide />
     <ArtifactSupportStatus />
+    <ArtifactResponsibilityMap />
     <ToolCenter />
   </StrictMode>,
 )
