@@ -2,6 +2,7 @@
 .issue-report-fab,
 .release-checklist-fab,
 .release-history-fab,
-.release-package-fab {
+.release-package-fab,
+.artifact-inspector-fab {
   display: none !important;
 }
