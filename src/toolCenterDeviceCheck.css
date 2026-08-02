@@ -3,6 +3,7 @@
 .release-checklist-fab,
 .release-history-fab,
 .release-package-fab,
-.artifact-inspector-fab {
+.artifact-inspector-fab,
+.artifact-workflow-map-fab {
   display: none !important;
 }
