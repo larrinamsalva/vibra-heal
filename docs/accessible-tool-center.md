@@ -1,6 +1,6 @@
 # Accessible Tool Center
 
-VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, artifact reference, support-status reporting, and safety behavior.
+VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, artifact reference, support and responsibility reporting, and safety behavior.
 
 ## Tools included
 
@@ -30,6 +30,7 @@ VibraHeal uses one visible **Tools** launcher to organize optional panels and in
 - Artifact Glossary
 - Artifact Version Guide
 - Artifact Support Status
+- Artifact Responsibility Map
 - Animal Calm
 
 Nature Mixer and Animal Calm are page sections. The remaining tools are non-modal panels.
@@ -71,27 +72,28 @@ Opening the Tool Center or moving between tools does not:
 - turn Artifact Glossary text into file validation or verified evidence
 - turn Artifact Version Guide policy into a registered version or migration path
 - turn Artifact Support Status into execution, successful review, approval, or defect-free operation
+- turn Artifact Responsibility Map into ownership transfer, evidence validation, an assigned approver, or a recorded decision
 - change frequency, volume, timer, or saved-session values
 - connect human audio tools to Animal Calm
 
-Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map, Artifact Glossary, Artifact Version Guide, and Artifact Support Status are static guidance and contain no workflow-action controls.
+Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, and Artifact Responsibility Map are static guidance and contain no workflow-action controls.
 
 ## Automated tests
 
 `src/ToolCenter.test.tsx` uses invented browser elements to verify that:
 
 - the Tool Center has a readable dialog name
-- the launcher reports nineteen destinations
+- the launcher reports twenty destinations
 - focus moves to the first tool when opened
 - Arrow, Home, End, and Escape navigation works
 - opening a second panel closes the first panel
 - only one managed panel remains in the document
 - panel closure returns focus to the Tools launcher
 - jumping to Nature Mixer closes an open panel and focuses the section
-- Artifact Inspector, Workflow Map, Artifact Glossary, Artifact Version Guide, and Artifact Support Status participate in panel switching
+- Artifact Inspector, Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, and Artifact Responsibility Map participate in panel switching
 - legacy launchers are removed from keyboard and assistive-technology navigation
 
-The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, execute support routes, or move a file between tools.
+The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, execute support routes, assign responsibility, record a decision, or move a file between tools.
 
 ## Real-browser review still required
 
@@ -109,6 +111,7 @@ Simulated component tests do not replace review with real browsers and assistive
 - Artifact Glossary heading navigation and long-identifier wrapping
 - Artifact Version Guide table scrolling and long-policy navigation
 - Artifact Support Status table scrolling and detailed coverage navigation
+- Artifact Responsibility Map lane, table, ordered-handoff, and long-text navigation
 - audio behavior on real hardware
 
 ## Contribution rule
