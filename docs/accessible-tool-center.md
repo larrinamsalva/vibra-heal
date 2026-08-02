@@ -1,10 +1,8 @@
 # Accessible Tool Center
 
-VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, and safety behavior.
+VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, and safety behavior.
 
 ## Tools included
-
-The launcher organizes nine destinations:
 
 ### Session tools
 
@@ -22,15 +20,21 @@ The launcher organizes nine destinations:
 
 ### Guidance
 
+- Device Check
+- Issue Report
+- Release Checklist
+- Release History
+- Release Package
+- Artifact Inspector
 - Animal Calm
 
-Nature Mixer and Animal Calm are page sections. The other seven tools are non-modal panels.
+Nature Mixer and Animal Calm are page sections. The remaining tools are non-modal panels.
 
 ## One-panel rule
 
-The Tool Center checks which managed panel is open before opening another. When a different panel is selected, the current panel closes first. This prevents Backup, Breathing, Summary, Journal, Privacy, Accessibility, and Install panels from covering one another.
+The Tool Center checks which managed panel is open before opening another. When a different panel is selected, the current panel closes first. This prevents optional panels from covering one another.
 
-The existing feature launchers remain in the document as hidden compatibility bridges. They are removed from keyboard and assistive-technology navigation with `tabindex="-1"`, `aria-hidden="true"`, and CSS. The Tool Center activates those bridges so each feature keeps its existing tested state, validation, audio, storage, and safety logic instead of duplicating it.
+The existing feature launchers remain in the document as hidden compatibility bridges. They are removed from keyboard and assistive-technology navigation with `tabindex="-1"`, `aria-hidden="true"`, and CSS. The Tool Center activates those bridges so each feature keeps its existing tested state, validation, audio, storage, privacy, and safety logic instead of duplicating it.
 
 ## Keyboard behavior
 
@@ -54,9 +58,11 @@ Opening the Tool Center or moving between tools does not:
 - start or stop nature ambience
 - start a breathing guide
 - save, analyze, or delete a journal entry
+- read, inspect, import, or export a file without a deliberate file selection or button press
 - export, restore, or clear browser data
 - install or update the app
 - create an account or network request
+- submit an issue or approve, compare, package, sign, publish, deploy, or certify a release
 - change frequency, volume, timer, or saved-session values
 - connect human audio tools to Animal Calm
 
@@ -73,9 +79,10 @@ Every consequential action remains inside its original feature and keeps its ori
 - only one managed panel remains in the document
 - panel closure returns focus to the Tools launcher
 - jumping to Nature Mixer closes an open panel and focuses the section
+- Artifact Inspector participates in panel switching
 - legacy launchers are removed from keyboard and assistive-technology navigation
 
-The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, or save journal text.
+The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, or read a real review artifact.
 
 ## Real-browser review still required
 
@@ -88,8 +95,9 @@ Simulated component tests do not replace review with real browsers and assistive
 - larger-text and narrow-phone layouts
 - panel stacking on iOS, Android, and desktop browsers
 - installed-app and service-worker behavior
+- file-picker, clipboard, and download behavior
 - audio behavior on real hardware
 
 ## Contribution rule
 
-A new floating launcher should not be added beside the Tool Center. New optional tools should be registered in `ToolCenter.tsx`, given a readable name and description, and covered by one-open-panel and focus-restoration tests. Navigation changes must not bypass a feature's confirmations, privacy boundaries, or explicit audio start controls.
+A new floating launcher should not be added beside the Tool Center. New optional tools should be registered in `ToolCenter.tsx`, given a readable name and description, and covered by one-open-panel and focus-restoration tests. Navigation changes must not bypass a feature's confirmations, privacy boundaries, file-selection requirements, or explicit audio start controls.
