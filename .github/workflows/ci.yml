@@ -21,7 +21,7 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Test privacy, accessibility, tools, offline lifecycle, review artifacts, and shared schemas
+      - name: Test privacy, accessibility, tools, offline lifecycle, review artifacts, shared schemas, and Artifact Inspector
         run: npm test
       - name: Build
         run: npm run build
