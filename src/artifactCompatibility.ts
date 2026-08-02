@@ -99,11 +99,14 @@ const SOURCE_FORMATS: Record<ReviewArtifactKind, string> = {
   releasePackage: REVIEW_ARTIFACT_FORMATS.releasePackage,
 }
 
-const RULES = [
+const ALWAYS_RULES = [
   'Artifact Inspector does not move, retain, upload, or submit the selected source file for another tool.',
+  'Compatibility describes a supported local workflow only; it does not prove accuracy, approval, deployment, safety, compliance, or certification.',
+]
+
+const DESTINATION_RULES = [
   'A person must close Artifact Inspector, open the destination from Tools, and select the same file again.',
   'The destination applies its own current format, version, size, and privacy validation before using the file.',
-  'Compatibility describes a supported local workflow only; it does not prove accuracy, approval, deployment, safety, compliance, or certification.',
 ]
 
 export function getArtifactCompatibility(
@@ -114,16 +117,19 @@ export function getArtifactCompatibility(
     ...TOOL_DETAILS[toolId],
     sourceFormat,
   }))
+  const noDownstreamImporter = destinations.length === 0
 
   return {
     sourceKind: kind,
     sourceFormat,
     destinations,
-    noDownstreamImporter: destinations.length === 0,
+    noDownstreamImporter,
     noDownstreamMessage:
-      destinations.length === 0
+      noDownstreamImporter
         ? 'No current VibraHeal tool imports a Release Package. Keep it as a local manifest; Artifact Inspector can validate it again later.'
         : '',
-    rules: [...RULES],
+    rules: noDownstreamImporter
+      ? [...ALWAYS_RULES]
+      : [ALWAYS_RULES[0], ...DESTINATION_RULES, ALWAYS_RULES[1]],
   }
 }
