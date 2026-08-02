@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import '@testing-library/jest-dom/vitest'
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import ArtifactInspector, {
   buildArtifactInspectionExport,
@@ -162,7 +162,8 @@ describe('Artifact Inspector compatibility presentation', () => {
       value: vi.fn().mockResolvedValue(JSON.stringify(fixture)),
     })
 
-    fireEvent.change(screen.getByLabelText('Select VibraHeal review JSON'), {
+    const fileInput = screen.getByLabelText('Select VibraHeal review JSON') as HTMLInputElement
+    fireEvent.change(fileInput, {
       target: { files: [file] },
     })
 
@@ -181,13 +182,10 @@ describe('Artifact Inspector compatibility presentation', () => {
     expect(storageRead).not.toHaveBeenCalled()
     expect(fetchSpy).not.toHaveBeenCalled()
 
-    const preview = screen.getByLabelText('Generated artifact inspection summary')
-    expect(preview).toHaveValue(expect.stringContaining('select the same Device Check file again'))
-    expect(preview).not.toHaveValue(expect.stringContaining('device-check-private-name.json'))
-    expect(preview).not.toHaveValue(expect.stringContaining('PRIVATE TESTER NOTE'))
-
-    await waitFor(() => {
-      expect(document.querySelector<HTMLInputElement>('input[type="file"]')?.files?.[0]).toBe(file)
-    })
+    const preview = screen.getByLabelText('Generated artifact inspection summary') as HTMLTextAreaElement
+    expect(preview.value).toContain('select the same Device Check file again')
+    expect(preview.value).not.toContain('device-check-private-name.json')
+    expect(preview.value).not.toContain('PRIVATE TESTER NOTE')
+    expect(fileInput.value).toBe('')
   })
 })
