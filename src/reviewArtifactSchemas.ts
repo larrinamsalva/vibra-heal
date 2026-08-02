@@ -171,6 +171,20 @@ function assertPrivacy(
   if (mismatch) throw new Error(`The ${label} privacy declaration is unsupported or unsafe.`)
 }
 
+function assertDevicePrivacy(value: unknown) {
+  if (!isReviewRecord(value)) throw new Error('The Device Check privacy declaration is missing.')
+  if (
+    value.rawUserAgentIncluded !== false
+    || value.browserStorageValuesIncluded !== false
+    || value.journalOrSessionContentIncluded !== false
+  ) {
+    throw new Error('This report declares sensitive browser or VibraHeal content and cannot be imported.')
+  }
+  if (value.localOnly !== true) {
+    throw new Error('The Device Check privacy declaration is unsupported or unsafe.')
+  }
+}
+
 function parseImportedChecklistReview(value: unknown): ImportedReviewSummary | null {
   if (value === null) return null
   if (!isReviewRecord(value)) throw new Error('Imported Device Check summary is invalid.')
@@ -243,12 +257,7 @@ function parseStatusMap(
 export function parseDeviceReviewArtifact(value: unknown): ImportedDeviceReview {
   if (!isReviewRecord(value)) throw new Error('The selected file is not a Device Check report.')
   assertFormatVersion(value, REVIEW_ARTIFACT_FORMATS.deviceCheck, 'Device Check')
-  assertPrivacy(value.privacy, 'Device Check', {
-    localOnly: true,
-    rawUserAgentIncluded: false,
-    browserStorageValuesIncluded: false,
-    journalOrSessionContentIncluded: false,
-  })
+  assertDevicePrivacy(value.privacy)
 
   const exportedAt = cleanReviewDate(value.exportedAt, 'Device Check export time')
   if (!Array.isArray(value.capabilities) || value.capabilities.length > 50) {
@@ -458,10 +467,14 @@ export function parseReleasePackageManifest(value: unknown): ParsedReleasePackag
     if (!Array.isArray(entry.strippedFields) || entry.strippedFields.length > 20) {
       throw new Error(`Release Package artifact ${index + 1} stripped-fields list is invalid.`)
     }
+    const version = cleanReviewCount(entry.version, `Release Package artifact ${index + 1} version`, 10)
+    if (version !== REVIEW_ARTIFACT_VERSION) {
+      throw new Error(`Release Package artifact ${index + 1} version is unsupported.`)
+    }
     return {
       kind: cleanReviewText(entry.kind, `Release Package artifact ${index + 1} kind`, 60),
       format: cleanReviewText(entry.format, `Release Package artifact ${index + 1} format`, 120),
-      version: cleanReviewCount(entry.version, `Release Package artifact ${index + 1} version`, 10),
+      version,
       createdAt: cleanReviewDate(entry.createdAt, `Release Package artifact ${index + 1} creation time`),
       data: entry.data,
       strippedFields: entry.strippedFields.map((field, fieldIndex) => cleanReviewText(
@@ -482,5 +495,5 @@ export function parseReleasePackageManifest(value: unknown): ParsedReleasePackag
 export function detectReviewArtifactKind(value: unknown): ReviewArtifactKind | null {
   if (!isReviewRecord(value)) return null
   const entry = Object.entries(REVIEW_ARTIFACT_FORMATS).find(([, format]) => value.format === format)
-  return entry?.[0] as ReviewArtifactKind | undefined ?? null
+  return (entry?.[0] as ReviewArtifactKind | undefined) ?? null
 }
