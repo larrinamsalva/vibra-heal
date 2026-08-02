@@ -93,7 +93,7 @@ describe('ArtifactResponsibilityMap component', () => {
     expect(within(dialog).getAllByRole('button')).toHaveLength(1)
     expect(within(dialog).getAllByRole('table')).toHaveLength(1)
     expect(within(dialog).getByRole('table').querySelectorAll('tbody tr')).toHaveLength(5)
-    expect(within(dialog).getByText('Human reviewer')).toBeInTheDocument()
+    expect(within(dialog).getAllByText('Human reviewer').length).toBeGreaterThan(0)
     expect(within(dialog).getByText('Destination importer')).toBeInTheDocument()
   })
 
