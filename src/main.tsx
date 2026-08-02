@@ -4,6 +4,7 @@ import AccessibilityControls from './AccessibilityControls'
 import AnimalCalm from './AnimalCalm'
 import App from './App'
 import ArtifactInspector from './ArtifactInspector'
+import ArtifactWorkflowMap from './ArtifactWorkflowMap'
 import BackupRestoreV2 from './BackupRestoreV2'
 import BreathingGuide from './BreathingGuide'
 import { installBreathingSessionBridge } from './breathingSessionBridge'
@@ -42,6 +43,7 @@ createRoot(document.getElementById('root')!).render(
     <ReleaseHistory />
     <ReleasePackage />
     <ArtifactInspector />
+    <ArtifactWorkflowMap />
     <ToolCenter />
   </StrictMode>,
 )
