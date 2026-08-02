@@ -1,22 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { parseDeviceReviewReport } from './IssueReport'
-import { RELEASE_CHECKLIST_ITEMS, type ReleaseItemStatus } from './ReleaseChecklist'
-import { parseReleaseChecklistExport } from './ReleaseHistory'
+import { RELEASE_CHECKLIST_ITEMS } from './ReleaseChecklist'
+import {
+  REVIEW_ARTIFACT_FORMATS,
+  REVIEW_ARTIFACT_VERSION,
+  detectReviewArtifactKind,
+  parseDeviceReviewArtifact,
+  parseIssueReportArtifact,
+  parseReleaseChecklistArtifact,
+  parseReleaseHistoryArtifact,
+  safeReviewSourceName,
+} from './reviewArtifactSchemas'
 import './releasePackage.css'
 
 const MAX_FILE_BYTES = 1_000_000
 const MAX_ARTIFACTS = 8
-const RELEASE_STATUSES = new Set<ReleaseItemStatus>([
-  'not-reviewed',
-  'ready',
-  'needs-attention',
-  'not-applicable',
-])
-const OVERALL_STATES = new Set([
-  'incomplete',
-  'needs-attention',
-  'checklist-complete',
-])
 
 export type ReleasePackageArtifactKind =
   | 'device-check'
@@ -33,40 +30,6 @@ export type ReleasePackageArtifact = {
   createdAt: string
   data: Record<string, unknown>
   strippedFields: string[]
-}
-
-type HistoryDeviceSummary = {
-  passed: number
-  needsReviewCount: number
-  notTestedCount: number
-  findingsResolvedOrAccepted: boolean
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function cleanText(value: unknown, label: string, maxLength: number) {
-  if (typeof value !== 'string') throw new Error(`${label} must be text.`)
-  if (value.length > maxLength) throw new Error(`${label} is too long.`)
-  return value.trim()
-}
-
-function cleanDate(value: unknown, label: string) {
-  const date = cleanText(value, label, 80)
-  if (!date || Number.isNaN(Date.parse(date))) throw new Error(`${label} is invalid.`)
-  return date
-}
-
-function cleanCount(value: unknown, label: string, maximum: number) {
-  if (!Number.isInteger(value) || Number(value) < 0 || Number(value) > maximum) {
-    throw new Error(`${label} is invalid.`)
-  }
-  return Number(value)
-}
-
-function safeSourceName(value: string) {
-  return value.replace(/[\r\n]+/g, ' ').trim().slice(0, 180) || 'selected-review.json'
 }
 
 function fingerprint(value: string) {
@@ -88,10 +51,10 @@ function makeArtifact(
 ): ReleasePackageArtifact {
   return {
     id: `${kind}:${createdAt}:${fingerprint(JSON.stringify(data))}`,
-    sourceName: safeSourceName(sourceName),
+    sourceName: safeReviewSourceName(sourceName, 'selected-review.json'),
     kind,
     format,
-    version: 1,
+    version: REVIEW_ARTIFACT_VERSION,
     createdAt,
     data,
     strippedFields,
@@ -106,19 +69,15 @@ function countValues(values: string[]) {
 }
 
 function parseDeviceCheck(value: unknown, sourceName: string) {
-  if (!isRecord(value) || !isRecord(value.privacy) || value.privacy.localOnly !== true) {
-    throw new Error('The Device Check privacy declaration is unsupported or unsafe.')
-  }
-  const review = parseDeviceReviewReport(value)
-  const createdAt = cleanDate(review.exportedAt, 'Device Check export time')
+  const review = parseDeviceReviewArtifact(value)
   const checkCounts = countValues(review.checks.map((check) => check.result))
   const capabilityCounts = countValues(review.capabilities.map((capability) => capability.status))
 
   return makeArtifact(
     sourceName,
     'device-check',
-    'vibraheal-real-device-review',
-    createdAt,
+    REVIEW_ARTIFACT_FORMATS.deviceCheck,
+    review.exportedAt,
     {
       checkCounts,
       capabilityCounts,
@@ -135,32 +94,15 @@ function parseDeviceCheck(value: unknown, sourceName: string) {
 }
 
 function parseIssueReport(value: unknown, sourceName: string) {
-  if (!isRecord(value)) throw new Error('The selected file is not an Issue Report export.')
-  if (value.format !== 'vibraheal-local-issue-report' || value.version !== 1) {
-    throw new Error('Only VibraHeal Issue Report format version 1 is supported.')
-  }
-  if (!isRecord(value.privacy)) throw new Error('The Issue Report privacy declaration is missing.')
-  if (
-    value.privacy.localOnly !== true
-    || value.privacy.submittedAutomatically !== false
-    || value.privacy.browserStorageRead !== false
-    || value.privacy.accountRequired !== false
-  ) {
-    throw new Error('The Issue Report privacy declaration is unsupported or unsafe.')
-  }
-
-  const createdAt = cleanDate(value.createdAt, 'Issue Report creation time')
-  const title = cleanText(value.title, 'Issue Report title', 400)
-  const markdown = cleanText(value.markdown, 'Issue Report Markdown', 40_000)
-
+  const issue = parseIssueReportArtifact(value)
   return makeArtifact(
     sourceName,
     'issue-report',
-    'vibraheal-local-issue-report',
-    createdAt,
+    REVIEW_ARTIFACT_FORMATS.issueReport,
+    issue.createdAt,
     {
-      titleWasPresent: title.length > 0,
-      formattedBodyWasPresent: markdown.length > 0,
+      titleWasPresent: issue.title.length > 0,
+      formattedBodyWasPresent: issue.markdown.length > 0,
     },
     [
       'original filename',
@@ -173,7 +115,7 @@ function parseIssueReport(value: unknown, sourceName: string) {
 }
 
 function parseChecklist(value: unknown, sourceName: string) {
-  const checklist = parseReleaseChecklistExport(value, sourceName)
+  const checklist = parseReleaseChecklistArtifact(value, RELEASE_CHECKLIST_ITEMS, sourceName)
   const statuses = Object.fromEntries(
     RELEASE_CHECKLIST_ITEMS.map((item) => [item.id, checklist.statuses[item.id]]),
   )
@@ -182,7 +124,7 @@ function parseChecklist(value: unknown, sourceName: string) {
   return makeArtifact(
     sourceName,
     'release-checklist',
-    'vibraheal-local-release-checklist',
+    REVIEW_ARTIFACT_FORMATS.releaseChecklist,
     checklist.createdAt,
     {
       targetDate: checklist.targetDate,
@@ -201,84 +143,22 @@ function parseChecklist(value: unknown, sourceName: string) {
   )
 }
 
-function parseHistoryDeviceSummary(value: unknown): HistoryDeviceSummary | null {
-  if (value === null) return null
-  if (!isRecord(value)) throw new Error('A Release History Device Check summary is invalid.')
-  return {
-    passed: cleanCount(value.passed, 'History passed count', 60),
-    needsReviewCount: cleanCount(value.needsReviewCount, 'History needs-review count', 60),
-    notTestedCount: cleanCount(value.notTestedCount, 'History not-tested count', 60),
-    findingsResolvedOrAccepted: value.findingsResolvedOrAccepted === true,
-  }
-}
-
 function parseHistory(value: unknown, sourceName: string) {
-  if (!isRecord(value)) throw new Error('The selected file is not a Release History export.')
-  if (value.format !== 'vibraheal-local-release-history-comparison' || value.version !== 1) {
-    throw new Error('Only VibraHeal Release History comparison format version 1 is supported.')
-  }
-  if (!isRecord(value.privacy)) throw new Error('The Release History privacy declaration is missing.')
-  if (
-    value.privacy.localOnly !== true
-    || value.privacy.persistedAutomatically !== false
-    || value.privacy.submittedAutomatically !== false
-    || value.privacy.browserStorageRead !== false
-    || value.privacy.accountRequired !== false
-    || value.privacy.approvalClaimed !== false
-    || value.privacy.certificationClaimed !== false
-  ) {
-    throw new Error('The Release History privacy declaration is unsupported or unsafe.')
-  }
-
-  const createdAt = cleanDate(value.createdAt, 'Release History creation time')
-  cleanText(value.markdown, 'Release History Markdown', 100_000)
-  if (!Array.isArray(value.records) || value.records.length < 1 || value.records.length > 4) {
-    throw new Error('Release History must contain between one and four records.')
-  }
-
-  const expectedIds = RELEASE_CHECKLIST_ITEMS.map((item) => item.id)
-  const records = value.records.map((entry, index) => {
-    if (!isRecord(entry)) throw new Error(`Release History record ${index + 1} is invalid.`)
-    const recordCreatedAt = cleanDate(entry.createdAt, `History record ${index + 1} creation time`)
-    cleanText(entry.milestone, `History record ${index + 1} milestone`, 180)
-    cleanText(entry.note ?? '', `History record ${index + 1} note`, 3000)
-    const targetDate = cleanText(entry.targetDate ?? '', `History record ${index + 1} target date`, 40)
-    if (targetDate && !/^\d{4}-\d{2}-\d{2}$/.test(targetDate)) {
-      throw new Error(`History record ${index + 1} target date is invalid.`)
-    }
-    const overall = cleanText(entry.overall, `History record ${index + 1} overall state`, 40)
-    if (!OVERALL_STATES.has(overall)) {
-      throw new Error(`History record ${index + 1} overall state is unsupported.`)
-    }
-    if (!isRecord(entry.statuses)) throw new Error(`History record ${index + 1} statuses are invalid.`)
-    const rawStatuses = entry.statuses
-    const keys = Object.keys(rawStatuses)
-    if (keys.length !== expectedIds.length || keys.some((id) => !expectedIds.includes(id))) {
-      throw new Error(`History record ${index + 1} must contain exactly the current checklist row ids.`)
-    }
-    const statuses = Object.fromEntries(expectedIds.map((id) => {
-      const status = rawStatuses[id]
-      if (typeof status !== 'string' || !RELEASE_STATUSES.has(status as ReleaseItemStatus)) {
-        throw new Error(`History record ${index + 1} status for “${id}” is unsupported.`)
-      }
-      return [id, status]
-    }))
-
-    return {
-      createdAt: recordCreatedAt,
-      targetDate,
-      overall,
-      statuses,
-      statusCounts: countValues(Object.values(statuses)),
-      importedDeviceReview: parseHistoryDeviceSummary(entry.importedDeviceReview),
-    }
-  })
+  const history = parseReleaseHistoryArtifact(value, RELEASE_CHECKLIST_ITEMS)
+  const records = history.records.map((record) => ({
+    createdAt: record.createdAt,
+    targetDate: record.targetDate,
+    overall: record.overall,
+    statuses: record.statuses,
+    statusCounts: countValues(Object.values(record.statuses)),
+    importedDeviceReview: record.importedDeviceReview,
+  }))
 
   return makeArtifact(
     sourceName,
     'release-history',
-    'vibraheal-local-release-history-comparison',
-    createdAt,
+    REVIEW_ARTIFACT_FORMATS.releaseHistory,
+    history.createdAt,
     {
       recordCount: records.length,
       records,
@@ -293,11 +173,11 @@ function parseHistory(value: unknown, sourceName: string) {
 }
 
 export function parseReleasePackageArtifact(value: unknown, sourceName = 'selected-review.json') {
-  if (!isRecord(value)) throw new Error('The selected JSON file is not a supported VibraHeal review artifact.')
-  if (value.format === 'vibraheal-real-device-review') return parseDeviceCheck(value, sourceName)
-  if (value.format === 'vibraheal-local-issue-report') return parseIssueReport(value, sourceName)
-  if (value.format === 'vibraheal-local-release-checklist') return parseChecklist(value, sourceName)
-  if (value.format === 'vibraheal-local-release-history-comparison') return parseHistory(value, sourceName)
+  const kind = detectReviewArtifactKind(value)
+  if (kind === 'deviceCheck') return parseDeviceCheck(value, sourceName)
+  if (kind === 'issueReport') return parseIssueReport(value, sourceName)
+  if (kind === 'releaseChecklist') return parseChecklist(value, sourceName)
+  if (kind === 'releaseHistory') return parseHistory(value, sourceName)
   throw new Error('This file is not a supported Device Check, Issue Report, Release Checklist, or Release History artifact.')
 }
 
@@ -357,8 +237,8 @@ export function buildReleasePackageExport(
 ) {
   const sorted = sortReleasePackageArtifacts(artifacts)
   return {
-    format: 'vibraheal-local-release-package',
-    version: 1,
+    format: REVIEW_ARTIFACT_FORMATS.releasePackage,
+    version: REVIEW_ARTIFACT_VERSION,
     createdAt,
     manifestOnly: true,
     artifactCount: sorted.length,
@@ -464,7 +344,7 @@ export default function ReleasePackage() {
         break
       }
       if (file.size > MAX_FILE_BYTES) {
-        errors.push(`${safeSourceName(file.name)} is larger than one megabyte.`)
+        errors.push(`${safeReviewSourceName(file.name, 'selected-review.json')} is larger than one megabyte.`)
         continue
       }
       try {
@@ -475,7 +355,7 @@ export default function ReleasePackage() {
         }
         next.push(parsed)
       } catch (error) {
-        errors.push(`${safeSourceName(file.name)}: ${error instanceof Error ? error.message : 'Unable to read this file.'}`)
+        errors.push(`${safeReviewSourceName(file.name, 'selected-review.json')}: ${error instanceof Error ? error.message : 'Unable to read this file.'}`)
       }
     }
 

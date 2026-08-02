@@ -1,6 +1,6 @@
 # VibraHeal
 
-VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, one accessible launcher for optional tools, a real-device review helper, a local issue formatter, a local release checklist, a local release-history comparison, and a sanitized release-package manifest.
+VibraHeal is an open-source relaxation and mindfulness experience combining sound, guided breathing, timers, wellness-goal navigation, a searchable frequency library, personal collections, responsive visuals, human nature ambience, species-sensitive animal calm guidance, installable offline support, accessibility controls, private backups, printable summaries, an opt-in local journal, a browser-local privacy center, one accessible launcher for optional tools, a real-device review helper, a local issue formatter, a local release checklist, a local release-history comparison, a sanitized release-package manifest, and shared versioned review-artifact schemas.
 
 > VibraHeal is designed for personal wellness, relaxation, meditation, creative focus, and careful environment planning. It does not diagnose, treat, or cure medical or veterinary conditions and is not a replacement for professional care.
 
@@ -25,7 +25,8 @@ VibraHeal is an open-source relaxation and mindfulness experience combining soun
 - Local Release Checklist with deliberate readiness states, optional Device Check evidence, and non-certifying local exports
 - Local Release History with strict checklist import, chronological comparison, and non-approving local exports
 - Sanitized Local Release Package manifests that exclude original files, filenames, notes, titles, and generated bodies
-- Automated tests for privacy, storage, backup schemas, accessibility interactions, tool navigation, install updates, the real service-worker lifecycle, device review, issue formatting, release-checklist rules, release-history comparison, and package sanitization
+- One shared Format v1 schema registry for Device Check, Issue Report, Release Checklist, Release History, and Release Package
+- Automated tests for privacy, storage, backup schemas, accessibility interactions, tool navigation, install updates, the real service-worker lifecycle, device review, issue formatting, release-checklist rules, release-history comparison, package sanitization, and cross-artifact schema compatibility
 - Three.js visual field plus static low-power mode
 - Reduced-motion, larger-text, high-contrast, keyboard, and forced-colors support
 - Silent Animal Calm education and observation planning for several companion-animal groups
@@ -56,7 +57,7 @@ npm run build
 npm run preview
 ```
 
-Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md), [`docs/pwa-installation.md`](docs/pwa-installation.md), [`docs/real-device-review.md`](docs/real-device-review.md), [`docs/local-issue-report.md`](docs/local-issue-report.md), [`docs/local-release-checklist.md`](docs/local-release-checklist.md), [`docs/local-release-history.md`](docs/local-release-history.md), and [`docs/local-release-package.md`](docs/local-release-package.md) for covered rules and remaining hands-on checks.
+Pull requests to `main` run tests before the production build. A failure in either gate prevents a green CI result. See [`docs/automated-privacy-tests.md`](docs/automated-privacy-tests.md), [`docs/accessibility-component-tests.md`](docs/accessibility-component-tests.md), [`docs/accessible-tool-center.md`](docs/accessible-tool-center.md), [`docs/pwa-installation.md`](docs/pwa-installation.md), [`docs/real-device-review.md`](docs/real-device-review.md), [`docs/local-issue-report.md`](docs/local-issue-report.md), [`docs/local-release-checklist.md`](docs/local-release-checklist.md), [`docs/local-release-history.md`](docs/local-release-history.md), [`docs/local-release-package.md`](docs/local-release-package.md), and [`docs/review-artifact-schemas.md`](docs/review-artifact-schemas.md) for covered rules and remaining hands-on checks.
 
 ## Accessible Tool Center
 
@@ -114,6 +115,14 @@ Release notes are excluded by default. A changed row means only that the recorde
 **Tools → Release Package** accepts explicitly selected Device Check, Issue Report, Release Checklist, and Release History Format v1 JSON files and creates one manifest-only Markdown or JSON package.
 
 The sanitizer keeps structured dates, status ids, state counts, and coarse review summaries. It removes original filenames, issue content, milestone names, notes, capability details, generated Markdown bodies, and original file bytes. The resulting package is not a ZIP, backup, signature, publication, approval, deployment, or certification. See [`docs/local-release-package.md`](docs/local-release-package.md).
+
+## Shared review artifact schemas
+
+Device Check, Issue Report, Release Checklist, Release History, and Release Package use one shared Format v1 registry for format identifiers, dates, counts, state values, privacy declarations, and overall-state consistency.
+
+Issue Report and Release History preserve their existing public parser names as compatibility wrappers, but the validation implementation now comes from the shared module. Release Package consumes normalized records from the same registry before applying its separate free-text and filename stripping rules.
+
+Changing the meaning of a field or a format identifier requires an explicit new version and compatibility plan rather than silently reinterpreting an older file. The schema registry remains local code; it is not a remote API, cloud service, signature system, approval workflow, or certification. See [`docs/review-artifact-schemas.md`](docs/review-artifact-schemas.md).
 
 ## Guided breathing
 
@@ -219,6 +228,7 @@ Future work may include:
 
 - focused regression tests based on verified real-device findings
 - evidence-aware educational content with primary-source citations
+- explicit Format v2 migrations only when a breaking artifact change is necessary
 - journal import only after a strict validation and privacy review
 - broader audio-output and installed-app testing across operating systems
 - cross-device synchronization only after a separate account, encryption, and consent design review
@@ -242,6 +252,7 @@ Future work may include:
 - Release Checklist must distinguish incomplete review from attention and completion without claiming certification.
 - Release History must show differences without ranking, approving, deploying, or certifying milestones.
 - Release Package must strip original files, filenames, and free text, remain manifest-only, and never claim signing, publication, approval, deployment, or certification.
+- Review-artifact format and privacy rules must stay centralized, versioned, and covered by cross-artifact compatibility tests.
 - Optional panels must use the single Tool Center and preserve explicit user gestures and confirmations.
 - Animal Calm is an observation and environment-planning guide, not veterinary advice or treatment.
 - PWA installation must not introduce autoplay, tracking, forced updates, or hidden synchronization.
