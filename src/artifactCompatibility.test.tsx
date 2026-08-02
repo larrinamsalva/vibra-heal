@@ -79,7 +79,7 @@ describe('artifact compatibility registry', () => {
     expect(getArtifactCompatibility('releasePackage').destinations).toEqual([])
   })
 
-  it('requires manual selection and destination revalidation for every supported route', () => {
+  it('requires manual selection and destination revalidation only for real routes', () => {
     const kinds = [
       'deviceCheck',
       'issueReport',
@@ -92,10 +92,19 @@ describe('artifact compatibility registry', () => {
       const guide = getArtifactCompatibility(kind)
       expect(guide.rules).toEqual(expect.arrayContaining([
         expect.stringMatching(/does not move/i),
-        expect.stringMatching(/select the same file again/i),
-        expect.stringMatching(/own current format/i),
         expect.stringMatching(/does not prove/i),
       ]))
+
+      if (guide.destinations.length > 0) {
+        expect(guide.rules).toEqual(expect.arrayContaining([
+          expect.stringMatching(/select the same file again/i),
+          expect.stringMatching(/own current format/i),
+        ]))
+      } else {
+        expect(guide.rules.join(' ')).not.toMatch(/open the destination/i)
+        expect(guide.rules.join(' ')).not.toMatch(/select the same file again/i)
+      }
+
       guide.destinations.forEach((destination) => {
         expect(destination.automaticTransfer).toBe(false)
         expect(destination.destinationRevalidates).toBe(true)
