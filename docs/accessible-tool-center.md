@@ -1,6 +1,6 @@
 # Accessible Tool Center
 
-VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, glossary reference, and safety behavior.
+VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, glossary and version reference, and safety behavior.
 
 ## Tools included
 
@@ -28,6 +28,7 @@ VibraHeal uses one visible **Tools** launcher to organize optional panels and in
 - Artifact Inspector
 - Workflow Map
 - Artifact Glossary
+- Artifact Version Guide
 - Animal Calm
 
 Nature Mixer and Animal Calm are page sections. The remaining tools are non-modal panels.
@@ -60,34 +61,35 @@ Opening the Tool Center or moving between tools does not:
 - start or stop nature ambience
 - start a breathing guide
 - save, analyze, or delete a journal entry
-- read, inspect, import, export, or route a file without a deliberate feature action
+- read, inspect, import, export, migrate, or route a file without a deliberate feature action
 - export, restore, or clear browser data
 - install or update the app
 - create an account or network request
 - submit an issue or approve, compare, package, sign, publish, deploy, or certify a release
 - turn a Workflow Map arrow into file movement or destination navigation
 - turn Artifact Glossary text into file validation or verified evidence
+- turn Artifact Version Guide policy into a registered version or migration path
 - change frequency, volume, timer, or saved-session values
 - connect human audio tools to Animal Calm
 
-Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map and Artifact Glossary are static guidance and contain no workflow-action controls.
+Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map, Artifact Glossary, and Artifact Version Guide are static guidance and contain no workflow-action controls.
 
 ## Automated tests
 
 `src/ToolCenter.test.tsx` uses invented browser elements to verify that:
 
 - the Tool Center has a readable dialog name
-- the launcher reports seventeen destinations
+- the launcher reports eighteen destinations
 - focus moves to the first tool when opened
 - Arrow, Home, End, and Escape navigation works
 - opening a second panel closes the first panel
 - only one managed panel remains in the document
 - panel closure returns focus to the Tools launcher
 - jumping to Nature Mixer closes an open panel and focuses the section
-- Artifact Inspector, Workflow Map, and Artifact Glossary participate in panel switching
+- Artifact Inspector, Workflow Map, Artifact Glossary, and Artifact Version Guide participate in panel switching
 - legacy launchers are removed from keyboard and assistive-technology navigation
 
-The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, or move a file between tools.
+The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, or move a file between tools.
 
 ## Real-browser review still required
 
@@ -103,6 +105,7 @@ Simulated component tests do not replace review with real browsers and assistive
 - file-picker, clipboard, and download behavior
 - Workflow Map table and horizontal-diagram scrolling
 - Artifact Glossary heading navigation and long-identifier wrapping
+- Artifact Version Guide table scrolling and long-policy navigation
 - audio behavior on real hardware
 
 ## Contribution rule
