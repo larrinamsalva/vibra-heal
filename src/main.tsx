@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import AccessibilityControls from './AccessibilityControls'
 import AnimalCalm from './AnimalCalm'
 import App from './App'
+import ArtifactGlossary from './ArtifactGlossary'
 import ArtifactInspector from './ArtifactInspector'
 import ArtifactWorkflowMap from './ArtifactWorkflowMap'
 import BackupRestoreV2 from './BackupRestoreV2'
@@ -44,6 +45,7 @@ createRoot(document.getElementById('root')!).render(
     <ReleasePackage />
     <ArtifactInspector />
     <ArtifactWorkflowMap />
+    <ArtifactGlossary />
     <ToolCenter />
   </StrictMode>,
 )
