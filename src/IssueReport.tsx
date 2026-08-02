@@ -1,8 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  REVIEW_ARTIFACT_FORMATS,
+  REVIEW_ARTIFACT_VERSION,
+  parseDeviceReviewArtifact,
+  type ImportedDeviceReview,
+} from './reviewArtifactSchemas'
 import './issueReport.css'
 
 const MAX_REVIEW_FILE_BYTES = 1_000_000
 const MAX_TEXT = 4000
+
+export type { ImportedDeviceReview } from './reviewArtifactSchemas'
+export const parseDeviceReviewReport = parseDeviceReviewArtifact
 
 export type IssueArea =
   | 'Accessibility'
@@ -15,26 +24,6 @@ export type IssueArea =
   | 'Other'
 
 export type IssueSeverity = 'minor' | 'moderate' | 'major' | 'blocking'
-
-type ReviewResult = 'not-tested' | 'pass' | 'needs-review' | 'not-applicable'
-type CapabilityStatus = 'available' | 'active' | 'inactive' | 'unavailable' | 'unknown'
-
-export type ImportedDeviceReview = {
-  exportedAt: string
-  capabilities: Array<{
-    id: string
-    label: string
-    status: CapabilityStatus
-    detail: string
-  }>
-  checks: Array<{
-    id: string
-    group: string
-    label: string
-    result: ReviewResult
-  }>
-  note: string
-}
 
 export type IssueDraft = {
   title: string
@@ -69,32 +58,6 @@ const SEVERITY_LABELS: Record<IssueSeverity, string> = {
   blocking: 'Blocking — prevents safe or meaningful use',
 }
 
-const REVIEW_RESULTS = new Set<ReviewResult>([
-  'not-tested',
-  'pass',
-  'needs-review',
-  'not-applicable',
-])
-
-const CAPABILITY_STATUSES = new Set<CapabilityStatus>([
-  'available',
-  'active',
-  'inactive',
-  'unavailable',
-  'unknown',
-])
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function cleanString(value: unknown, label: string, maxLength: number): string {
-  if (typeof value !== 'string') throw new Error(`${label} must be text.`)
-  const cleaned = value.trim()
-  if (cleaned.length > maxLength) throw new Error(`${label} is too long.`)
-  return cleaned
-}
-
 function safeLine(value: string) {
   return value.replace(/[\r\n]+/g, ' ').trim()
 }
@@ -111,70 +74,6 @@ function numberedSteps(value: string) {
 
   if (lines.length === 0) return '_Not provided._'
   return lines.map((line, index) => `${index + 1}. ${line.replace(/^\d+[.)]\s*/, '')}`).join('\n')
-}
-
-export function parseDeviceReviewReport(value: unknown): ImportedDeviceReview {
-  if (!isRecord(value)) throw new Error('The selected file is not a Device Check report.')
-  if (value.format !== 'vibraheal-real-device-review' || value.version !== 1) {
-    throw new Error('Only VibraHeal Device Check format version 1 is supported.')
-  }
-
-  const exportedAt = cleanString(value.exportedAt, 'Export time', 80)
-  if (Number.isNaN(Date.parse(exportedAt))) throw new Error('The Device Check export time is invalid.')
-
-  if (!isRecord(value.privacy)) throw new Error('The Device Check privacy declaration is missing.')
-  if (
-    value.privacy.rawUserAgentIncluded !== false
-    || value.privacy.browserStorageValuesIncluded !== false
-    || value.privacy.journalOrSessionContentIncluded !== false
-  ) {
-    throw new Error('This report declares sensitive browser or VibraHeal content and cannot be imported.')
-  }
-
-  if (!Array.isArray(value.capabilities) || value.capabilities.length > 50) {
-    throw new Error('The Device Check capability list is invalid.')
-  }
-
-  const capabilities = value.capabilities.map((item, index) => {
-    if (!isRecord(item)) throw new Error(`Capability ${index + 1} is invalid.`)
-    const status = cleanString(item.status, `Capability ${index + 1} status`, 30) as CapabilityStatus
-    if (!CAPABILITY_STATUSES.has(status)) throw new Error(`Capability ${index + 1} has an unsupported status.`)
-    return {
-      id: cleanString(item.id, `Capability ${index + 1} id`, 120),
-      label: cleanString(item.label, `Capability ${index + 1} label`, 160),
-      status,
-      detail: cleanString(item.detail, `Capability ${index + 1} detail`, 500),
-    }
-  })
-
-  if (!Array.isArray(value.checks) || value.checks.length === 0 || value.checks.length > 60) {
-    throw new Error('The Device Check result list is invalid.')
-  }
-
-  const seen = new Set<string>()
-  const checks = value.checks.map((item, index) => {
-    if (!isRecord(item)) throw new Error(`Review item ${index + 1} is invalid.`)
-    const id = cleanString(item.id, `Review item ${index + 1} id`, 120)
-    if (seen.has(id)) throw new Error(`Review item id “${id}” appears more than once.`)
-    seen.add(id)
-
-    const result = cleanString(item.result, `Review item ${index + 1} result`, 30) as ReviewResult
-    if (!REVIEW_RESULTS.has(result)) throw new Error(`Review item ${index + 1} has an unsupported result.`)
-
-    return {
-      id,
-      group: cleanString(item.group, `Review item ${index + 1} group`, 120),
-      label: cleanString(item.label, `Review item ${index + 1} label`, 180),
-      result,
-    }
-  })
-
-  return {
-    exportedAt,
-    capabilities,
-    checks,
-    note: cleanString(value.note ?? '', 'Device Check note', 1200),
-  }
 }
 
 export function buildIssueMarkdown(draft: IssueDraft) {
@@ -234,8 +133,8 @@ export function buildIssueMarkdown(draft: IssueDraft) {
 
 export function buildIssueExport(draft: IssueDraft, createdAt = new Date().toISOString()) {
   return {
-    format: 'vibraheal-local-issue-report',
-    version: 1,
+    format: REVIEW_ARTIFACT_FORMATS.issueReport,
+    version: REVIEW_ARTIFACT_VERSION,
     createdAt,
     title: safeLine(draft.title) || 'VibraHeal issue report',
     markdown: buildIssueMarkdown(draft),
@@ -479,7 +378,7 @@ export default function IssueReport() {
             <div>
               <span>Optional Device Check source</span>
               <h3 id="issue-import-title">Import a report you deliberately downloaded</h3>
-              <p>Only format version 1 files that declare no raw user agent, browser-storage values, journal text, or session content are accepted.</p>
+              <p>Only format version 1 files that declare local-only behavior and no raw user agent, browser-storage values, journal text, or session content are accepted.</p>
             </div>
             <input
               ref={fileRef}
