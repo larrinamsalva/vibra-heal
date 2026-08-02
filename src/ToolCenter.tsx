@@ -171,6 +171,17 @@ const PANEL_TOOLS: PanelTool[] = [
     panelSelector: '#artifact-inspector-panel',
     closeSelector: '.artifact-inspector-close',
   },
+  {
+    kind: 'panel',
+    id: 'artifact-workflow-map',
+    label: 'Workflow Map',
+    description: 'View the static five-artifact, seven-route local review workflow.',
+    symbol: '⌘',
+    group: 'Guidance',
+    triggerSelector: '.artifact-workflow-map-fab',
+    panelSelector: '#artifact-workflow-map-panel',
+    closeSelector: '.artifact-workflow-map-close',
+  },
 ]
 
 const JUMP_TOOLS: JumpTool[] = [
@@ -209,6 +220,7 @@ const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[10],
   PANEL_TOOLS[11],
   PANEL_TOOLS[12],
+  PANEL_TOOLS[13],
   JUMP_TOOLS[1],
 ]
 
@@ -506,7 +518,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, inspect a file without selection, create or submit an issue report, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
