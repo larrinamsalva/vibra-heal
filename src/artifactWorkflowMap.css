@@ -1,0 +1,349 @@
+.artifact-workflow-map-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 84;
+  min-height: 2.75rem;
+  border: 1px solid rgba(157, 225, 255, 0.46);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: rgba(9, 19, 35, 0.96);
+  color: #eefaff;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.35);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.artifact-workflow-map-panel {
+  position: fixed;
+  inset: 1rem;
+  z-index: 96;
+  width: min(1120px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin-left: auto;
+  overflow: auto;
+  padding: clamp(1rem, 2.5vw, 1.65rem);
+  border: 1px solid rgba(157, 225, 255, 0.42);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(88, 190, 255, 0.14), transparent 36%),
+    linear-gradient(155deg, rgba(8, 18, 34, 0.99), rgba(15, 21, 39, 0.99));
+  color: #effaff;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.58);
+}
+
+.artifact-workflow-map-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.artifact-workflow-map-heading p,
+.artifact-workflow-map-section-heading span,
+.artifact-workflow-map-node-grid article > span {
+  margin: 0 0 0.25rem;
+  color: #9adfff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.artifact-workflow-map-heading h2,
+.artifact-workflow-map-section-heading h3,
+.artifact-workflow-map-node-grid h4 {
+  margin: 0;
+  line-height: 1.15;
+}
+
+.artifact-workflow-map-close {
+  flex: 0 0 auto;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font: inherit;
+  font-size: 1.45rem;
+  cursor: pointer;
+}
+
+.artifact-workflow-map-intro,
+.artifact-workflow-map-boundary {
+  color: #c9d9e9;
+  line-height: 1.65;
+}
+
+.artifact-workflow-map-totals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 1rem 0 0;
+}
+
+.artifact-workflow-map-totals > div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(163, 220, 255, 0.2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-workflow-map-totals dt {
+  color: #9fc7dd;
+  font-size: 0.78rem;
+}
+
+.artifact-workflow-map-totals dd {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 850;
+}
+
+.artifact-workflow-map-visual,
+.artifact-workflow-map-directory,
+.artifact-workflow-map-routes,
+.artifact-workflow-map-rules {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(163, 220, 255, 0.22);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-workflow-map-section-heading {
+  margin-bottom: 0.85rem;
+}
+
+.artifact-workflow-map-svg {
+  display: block;
+  width: 100%;
+  min-width: 760px;
+  max-height: 32rem;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.artifact-workflow-map-visual {
+  overflow-x: auto;
+}
+
+.artifact-workflow-svg-routes path {
+  fill: none;
+  stroke: #8edfc8;
+  stroke-width: 4;
+  marker-end: url(#artifact-workflow-arrow);
+}
+
+#artifact-workflow-arrow path {
+  fill: #8edfc8;
+}
+
+.artifact-workflow-svg-node rect {
+  fill: rgba(22, 58, 72, 0.98);
+  stroke: rgba(157, 225, 255, 0.66);
+  stroke-width: 2;
+}
+
+.artifact-workflow-svg-node.terminal rect {
+  fill: rgba(72, 54, 24, 0.98);
+  stroke: rgba(255, 219, 143, 0.82);
+}
+
+.artifact-workflow-svg-node text {
+  fill: #f2fbff;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.artifact-workflow-svg-node .artifact-workflow-svg-caption {
+  fill: #b8cede;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.artifact-workflow-map-legend {
+  margin: 0.8rem 0 0;
+  color: #c7d9e7;
+  line-height: 1.55;
+}
+
+.artifact-workflow-map-node-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.artifact-workflow-map-node-grid article {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.9rem;
+  border: 1px solid rgba(163, 220, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.artifact-workflow-map-node-grid article.terminal {
+  border-color: rgba(255, 219, 143, 0.48);
+  background: rgba(105, 72, 18, 0.15);
+}
+
+.artifact-workflow-map-node-grid code {
+  color: #bdefff;
+  overflow-wrap: anywhere;
+}
+
+.artifact-workflow-map-node-grid p {
+  margin: 0;
+  color: #c9d9e5;
+  line-height: 1.5;
+}
+
+.artifact-workflow-map-table-wrap {
+  overflow-x: auto;
+}
+
+.artifact-workflow-map-routes table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.artifact-workflow-map-routes caption {
+  padding: 0 0 0.75rem;
+  color: #c9d9e5;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.artifact-workflow-map-routes th,
+.artifact-workflow-map-routes td {
+  padding: 0.75rem;
+  border: 1px solid rgba(163, 220, 255, 0.2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.artifact-workflow-map-routes thead th {
+  color: #bdefff;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.artifact-workflow-map-routes tbody th {
+  color: #effaff;
+}
+
+.artifact-workflow-map-rules ul {
+  margin-bottom: 0;
+  padding-left: 1.25rem;
+  color: #d4e4ee;
+  line-height: 1.6;
+}
+
+.artifact-workflow-map-status {
+  margin: 1rem 0 0;
+  color: #aee8ff;
+  font-weight: 750;
+}
+
+.artifact-workflow-map-boundary {
+  margin-bottom: 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.9rem;
+}
+
+.artifact-workflow-map-panel button:focus-visible,
+.artifact-workflow-map-fab:focus-visible {
+  outline: 3px solid #a8e8ff;
+  outline-offset: 3px;
+}
+
+[data-text-size='large'] .artifact-workflow-map-panel {
+  font-size: 1.14rem;
+}
+
+[data-contrast='high'] .artifact-workflow-map-panel,
+[data-contrast='high'] .artifact-workflow-map-fab {
+  border-color: currentColor;
+  background: #03070d;
+  color: #fff;
+}
+
+@media (max-width: 820px) {
+  .artifact-workflow-map-panel {
+    inset: 0;
+    width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .artifact-workflow-map-heading {
+    padding-right: 3.2rem;
+  }
+
+  .artifact-workflow-map-close {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+  }
+
+  .artifact-workflow-map-totals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .artifact-workflow-map-node-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 440px) {
+  .artifact-workflow-map-totals {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artifact-workflow-map-panel,
+  .artifact-workflow-map-fab {
+    scroll-behavior: auto;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .artifact-workflow-map-panel,
+  .artifact-workflow-map-fab,
+  .artifact-workflow-map-panel section,
+  .artifact-workflow-map-panel article,
+  .artifact-workflow-map-panel button,
+  .artifact-workflow-map-panel table,
+  .artifact-workflow-map-panel th,
+  .artifact-workflow-map-panel td {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .artifact-workflow-map-svg {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+
+  .artifact-workflow-svg-routes path,
+  .artifact-workflow-svg-node rect {
+    stroke: CanvasText;
+  }
+
+  #artifact-workflow-arrow path,
+  .artifact-workflow-svg-node text,
+  .artifact-workflow-svg-node .artifact-workflow-svg-caption {
+    fill: CanvasText;
+  }
+}
