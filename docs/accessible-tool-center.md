@@ -1,6 +1,6 @@
 # Accessible Tool Center
 
-VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, and safety behavior.
+VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, and safety behavior.
 
 ## Tools included
 
@@ -26,6 +26,7 @@ VibraHeal uses one visible **Tools** launcher to organize optional panels and in
 - Release History
 - Release Package
 - Artifact Inspector
+- Workflow Map
 - Animal Calm
 
 Nature Mixer and Animal Calm are page sections. The remaining tools are non-modal panels.
@@ -58,31 +59,33 @@ Opening the Tool Center or moving between tools does not:
 - start or stop nature ambience
 - start a breathing guide
 - save, analyze, or delete a journal entry
-- read, inspect, import, or export a file without a deliberate file selection or button press
+- read, inspect, import, export, or route a file without a deliberate feature action
 - export, restore, or clear browser data
 - install or update the app
 - create an account or network request
 - submit an issue or approve, compare, package, sign, publish, deploy, or certify a release
+- turn a Workflow Map arrow into file movement or destination navigation
 - change frequency, volume, timer, or saved-session values
 - connect human audio tools to Animal Calm
 
-Every consequential action remains inside its original feature and keeps its original confirmation or user gesture.
+Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map is static guidance and contains no workflow-action control.
 
 ## Automated tests
 
 `src/ToolCenter.test.tsx` uses invented browser elements to verify that:
 
 - the Tool Center has a readable dialog name
+- the launcher reports sixteen destinations
 - focus moves to the first tool when opened
 - Arrow, Home, End, and Escape navigation works
 - opening a second panel closes the first panel
 - only one managed panel remains in the document
 - panel closure returns focus to the Tools launcher
 - jumping to Nature Mixer closes an open panel and focuses the section
-- Artifact Inspector participates in panel switching
+- Artifact Inspector and Workflow Map participate in panel switching
 - legacy launchers are removed from keyboard and assistive-technology navigation
 
-The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, or read a real review artifact.
+The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, or move a file between tools.
 
 ## Real-browser review still required
 
@@ -96,6 +99,7 @@ Simulated component tests do not replace review with real browsers and assistive
 - panel stacking on iOS, Android, and desktop browsers
 - installed-app and service-worker behavior
 - file-picker, clipboard, and download behavior
+- Workflow Map table and horizontal-diagram scrolling
 - audio behavior on real hardware
 
 ## Contribution rule
