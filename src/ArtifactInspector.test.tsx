@@ -18,6 +18,7 @@ const PRIVATE_STRINGS = [
   'PRIVATE ISSUE MARKDOWN',
   'PRIVATE MILESTONE',
   'PRIVATE RELEASE NOTE',
+  'PRIVATE CHECKLIST MARKDOWN',
   'PRIVATE HISTORY MILESTONE',
   'PRIVATE HISTORY NOTE',
   'PRIVATE HISTORY MARKDOWN',
@@ -300,7 +301,8 @@ describe('ArtifactInspector component', () => {
     })
 
     await screen.findByText('Validation failed')
-    expect(screen.getByText(/version 1/i)).toBeInTheDocument()
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent(/version 1/i)
     expect(screen.queryByText('PRIVATE INVALID BODY')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Clear inspection' }))
