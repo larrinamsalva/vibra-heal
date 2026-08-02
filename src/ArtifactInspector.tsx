@@ -128,10 +128,12 @@ function countValues(values: string[]) {
 }
 
 function collectPrivacy(value: unknown, kind: ReviewArtifactKind): ArtifactPrivacyFlag[] {
-  if (!isReviewRecord(value) || !isReviewRecord(value.privacy)) return []
+  if (!isReviewRecord(value)) return []
+  const privacy = value.privacy
+  if (!isReviewRecord(privacy)) return []
   return PRIVACY_KEYS[kind].map((key) => ({
     key,
-    value: value.privacy?.[key] === true,
+    value: privacy[key] === true,
   }))
 }
 
