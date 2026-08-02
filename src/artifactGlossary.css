@@ -1,0 +1,284 @@
+.artifact-glossary-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 110;
+}
+
+.artifact-glossary-panel {
+  position: fixed;
+  inset: 4vh max(16px, calc((100vw - 1120px) / 2));
+  z-index: 150;
+  overflow: auto;
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid rgba(170, 226, 213, 0.34);
+  border-radius: 26px;
+  color: #f4fffc;
+  background: linear-gradient(160deg, rgba(14, 37, 43, 0.99), rgba(27, 31, 58, 0.99));
+  box-shadow: 0 30px 90px rgba(2, 10, 19, 0.58);
+  backdrop-filter: blur(22px);
+}
+
+.artifact-glossary-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.artifact-glossary-header p,
+.artifact-glossary-header h2,
+.artifact-glossary-intro,
+.artifact-glossary-boundary,
+.artifact-glossary-entry h3,
+.artifact-glossary-entry h4,
+.artifact-glossary-entry h5,
+.artifact-glossary-entry p,
+.artifact-glossary-entry ul,
+.artifact-glossary-entry dl {
+  margin: 0;
+}
+
+.artifact-glossary-header p {
+  margin-bottom: 5px;
+  color: #91e5ce;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.artifact-glossary-header h2 {
+  font-size: clamp(1.45rem, 4vw, 2.2rem);
+  line-height: 1.12;
+}
+
+.artifact-glossary-close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(225, 255, 248, 0.24);
+  border-radius: 13px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  font: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.artifact-glossary-intro {
+  max-width: 78ch;
+  margin-top: 14px;
+  color: rgba(238, 255, 251, 0.75);
+  line-height: 1.6;
+}
+
+.artifact-glossary-totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 0;
+}
+
+.artifact-glossary-totals > div {
+  padding: 14px;
+  border: 1px solid rgba(210, 255, 246, 0.13);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-glossary-totals dt {
+  color: rgba(237, 255, 251, 0.65);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.artifact-glossary-totals dd {
+  margin: 5px 0 0;
+  color: #bdffeb;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.artifact-glossary-entries {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.artifact-glossary-entry {
+  padding: clamp(16px, 2.5vw, 24px);
+  border: 1px solid rgba(203, 255, 244, 0.16);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-glossary-entry-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.artifact-glossary-entry-heading span {
+  color: #91e5ce;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.artifact-glossary-entry h3 {
+  margin-top: 3px;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+}
+
+.artifact-glossary-entry-heading > strong {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #caffef;
+  background: rgba(85, 192, 160, 0.13);
+  font-size: 0.75rem;
+}
+
+.artifact-glossary-identity {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.artifact-glossary-identity > div {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.28fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.artifact-glossary-identity dt,
+.artifact-glossary-entry h4,
+.artifact-glossary-entry h5 {
+  color: rgba(237, 255, 251, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.artifact-glossary-identity dd {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.artifact-glossary-identity code {
+  overflow-wrap: anywhere;
+  color: #bdffeb;
+}
+
+.artifact-glossary-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.artifact-glossary-columns section,
+.artifact-glossary-destinations,
+.artifact-glossary-validation {
+  padding: 14px;
+  border-radius: 15px;
+  background: rgba(5, 15, 25, 0.24);
+}
+
+.artifact-glossary-entry ul {
+  padding-left: 20px;
+}
+
+.artifact-glossary-entry li,
+.artifact-glossary-entry p {
+  color: rgba(239, 255, 252, 0.76);
+  line-height: 1.55;
+}
+
+.artifact-glossary-entry h4 + p,
+.artifact-glossary-entry h4 + ul,
+.artifact-glossary-entry h5 + ul {
+  margin-top: 7px;
+}
+
+.artifact-glossary-destinations,
+.artifact-glossary-validation {
+  margin-top: 12px;
+}
+
+.artifact-glossary-validation h5 {
+  margin-top: 12px;
+}
+
+.artifact-glossary-boundary {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 15px;
+  color: rgba(239, 255, 252, 0.68);
+  background: rgba(85, 192, 160, 0.08);
+  line-height: 1.55;
+}
+
+.artifact-glossary-close:focus-visible {
+  outline: 3px solid #dcfff5;
+  outline-offset: 3px;
+}
+
+html[data-text-size='large'] .artifact-glossary-panel {
+  inset-inline: max(10px, calc((100vw - 1220px) / 2));
+}
+
+html[data-contrast='high'] .artifact-glossary-panel,
+html[data-contrast='high'] .artifact-glossary-entry,
+html[data-contrast='high'] .artifact-glossary-totals > div,
+html[data-contrast='high'] .artifact-glossary-close {
+  border-color: currentColor;
+}
+
+@media (max-width: 720px) {
+  .artifact-glossary-panel {
+    inset: 8px;
+    padding: 17px;
+    border-radius: 20px;
+  }
+
+  .artifact-glossary-totals,
+  .artifact-glossary-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-glossary-identity > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .artifact-glossary-entry-heading {
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artifact-glossary-panel,
+  .artifact-glossary-close {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .artifact-glossary-panel,
+  .artifact-glossary-entry,
+  .artifact-glossary-totals > div,
+  .artifact-glossary-columns section,
+  .artifact-glossary-destinations,
+  .artifact-glossary-validation,
+  .artifact-glossary-close {
+    border: 2px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+}

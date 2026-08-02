@@ -4,6 +4,7 @@
 .release-history-fab,
 .release-package-fab,
 .artifact-inspector-fab,
-.artifact-workflow-map-fab {
+.artifact-workflow-map-fab,
+.artifact-glossary-fab {
   display: none !important;
 }
