@@ -1,8 +1,8 @@
 # Local Artifact Inspector
 
-VibraHeal's **Tools → Artifact Inspector** validates one explicitly selected local review-artifact JSON file and presents a privacy-safe structural summary.
+VibraHeal's **Tools → Artifact Inspector** validates one explicitly selected local review-artifact JSON file and presents a privacy-safe structural summary plus passive compatibility guidance.
 
-The Inspector is a file-structure and privacy-declaration viewer. It is not a raw JSON viewer, release approval, deployment verifier, security scanner, compliance report, medical or veterinary assessment, signature checker, or certification service.
+The Inspector is a file-structure and privacy-declaration viewer. It is not a raw JSON viewer, release approval, deployment verifier, security scanner, compliance report, medical or veterinary assessment, signature checker, certification service, or automatic file router.
 
 ## Supported Format v1 artifacts
 
@@ -42,8 +42,41 @@ After successful validation, the Inspector can show:
 - whether optional notes or generated bodies exist
 - the expected boolean privacy declaration
 - a list of content categories deliberately hidden
+- current downstream tools that can import that Format v1 artifact
 
 The selected filename is shown only in the live panel so the tester can recognize the local file. It is not included in the copied or downloaded summary.
+
+## Compatibility guidance
+
+The compatibility registry describes only workflows that current VibraHeal tools actually support:
+
+| Inspected artifact | Current downstream importers |
+| --- | --- |
+| Device Check | Issue Report, Release Checklist, Release Package |
+| Issue Report | Release Package |
+| Release Checklist | Release History, Release Package |
+| Release History | Release Package |
+| Release Package | None |
+
+Each destination card explains:
+
+- what that destination does with the supported file
+- what information remains excluded or sanitized
+- that the Inspector must be closed first
+- that the person must open the destination through **Tools**
+- that the same file must be selected again through that destination's own picker
+- that the destination applies its own current validation
+
+Release Package is intentionally terminal in the current local workflow. No VibraHeal tool imports a Release Package manifest. It can be stored locally or inspected again later.
+
+Compatibility guidance never:
+
+- transfers the selected `File` object
+- keeps the browser file input populated for another tool
+- opens a destination automatically
+- submits, uploads, synchronizes, signs, publishes, deploys, or approves anything
+- proves that the artifact's contents are accurate or complete
+- claims accessibility, privacy, security, medical, veterinary, legal, or browser certification
 
 ## Content deliberately hidden
 
@@ -62,6 +95,8 @@ The summary may state that hidden text exists or report its character count, but
 
 A valid inspection can be copied as sanitized Markdown or downloaded as `vibraheal-artifact-inspection.json`.
 
+The copied and downloaded summaries include the static compatibility routes and manual instructions. They do not include the selected file or grant another tool access to it.
+
 The JSON summary declares:
 
 - local-only processing
@@ -71,18 +106,21 @@ The JSON summary declares:
 - no source filename
 - no raw JSON
 - no free-text bodies
+- no source-file transfer
+- no automatic destination opening
 - no upload
 
 The inspection-summary format is a convenience report and is not itself one of the five registered review artifacts.
 
 ## Memory and privacy boundary
 
-- The selected file remains in page memory only.
+- The selected file remains in page memory only while validation runs.
+- The browser file picker is cleared after the file is read.
 - The Inspector does not write to local storage.
 - The Inspector does not contact the network or GitHub.
 - Clearing the inspection does not modify or delete the source file.
 - Invalid files display only the validation error, not the raw content.
-- Closing or refreshing the page discards the selected file and inspection state.
+- Closing or refreshing the page discards the inspection state.
 
 ## Accessibility
 
@@ -92,6 +130,8 @@ The panel provides:
 - focus on the close button when opened
 - Escape-to-close and focus return
 - labeled file input and controls
+- heading-based compatibility navigation
+- text-only route, privacy, and manual-step explanations
 - live status announcements
 - phone and 200% zoom layouts
 - larger-text, reduced-motion, high-contrast, and forced-colors support
@@ -104,6 +144,12 @@ Tests verify that:
 - unsupported formats, versions, and unsafe privacy declarations fail
 - planted private strings do not appear in Markdown or JSON summaries
 - selected filenames remain excluded from copied output
+- the exact supported downstream route matrix is preserved
+- every route requires manual selection and destination revalidation
+- Release Package does not invent a downstream importer
+- compatibility summaries preserve private-text exclusions
+- the guidance section contains no destination action buttons
+- the browser file input is cleared after inspection
 - opening the tool does not read local storage or call the network
 - file import, copy, invalid-state display, reset, Escape, and focus restoration work
 - Tool Center keeps one panel open and hides the compatibility launcher
