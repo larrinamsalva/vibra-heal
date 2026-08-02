@@ -30,6 +30,7 @@ const HARNESS_PANELS: HarnessPanel[] = [
   { triggerClass: 'artifact-glossary-fab', panelId: 'artifact-glossary-panel', closeClass: 'artifact-glossary-close', name: 'Artifact Glossary panel' },
   { triggerClass: 'artifact-version-guide-fab', panelId: 'artifact-version-guide-panel', closeClass: 'artifact-version-guide-close', name: 'Artifact Version Guide panel' },
   { triggerClass: 'artifact-support-status-fab', panelId: 'artifact-support-status-panel', closeClass: 'artifact-support-status-close', name: 'Artifact Support Status panel' },
+  { triggerClass: 'artifact-responsibility-map-fab', panelId: 'artifact-responsibility-map-panel', closeClass: 'artifact-responsibility-map-close', name: 'Artifact Responsibility Map panel' },
 ]
 
 function addPanelHarness(definition: HarnessPanel) {
@@ -120,11 +121,11 @@ afterEach(() => {
 })
 
 describe('ToolCenter', () => {
-  it('opens a named nineteen-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
+  it('opens a named twenty-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
     render(<ToolCenter />)
 
     const launcher = screen.getByRole('button', { name: /Tools/i })
-    expect(launcher).toHaveTextContent('19 tools')
+    expect(launcher).toHaveTextContent('20 tools')
     fireEvent.click(launcher)
 
     const menu = screen.getByRole('dialog', { name: 'Choose one tool at a time.' })
@@ -132,6 +133,7 @@ describe('ToolCenter', () => {
     const animal = screen.getByRole('button', { name: /Animal Calm/i })
     expect(screen.getByRole('button', { name: /Artifact Version Guide/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Artifact Support Status/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Artifact Responsibility Map/i })).toBeInTheDocument()
 
     await waitFor(() => expect(breathing).toHaveFocus())
     fireEvent.keyDown(menu, { key: 'End' })
@@ -152,6 +154,7 @@ describe('ToolCenter', () => {
     ['Workflow Map', 'Artifact Workflow Map panel', 'Artifact Glossary', 'Artifact Glossary panel'],
     ['Artifact Glossary', 'Artifact Glossary panel', 'Artifact Version Guide', 'Artifact Version Guide panel'],
     ['Artifact Version Guide', 'Artifact Version Guide panel', 'Artifact Support Status', 'Artifact Support Status panel'],
+    ['Artifact Support Status', 'Artifact Support Status panel', 'Artifact Responsibility Map', 'Artifact Responsibility Map panel'],
   ])('closes %s before opening %s', async (firstTool, firstPanel, secondTool, secondPanel) => {
     render(<ToolCenter />)
     const launcher = screen.getByRole('button', { name: /Tools/i })
