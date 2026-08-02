@@ -1,44 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   RELEASE_CHECKLIST_ITEMS,
-  type ReleaseItemStatus,
 } from './ReleaseChecklist'
+import {
+  REVIEW_ARTIFACT_FORMATS,
+  REVIEW_ARTIFACT_VERSION,
+  parseReleaseChecklistArtifact,
+  type ParsedReleaseChecklistRecord,
+  type ReleaseItemStatus,
+  type ReleaseOverall,
+} from './reviewArtifactSchemas'
 import './releaseHistory.css'
 
 const MAX_FILE_BYTES = 1_000_000
 const MAX_RECORDS = 4
-const OVERALL_STATES = new Set<ReleaseOverall>([
-  'incomplete',
-  'needs-attention',
-  'checklist-complete',
-])
-const ITEM_STATUSES = new Set<ReleaseItemStatus>([
-  'not-reviewed',
-  'ready',
-  'needs-attention',
-  'not-applicable',
-])
 
-type ReleaseOverall = 'incomplete' | 'needs-attention' | 'checklist-complete'
-
-type ImportedReviewSummary = {
-  passed: number
-  needsReviewCount: number
-  notTestedCount: number
-  findingsResolvedOrAccepted: boolean
-}
-
-export type ReleaseHistoryRecord = {
-  id: string
-  sourceName: string
-  createdAt: string
-  milestone: string
-  targetDate: string
-  overall: ReleaseOverall
-  statuses: Record<string, ReleaseItemStatus>
-  importedDeviceReview: ImportedReviewSummary | null
-  note: string
-}
+export type ReleaseHistoryRecord = ParsedReleaseChecklistRecord
 
 export type ReleaseHistoryCell = {
   status: ReleaseItemStatus
@@ -52,22 +29,11 @@ export type ReleaseHistoryRow = {
   cells: ReleaseHistoryCell[]
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function cleanText(value: unknown, label: string, maxLength: number): string {
-  if (typeof value !== 'string') throw new Error(`${label} must be text.`)
-  const cleaned = value.trim()
-  if (cleaned.length > maxLength) throw new Error(`${label} is too long.`)
-  return cleaned
-}
-
-function cleanCount(value: unknown, label: string, max: number): number {
-  if (!Number.isInteger(value) || Number(value) < 0 || Number(value) > max) {
-    throw new Error(`${label} is invalid.`)
-  }
-  return Number(value)
+export function parseReleaseChecklistExport(
+  value: unknown,
+  sourceName = 'release-checklist.json',
+): ReleaseHistoryRecord {
+  return parseReleaseChecklistArtifact(value, RELEASE_CHECKLIST_ITEMS, sourceName)
 }
 
 function safeLine(value: string) {
@@ -85,116 +51,6 @@ function overallLabel(overall: ReleaseOverall) {
   if (overall === 'checklist-complete') return 'Checklist complete'
   if (overall === 'needs-attention') return 'Needs attention'
   return 'Review incomplete'
-}
-
-function deriveOverall(
-  statuses: Record<string, ReleaseItemStatus>,
-  importedReview: ImportedReviewSummary | null,
-): ReleaseOverall {
-  const hasAttention = RELEASE_CHECKLIST_ITEMS.some(
-    (item) => statuses[item.id] === 'needs-attention',
-  )
-  const importedAttention = Boolean(
-    importedReview
-      && importedReview.needsReviewCount > 0
-      && !importedReview.findingsResolvedOrAccepted,
-  )
-  if (hasAttention || importedAttention) return 'needs-attention'
-
-  const requiredIncomplete = RELEASE_CHECKLIST_ITEMS.some(
-    (item) => item.required && statuses[item.id] === 'not-reviewed',
-  )
-  return requiredIncomplete ? 'incomplete' : 'checklist-complete'
-}
-
-function parseImportedReview(value: unknown): ImportedReviewSummary | null {
-  if (value === null) return null
-  if (!isRecord(value)) throw new Error('Imported Device Check summary is invalid.')
-
-  if (!Array.isArray(value.needsReview) || value.needsReview.length > 60) {
-    throw new Error('Imported Device Check findings are invalid.')
-  }
-
-  return {
-    passed: cleanCount(value.passed, 'Imported passed count', 60),
-    needsReviewCount: value.needsReview.length,
-    notTestedCount: cleanCount(value.notTestedCount, 'Imported not-tested count', 60),
-    findingsResolvedOrAccepted: value.findingsResolvedOrAccepted === true,
-  }
-}
-
-export function parseReleaseChecklistExport(
-  value: unknown,
-  sourceName = 'release-checklist.json',
-): ReleaseHistoryRecord {
-  if (!isRecord(value)) throw new Error('The selected file is not a Release Checklist export.')
-  if (value.format !== 'vibraheal-local-release-checklist' || value.version !== 1) {
-    throw new Error('Only VibraHeal Release Checklist format version 1 is supported.')
-  }
-
-  if (!isRecord(value.privacy)) throw new Error('The checklist privacy declaration is missing.')
-  if (
-    value.privacy.localOnly !== true
-    || value.privacy.persistedAutomatically !== false
-    || value.privacy.submittedAutomatically !== false
-    || value.privacy.browserStorageRead !== false
-    || value.privacy.accountRequired !== false
-    || value.privacy.certificationClaimed !== false
-  ) {
-    throw new Error('The checklist privacy declaration is unsupported or unsafe.')
-  }
-
-  const createdAt = cleanText(value.createdAt, 'Creation time', 80)
-  if (Number.isNaN(Date.parse(createdAt))) throw new Error('The checklist creation time is invalid.')
-  const milestone = cleanText(value.milestone, 'Milestone', 180)
-  const targetDate = cleanText(value.targetDate ?? '', 'Target date', 40)
-  if (targetDate && !/^\d{4}-\d{2}-\d{2}$/.test(targetDate)) {
-    throw new Error('The checklist target date is invalid.')
-  }
-
-  const overall = cleanText(value.overall, 'Overall state', 40) as ReleaseOverall
-  if (!OVERALL_STATES.has(overall)) throw new Error('The checklist overall state is unsupported.')
-
-  if (!Array.isArray(value.checklist) || value.checklist.length !== RELEASE_CHECKLIST_ITEMS.length) {
-    throw new Error(`The checklist must contain exactly ${RELEASE_CHECKLIST_ITEMS.length} current review rows.`)
-  }
-
-  const statuses: Record<string, ReleaseItemStatus> = {}
-  const seen = new Set<string>()
-  value.checklist.forEach((entry, index) => {
-    if (!isRecord(entry)) throw new Error(`Checklist row ${index + 1} is invalid.`)
-    const id = cleanText(entry.id, `Checklist row ${index + 1} id`, 120)
-    const item = RELEASE_CHECKLIST_ITEMS.find((candidate) => candidate.id === id)
-    if (!item) throw new Error(`Checklist row id “${id}” is not supported by this viewer.`)
-    if (seen.has(id)) throw new Error(`Checklist row id “${id}” appears more than once.`)
-    seen.add(id)
-
-    const status = cleanText(entry.status, `Checklist row ${index + 1} status`, 40) as ReleaseItemStatus
-    if (!ITEM_STATUSES.has(status)) throw new Error(`Checklist row “${id}” has an unsupported status.`)
-    if (entry.required !== item.required) throw new Error(`Checklist row “${id}” has an invalid required flag.`)
-    statuses[id] = status
-  })
-
-  const importedDeviceReview = parseImportedReview(value.importedDeviceReview)
-  const derived = deriveOverall(statuses, importedDeviceReview)
-  if (derived !== overall) {
-    throw new Error(`The checklist overall state does not match its row data; expected “${overallLabel(derived)}”.`)
-  }
-
-  const note = cleanText(value.note ?? '', 'Release note', 3000)
-  const normalizedSource = safeLine(sourceName).slice(0, 180) || 'release-checklist.json'
-
-  return {
-    id: `${createdAt}::${milestone}`,
-    sourceName: normalizedSource,
-    createdAt,
-    milestone: milestone || 'VibraHeal release checklist',
-    targetDate,
-    overall,
-    statuses,
-    importedDeviceReview,
-    note,
-  }
 }
 
 export function sortReleaseHistory(records: ReleaseHistoryRecord[]) {
@@ -295,8 +151,8 @@ export function buildReleaseHistoryExport(
 ) {
   const sorted = sortReleaseHistory(records)
   return {
-    format: 'vibraheal-local-release-history-comparison',
-    version: 1,
+    format: REVIEW_ARTIFACT_FORMATS.releaseHistory,
+    version: REVIEW_ARTIFACT_VERSION,
     createdAt,
     records: sorted.map((record) => ({
       createdAt: record.createdAt,
