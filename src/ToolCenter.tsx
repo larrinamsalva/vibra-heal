@@ -193,6 +193,17 @@ const PANEL_TOOLS: PanelTool[] = [
     panelSelector: '#artifact-glossary-panel',
     closeSelector: '.artifact-glossary-close',
   },
+  {
+    kind: 'panel',
+    id: 'artifact-version-guide',
+    label: 'Artifact Version Guide',
+    description: 'Explain current v1 compatibility and future migration rules.',
+    symbol: 'v1',
+    group: 'Guidance',
+    triggerSelector: '.artifact-version-guide-fab',
+    panelSelector: '#artifact-version-guide-panel',
+    closeSelector: '.artifact-version-guide-close',
+  },
 ]
 
 const JUMP_TOOLS: JumpTool[] = [
@@ -233,6 +244,7 @@ const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[12],
   PANEL_TOOLS[13],
   PANEL_TOOLS[14],
+  PANEL_TOOLS[15],
   JUMP_TOOLS[1],
 ]
 
@@ -530,7 +542,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary guidance into validation, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary or version guidance into validation or migration, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}

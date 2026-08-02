@@ -1,6 +1,7 @@
 import { getArtifactCompatibility } from './artifactCompatibility'
 import {
   REVIEW_ARTIFACT_FORMATS,
+  REVIEW_ARTIFACT_VERSION,
   type ReviewArtifactKind,
 } from './reviewArtifactSchemas'
 
@@ -16,7 +17,7 @@ export type ReviewArtifactCatalogEntry = {
   kind: ReviewArtifactKind
   label: string
   format: string
-  version: 1
+  version: typeof REVIEW_ARTIFACT_VERSION
   purpose: string
   mayContain: string[]
   privacyBoundary: string
@@ -98,12 +99,12 @@ export function getReviewArtifactCatalogEntry(
     kind,
     label: LABELS[kind],
     format: REVIEW_ARTIFACT_FORMATS[kind],
-    version: 1,
+    version: REVIEW_ARTIFACT_VERSION,
     purpose: PURPOSES[kind],
     mayContain: MAY_CONTAIN[kind],
     privacyBoundary: PRIVACY_BOUNDARIES[kind],
     structuralValidationMeans:
-      'The file matches the current Format v1 structure, supported values, and expected privacy declarations.',
+      `The file matches the current Format v${REVIEW_ARTIFACT_VERSION} structure, supported values, and expected privacy declarations.`,
     structuralValidationDoesNotMean: [...VALIDATION_DOES_NOT_MEAN],
     destinationLabels: compatibility.destinations.map((destination) => destination.toolLabel),
     terminal: compatibility.noDownstreamImporter,

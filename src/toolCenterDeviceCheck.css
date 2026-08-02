@@ -5,6 +5,7 @@
 .release-package-fab,
 .artifact-inspector-fab,
 .artifact-workflow-map-fab,
-.artifact-glossary-fab {
+.artifact-glossary-fab,
+.artifact-version-guide-fab {
   display: none !important;
 }
