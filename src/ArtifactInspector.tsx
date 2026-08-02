@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  getArtifactCompatibility,
+  type ArtifactCompatibilityGuide,
+} from './artifactCompatibility'
 import { RELEASE_CHECKLIST_ITEMS } from './ReleaseChecklist'
 import {
   REVIEW_ARTIFACT_FORMATS,
@@ -118,6 +122,7 @@ export type ArtifactInspection = {
   summary: Record<string, unknown>
   privacy: ArtifactPrivacyFlag[]
   hiddenFields: string[]
+  compatibility: ArtifactCompatibilityGuide
 }
 
 function countValues(values: string[]) {
@@ -154,6 +159,7 @@ function inspectDeviceCheck(value: unknown): ArtifactInspection {
     },
     privacy: collectPrivacy(value, 'deviceCheck'),
     hiddenFields: HIDDEN_FIELDS.deviceCheck,
+    compatibility: getArtifactCompatibility('deviceCheck'),
   }
 }
 
@@ -172,6 +178,7 @@ function inspectIssueReport(value: unknown): ArtifactInspection {
     },
     privacy: collectPrivacy(value, 'issueReport'),
     hiddenFields: HIDDEN_FIELDS.issueReport,
+    compatibility: getArtifactCompatibility('issueReport'),
   }
 }
 
@@ -197,6 +204,7 @@ function inspectReleaseChecklist(value: unknown): ArtifactInspection {
     },
     privacy: collectPrivacy(value, 'releaseChecklist'),
     hiddenFields: HIDDEN_FIELDS.releaseChecklist,
+    compatibility: getArtifactCompatibility('releaseChecklist'),
   }
 }
 
@@ -223,6 +231,7 @@ function inspectReleaseHistory(value: unknown): ArtifactInspection {
     },
     privacy: collectPrivacy(value, 'releaseHistory'),
     hiddenFields: HIDDEN_FIELDS.releaseHistory,
+    compatibility: getArtifactCompatibility('releaseHistory'),
   }
 }
 
@@ -246,6 +255,7 @@ function inspectReleasePackage(value: unknown): ArtifactInspection {
     },
     privacy: collectPrivacy(value, 'releasePackage'),
     hiddenFields: HIDDEN_FIELDS.releasePackage,
+    compatibility: getArtifactCompatibility('releasePackage'),
   }
 }
 
@@ -259,6 +269,33 @@ export function inspectReviewArtifact(value: unknown): ArtifactInspection {
   if (kind === 'releaseChecklist') return inspectReleaseChecklist(value)
   if (kind === 'releaseHistory') return inspectReleaseHistory(value)
   return inspectReleasePackage(value)
+}
+
+function buildCompatibilityMarkdown(guide: ArtifactCompatibilityGuide) {
+  const lines = ['## Where this file can be used next', '']
+
+  if (guide.noDownstreamImporter) {
+    lines.push(`- ${guide.noDownstreamMessage}`, '')
+  } else {
+    guide.destinations.forEach((destination) => {
+      lines.push(
+        `### ${destination.toolLabel}`,
+        '',
+        destination.purpose,
+        '',
+        `**Privacy boundary:** ${destination.privacyBoundary}`,
+        '',
+        `**Manual step:** ${destination.manualInstruction}`,
+        '',
+        `- Automatic file transfer: ${destination.automaticTransfer}`,
+        `- Destination revalidates the file: ${destination.destinationRevalidates}`,
+        '',
+      )
+    })
+  }
+
+  lines.push('## Compatibility rules', '', ...guide.rules.map((rule) => `- ${rule}`), '')
+  return lines
 }
 
 export function buildArtifactInspectionMarkdown(inspection: ArtifactInspection) {
@@ -281,8 +318,9 @@ export function buildArtifactInspectionMarkdown(inspection: ArtifactInspection) 
     '## Content deliberately hidden',
     ...inspection.hiddenFields.map((field) => `- ${field}`),
     '',
+    ...buildCompatibilityMarkdown(inspection.compatibility),
     '---',
-    '_Generated locally. The selected filename, raw JSON, and hidden free-text bodies are not included._',
+    '_Generated locally. The selected filename, raw JSON, hidden free-text bodies, and source file are not transferred._',
   ]
   return lines.join('\n')
 }
@@ -303,6 +341,7 @@ export function buildArtifactInspectionExport(
     summary: inspection.summary,
     privacy: inspection.privacy,
     hiddenFields: inspection.hiddenFields,
+    compatibility: inspection.compatibility,
     markdown: buildArtifactInspectionMarkdown(inspection),
     safeguards: {
       localOnly: true,
@@ -313,6 +352,8 @@ export function buildArtifactInspectionExport(
       sourceFilenameIncluded: false,
       rawJsonIncluded: false,
       freeTextBodiesIncluded: false,
+      sourceFileTransferred: false,
+      destinationOpenedAutomatically: false,
       uploaded: false,
     },
   }
@@ -404,7 +445,9 @@ export default function ArtifactInspector() {
       const parsed = JSON.parse(await file.text())
       const next = inspectReviewArtifact(parsed)
       setInspection(next)
-      setStatus(`${next.label} Format v${next.version} validated locally. Hidden text remains hidden.`)
+      setStatus(
+        `${next.label} Format v${next.version} validated locally. Compatibility guidance is informational only.`,
+      )
     } catch (error) {
       const message = error instanceof Error
         ? error.message
@@ -425,7 +468,9 @@ export default function ArtifactInspector() {
     if (!inspection) return
     try {
       await copyText(markdown)
-      setStatus('Sanitized inspection summary copied locally. The filename and hidden text were excluded.')
+      setStatus(
+        'Sanitized inspection and compatibility summary copied locally. No file was transferred.',
+      )
     } catch {
       setStatus('Copy is unavailable in this browser. Use the JSON download instead.')
     }
@@ -439,7 +484,7 @@ export default function ArtifactInspector() {
       'vibraheal-artifact-inspection.json',
       'application/json;charset=utf-8',
     )
-    setStatus('Sanitized inspection summary downloaded locally. Nothing was uploaded.')
+    setStatus('Sanitized inspection summary downloaded locally. Nothing was uploaded or transferred.')
   }
 
   return (
@@ -481,8 +526,8 @@ export default function ArtifactInspector() {
 
           <p className="artifact-inspector-intro">
             Select one VibraHeal review JSON file deliberately. The shared Format v1 registry validates it,
-            while this screen shows only dates, counts, states, and expected privacy flags. Raw JSON and
-            free-text bodies are never rendered.
+            while this screen shows safe metadata and explains which current tool can accept the file next.
+            Raw JSON and free-text bodies are never rendered or transferred.
           </p>
 
           <section className="artifact-inspector-import" aria-labelledby="artifact-inspector-import-title">
@@ -560,13 +605,58 @@ export default function ArtifactInspector() {
                 <ul>{inspection.hiddenFields.map((field) => <li key={field}>{field}</li>)}</ul>
               </section>
 
+              <section
+                className="artifact-inspector-compatibility"
+                aria-labelledby="artifact-inspector-compatibility-title"
+              >
+                <div className="artifact-inspector-section-heading">
+                  <div>
+                    <span>Supported local workflow</span>
+                    <h3 id="artifact-inspector-compatibility-title">Where this file can be used next</h3>
+                  </div>
+                </div>
+
+                {inspection.compatibility.noDownstreamImporter ? (
+                  <div className="artifact-inspector-no-destination">
+                    <strong>No downstream importer</strong>
+                    <p>{inspection.compatibility.noDownstreamMessage}</p>
+                  </div>
+                ) : (
+                  <div className="artifact-inspector-destination-grid">
+                    {inspection.compatibility.destinations.map((destination) => (
+                      <article key={destination.toolId} className="artifact-inspector-destination">
+                        <span>Tools → {destination.toolLabel}</span>
+                        <h4>{destination.toolLabel}</h4>
+                        <p>{destination.purpose}</p>
+                        <small>{destination.privacyBoundary}</small>
+                        <strong>{destination.manualInstruction}</strong>
+                        <dl>
+                          <div>
+                            <dt>Automatic transfer</dt>
+                            <dd>{String(destination.automaticTransfer)}</dd>
+                          </div>
+                          <div>
+                            <dt>Revalidated there</dt>
+                            <dd>{String(destination.destinationRevalidates)}</dd>
+                          </div>
+                        </dl>
+                      </article>
+                    ))}
+                  </div>
+                )}
+
+                <ul className="artifact-inspector-compatibility-rules">
+                  {inspection.compatibility.rules.map((rule) => <li key={rule}>{rule}</li>)}
+                </ul>
+              </section>
+
               <section className="artifact-inspector-preview" aria-labelledby="artifact-inspector-preview-title">
                 <div className="artifact-inspector-section-heading">
                   <div><span>Local sanitized output</span><h3 id="artifact-inspector-preview-title">Review the exact shareable summary</h3></div>
                 </div>
                 <textarea
                   readOnly
-                  rows={18}
+                  rows={22}
                   value={markdown}
                   aria-label="Generated artifact inspection summary"
                 />
@@ -585,8 +675,9 @@ export default function ArtifactInspector() {
 
           <p className="artifact-inspector-status" aria-live="polite">{status}</p>
           <p className="artifact-inspector-boundary">
-            Artifact Inspector does not save imports, reveal hidden text, modify source files, read VibraHeal storage,
-            upload content, contact GitHub, approve a release, verify deployment, or claim certification.
+            Artifact Inspector does not save imports, reveal hidden text, transfer source files, open another
+            tool automatically, read VibraHeal storage, upload content, contact GitHub, approve a release,
+            verify deployment, or claim certification.
           </p>
         </aside>
       )}

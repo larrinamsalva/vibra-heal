@@ -45,7 +45,8 @@
 .artifact-inspector-heading p,
 .artifact-inspector-section-heading span,
 .artifact-inspector-valid span,
-.artifact-inspector-source span {
+.artifact-inspector-source span,
+.artifact-inspector-destination > span {
   margin: 0 0 0.25rem;
   color: #9adfff;
   font-size: 0.78rem;
@@ -57,7 +58,8 @@
 .artifact-inspector-heading h2,
 .artifact-inspector-section-heading h3,
 .artifact-inspector-valid h3,
-.artifact-inspector-import h3 {
+.artifact-inspector-import h3,
+.artifact-inspector-destination h4 {
   margin: 0;
   line-height: 1.15;
 }
@@ -87,6 +89,7 @@
 .artifact-inspector-summary,
 .artifact-inspector-privacy,
 .artifact-inspector-hidden,
+.artifact-inspector-compatibility,
 .artifact-inspector-preview,
 .artifact-inspector-empty {
   margin-top: 1rem;
@@ -107,7 +110,8 @@
 .artifact-inspector-import p,
 .artifact-inspector-source small,
 .artifact-inspector-invalid small,
-.artifact-inspector-empty p {
+.artifact-inspector-empty p,
+.artifact-inspector-no-destination p {
   margin-bottom: 0;
   color: #bfd0df;
   line-height: 1.5;
@@ -184,14 +188,16 @@
 }
 
 .artifact-inspector-valid dt,
-.artifact-inspector-privacy dt {
+.artifact-inspector-privacy dt,
+.artifact-inspector-destination dt {
   color: #9fc7dd;
   font-size: 0.78rem;
   overflow-wrap: anywhere;
 }
 
 .artifact-inspector-valid dd,
-.artifact-inspector-privacy dd {
+.artifact-inspector-privacy dd,
+.artifact-inspector-destination dd {
   margin: 0;
   font-weight: 800;
   overflow-wrap: anywhere;
@@ -209,11 +215,77 @@
   overflow-wrap: anywhere;
 }
 
-.artifact-inspector-hidden ul {
+.artifact-inspector-hidden ul,
+.artifact-inspector-compatibility-rules {
   margin-bottom: 0;
   padding-left: 1.3rem;
   color: #d6e5ef;
   line-height: 1.6;
+}
+
+.artifact-inspector-destination-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0.85rem;
+  margin-top: 0.9rem;
+}
+
+.artifact-inspector-destination,
+.artifact-inspector-no-destination {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(128, 218, 255, 0.28);
+  border-radius: 16px;
+  background: rgba(3, 12, 25, 0.34);
+}
+
+.artifact-inspector-destination {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+}
+
+.artifact-inspector-destination p,
+.artifact-inspector-destination small,
+.artifact-inspector-destination strong {
+  margin: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.artifact-inspector-destination p {
+  color: #e2edf5;
+}
+
+.artifact-inspector-destination small {
+  color: #bad0de;
+}
+
+.artifact-inspector-destination strong {
+  color: #dff7ff;
+  font-size: 0.92rem;
+}
+
+.artifact-inspector-destination dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.artifact-inspector-destination dl > div {
+  min-width: 0;
+  padding: 0.6rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.artifact-inspector-no-destination {
+  margin-top: 0.9rem;
+}
+
+.artifact-inspector-compatibility-rules {
+  margin-top: 1rem;
 }
 
 .artifact-inspector-preview textarea {
@@ -292,7 +364,8 @@
   }
 
   .artifact-inspector-valid dl,
-  .artifact-inspector-privacy dl {
+  .artifact-inspector-privacy dl,
+  .artifact-inspector-destination dl {
     grid-template-columns: 1fr;
     width: 100%;
   }
@@ -311,6 +384,7 @@
   .artifact-inspector-panel,
   .artifact-inspector-fab,
   .artifact-inspector-panel section,
+  .artifact-inspector-panel article,
   .artifact-inspector-panel button,
   .artifact-inspector-panel textarea {
     border: 1px solid CanvasText;
