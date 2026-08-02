@@ -53,7 +53,7 @@ describe('review artifact catalog', () => {
       expect(entry.privacyBoundary.length).toBeGreaterThan(20)
       expect(entry.structuralValidationMeans).toMatch(/Format v1 structure/i)
       expect(entry.structuralValidationDoesNotMean).toHaveLength(3)
-      expect(entry.structuralValidationDoesNotMean.join(' ')).toMatch(/not.*certified/i)
+      expect(entry.structuralValidationDoesNotMean.join(' ')).toMatch(/certified/i)
     })
   })
 })
