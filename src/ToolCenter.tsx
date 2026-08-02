@@ -27,225 +27,83 @@ type JumpTool = {
 
 type ToolDefinition = PanelTool | JumpTool
 
+function panel(
+  id: string,
+  label: string,
+  description: string,
+  symbol: string,
+  group: ToolGroup,
+  triggerSelector: string,
+  panelSelector: string,
+  closeSelector: string,
+): PanelTool {
+  return {
+    kind: 'panel',
+    id,
+    label,
+    description,
+    symbol,
+    group,
+    triggerSelector,
+    panelSelector,
+    closeSelector,
+  }
+}
+
+function jump(
+  id: string,
+  label: string,
+  description: string,
+  symbol: string,
+  group: ToolGroup,
+  targetSelector: string,
+): JumpTool {
+  return { kind: 'jump', id, label, description, symbol, group, targetSelector }
+}
+
 const PANEL_TOOLS: PanelTool[] = [
-  {
-    kind: 'panel',
-    id: 'breathing',
-    label: 'Breathing',
-    description: 'Choose a text-first breathing pattern and pace.',
-    symbol: '◌',
-    group: 'Session tools',
-    triggerSelector: '.breathing-fab',
-    panelSelector: '#breathing-guide-panel',
-    closeSelector: '.breathing-close',
-  },
-  {
-    kind: 'panel',
-    id: 'summary',
-    label: 'Session summary',
-    description: 'Print or download a private session summary.',
-    symbol: '▤',
-    group: 'Session tools',
-    triggerSelector: '.summary-fab',
-    panelSelector: '#session-summary-panel',
-    closeSelector: '.summary-close',
-  },
-  {
-    kind: 'panel',
-    id: 'journal',
-    label: 'Journal',
-    description: 'Save only reflections you deliberately choose.',
-    symbol: '✎',
-    group: 'Session tools',
-    triggerSelector: '.journal-fab',
-    panelSelector: '#session-journal-panel',
-    closeSelector: '.journal-close',
-  },
-  {
-    kind: 'panel',
-    id: 'accessibility',
-    label: 'Accessibility',
-    description: 'Adjust visuals, motion, text size, and contrast.',
-    symbol: 'Aa',
-    group: 'Preferences and data',
-    triggerSelector: '.accessibility-fab',
-    panelSelector: '#accessibility-panel',
-    closeSelector: '.accessibility-close',
-  },
-  {
-    kind: 'panel',
-    id: 'backup',
-    label: 'Backup and restore',
-    description: 'Export or restore validated local settings.',
-    symbol: '↕',
-    group: 'Preferences and data',
-    triggerSelector: '.backup-fab',
-    panelSelector: '#backup-panel',
-    closeSelector: '.backup-close',
-  },
-  {
-    kind: 'panel',
-    id: 'privacy',
-    label: 'Privacy and local data',
-    description: 'Inspect, export, or clear browser-local data.',
-    symbol: '⌁',
-    group: 'Preferences and data',
-    triggerSelector: '.privacy-center-fab',
-    panelSelector: '#privacy-center-panel',
-    closeSelector: '.privacy-center-close',
-  },
-  {
-    kind: 'panel',
-    id: 'install',
-    label: 'Install and updates',
-    description: 'Review installation, offline, and update status.',
-    symbol: '▣',
-    group: 'Preferences and data',
-    triggerSelector: '.pwa-install-fab',
-    panelSelector: '#pwa-install-panel',
-    closeSelector: '.pwa-close-button',
-  },
-  {
-    kind: 'panel',
-    id: 'device-check',
-    label: 'Device Check',
-    description: 'Run a local capability scan and structured real-device review.',
-    symbol: '✓?',
-    group: 'Guidance',
-    triggerSelector: '.device-check-fab',
-    panelSelector: '#device-check-panel',
-    closeSelector: '.device-check-close',
-  },
-  {
-    kind: 'panel',
-    id: 'issue-report',
-    label: 'Issue Report',
-    description: 'Format a focused local bug report without submitting it.',
-    symbol: '!',
-    group: 'Guidance',
-    triggerSelector: '.issue-report-fab',
-    panelSelector: '#issue-report-panel',
-    closeSelector: '.issue-report-close',
-  },
-  {
-    kind: 'panel',
-    id: 'release-checklist',
-    label: 'Release Checklist',
-    description: 'Record local milestone review without claiming certification.',
-    symbol: '✓',
-    group: 'Guidance',
-    triggerSelector: '.release-checklist-fab',
-    panelSelector: '#release-checklist-panel',
-    closeSelector: '.release-checklist-close',
-  },
-  {
-    kind: 'panel',
-    id: 'release-history',
-    label: 'Release History',
-    description: 'Compare explicitly imported checklist files without treating them as approvals.',
-    symbol: '↔',
-    group: 'Guidance',
-    triggerSelector: '.release-history-fab',
-    panelSelector: '#release-history-panel',
-    closeSelector: '.release-history-close',
-  },
-  {
-    kind: 'panel',
-    id: 'release-package',
-    label: 'Release Package',
-    description: 'Build a sanitized manifest from explicitly selected review artifacts.',
-    symbol: '▦',
-    group: 'Guidance',
-    triggerSelector: '.release-package-fab',
-    panelSelector: '#release-package-panel',
-    closeSelector: '.release-package-close',
-  },
-  {
-    kind: 'panel',
-    id: 'artifact-inspector',
-    label: 'Artifact Inspector',
-    description: 'Validate one local review file and show only safe structured metadata.',
-    symbol: '⌕',
-    group: 'Guidance',
-    triggerSelector: '.artifact-inspector-fab',
-    panelSelector: '#artifact-inspector-panel',
-    closeSelector: '.artifact-inspector-close',
-  },
-  {
-    kind: 'panel',
-    id: 'artifact-workflow-map',
-    label: 'Workflow Map',
-    description: 'View the static five-artifact, seven-route local review workflow.',
-    symbol: '⌘',
-    group: 'Guidance',
-    triggerSelector: '.artifact-workflow-map-fab',
-    panelSelector: '#artifact-workflow-map-panel',
-    closeSelector: '.artifact-workflow-map-close',
-  },
-  {
-    kind: 'panel',
-    id: 'artifact-glossary',
-    label: 'Artifact Glossary',
-    description: 'Explain each registered review format and its privacy boundary.',
-    symbol: 'ABC',
-    group: 'Guidance',
-    triggerSelector: '.artifact-glossary-fab',
-    panelSelector: '#artifact-glossary-panel',
-    closeSelector: '.artifact-glossary-close',
-  },
-  {
-    kind: 'panel',
-    id: 'artifact-version-guide',
-    label: 'Artifact Version Guide',
-    description: 'Explain current v1 compatibility and future migration rules.',
-    symbol: 'v1',
-    group: 'Guidance',
-    triggerSelector: '.artifact-version-guide-fab',
-    panelSelector: '#artifact-version-guide-panel',
-    closeSelector: '.artifact-version-guide-close',
-  },
+  panel('breathing', 'Breathing', 'Choose a text-first breathing pattern and pace.', '◌', 'Session tools', '.breathing-fab', '#breathing-guide-panel', '.breathing-close'),
+  panel('summary', 'Session summary', 'Print or download a private session summary.', '▤', 'Session tools', '.summary-fab', '#session-summary-panel', '.summary-close'),
+  panel('journal', 'Journal', 'Save only reflections you deliberately choose.', '✎', 'Session tools', '.journal-fab', '#session-journal-panel', '.journal-close'),
+  panel('accessibility', 'Accessibility', 'Adjust visuals, motion, text size, and contrast.', 'Aa', 'Preferences and data', '.accessibility-fab', '#accessibility-panel', '.accessibility-close'),
+  panel('backup', 'Backup and restore', 'Export or restore validated local settings.', '↕', 'Preferences and data', '.backup-fab', '#backup-panel', '.backup-close'),
+  panel('privacy', 'Privacy and local data', 'Inspect, export, or clear browser-local data.', '⌁', 'Preferences and data', '.privacy-center-fab', '#privacy-center-panel', '.privacy-center-close'),
+  panel('install', 'Install and updates', 'Review installation, offline, and update status.', '▣', 'Preferences and data', '.pwa-install-fab', '#pwa-install-panel', '.pwa-close-button'),
+  panel('device-check', 'Device Check', 'Run a local capability scan and structured real-device review.', '✓?', 'Guidance', '.device-check-fab', '#device-check-panel', '.device-check-close'),
+  panel('issue-report', 'Issue Report', 'Format a focused local bug report without submitting it.', '!', 'Guidance', '.issue-report-fab', '#issue-report-panel', '.issue-report-close'),
+  panel('release-checklist', 'Release Checklist', 'Record local milestone review without claiming certification.', '✓', 'Guidance', '.release-checklist-fab', '#release-checklist-panel', '.release-checklist-close'),
+  panel('release-history', 'Release History', 'Compare explicitly imported checklist files without treating them as approvals.', '↔', 'Guidance', '.release-history-fab', '#release-history-panel', '.release-history-close'),
+  panel('release-package', 'Release Package', 'Build a sanitized manifest from explicitly selected review artifacts.', '▦', 'Guidance', '.release-package-fab', '#release-package-panel', '.release-package-close'),
+  panel('artifact-inspector', 'Artifact Inspector', 'Validate one local review file and show only safe structured metadata.', '⌕', 'Guidance', '.artifact-inspector-fab', '#artifact-inspector-panel', '.artifact-inspector-close'),
+  panel('artifact-workflow-map', 'Workflow Map', 'View the static five-artifact, seven-route local review workflow.', '⌘', 'Guidance', '.artifact-workflow-map-fab', '#artifact-workflow-map-panel', '.artifact-workflow-map-close'),
+  panel('artifact-glossary', 'Artifact Glossary', 'Explain each registered review format and its privacy boundary.', 'ABC', 'Guidance', '.artifact-glossary-fab', '#artifact-glossary-panel', '.artifact-glossary-close'),
+  panel('artifact-version-guide', 'Artifact Version Guide', 'Explain current v1 compatibility and future migration rules.', 'v1', 'Guidance', '.artifact-version-guide-fab', '#artifact-version-guide-panel', '.artifact-version-guide-close'),
+  panel('artifact-support-status', 'Artifact Support Status', 'Show current producer, validator, and importer coverage.', '✓✓', 'Guidance', '.artifact-support-status-fab', '#artifact-support-status-panel', '.artifact-support-status-close'),
 ]
 
-const JUMP_TOOLS: JumpTool[] = [
-  {
-    kind: 'jump',
-    id: 'nature',
-    label: 'Nature mixer',
-    description: 'Jump to the human-only rain, ocean, and wind mixer.',
-    symbol: '🌿',
-    group: 'Session tools',
-    targetSelector: '#nature-mixer',
-  },
-  {
-    kind: 'jump',
-    id: 'animal',
-    label: 'Animal Calm',
-    description: 'Jump to silent animal-safety and observation guidance.',
-    symbol: '🐾',
-    group: 'Guidance',
-    targetSelector: '#animal-calm',
-  },
-]
+const NATURE_TOOL = jump(
+  'nature',
+  'Nature mixer',
+  'Jump to the human-only rain, ocean, and wind mixer.',
+  '🌿',
+  'Session tools',
+  '#nature-mixer',
+)
+
+const ANIMAL_TOOL = jump(
+  'animal',
+  'Animal Calm',
+  'Jump to silent animal-safety and observation guidance.',
+  '🐾',
+  'Guidance',
+  '#animal-calm',
+)
 
 const TOOLS: ToolDefinition[] = [
   PANEL_TOOLS[0],
-  JUMP_TOOLS[0],
-  PANEL_TOOLS[1],
-  PANEL_TOOLS[2],
-  PANEL_TOOLS[3],
-  PANEL_TOOLS[4],
-  PANEL_TOOLS[5],
-  PANEL_TOOLS[6],
-  PANEL_TOOLS[7],
-  PANEL_TOOLS[8],
-  PANEL_TOOLS[9],
-  PANEL_TOOLS[10],
-  PANEL_TOOLS[11],
-  PANEL_TOOLS[12],
-  PANEL_TOOLS[13],
-  PANEL_TOOLS[14],
-  PANEL_TOOLS[15],
-  JUMP_TOOLS[1],
+  NATURE_TOOL,
+  ...PANEL_TOOLS.slice(1),
+  ANIMAL_TOOL,
 ]
 
 const GROUPS: ToolGroup[] = ['Session tools', 'Preferences and data', 'Guidance']
@@ -284,7 +142,6 @@ export default function ToolCenter() {
   const [activeToolId, setActiveToolId] = useState<string | null>(null)
   const [status, setStatus] = useState(`${TOOLS.length} VibraHeal tools are available from one launcher.`)
   const launcherRef = useRef<HTMLButtonElement>(null)
-  const menuRef = useRef<HTMLElement>(null)
   const firstItemRef = useRef<HTMLButtonElement>(null)
   const switchingRef = useRef(false)
   const activeToolRef = useRef<string | null>(null)
@@ -299,8 +156,8 @@ export default function ToolCenter() {
   }
 
   function focusPanelClose(tool: PanelTool, attempt = 0) {
-    const panel = document.querySelector<HTMLElement>(tool.panelSelector)
-    const close = panel?.querySelector<HTMLElement>(tool.closeSelector)
+    const panelElement = document.querySelector<HTMLElement>(tool.panelSelector)
+    const close = panelElement?.querySelector<HTMLElement>(tool.closeSelector)
     if (close) {
       close.focus()
       switchingRef.current = false
@@ -319,8 +176,7 @@ export default function ToolCenter() {
   function closeOpenPanel() {
     const current = getOpenPanelTool()
     if (!current) return false
-    const trigger = getLegacyTrigger(current)
-    trigger?.click()
+    getLegacyTrigger(current)?.click()
     return true
   }
 
@@ -485,7 +341,6 @@ export default function ToolCenter() {
 
       {menuOpen && (
         <aside
-          ref={menuRef}
           className="tool-center-menu"
           id="tool-center-menu"
           role="dialog"
@@ -542,7 +397,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary or version guidance into validation or migration, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, or support guidance into validation or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}

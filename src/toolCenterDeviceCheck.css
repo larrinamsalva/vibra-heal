@@ -6,6 +6,7 @@
 .artifact-inspector-fab,
 .artifact-workflow-map-fab,
 .artifact-glossary-fab,
-.artifact-version-guide-fab {
+.artifact-version-guide-fab,
+.artifact-support-status-fab {
   display: none !important;
 }
