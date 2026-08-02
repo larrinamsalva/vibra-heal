@@ -106,7 +106,7 @@ export function buildArtifactVersionGuideModel(): ArtifactVersionGuideModel {
     registeredVersions: [REVIEW_ARTIFACT_VERSION],
     newerRegisteredVersionExists: false,
     migrationToolAvailable: false,
-    entries: catalog.map((entry) => ({
+    entries: catalog.map((entry): ArtifactVersionEntry => ({
       kind: entry.kind,
       label: entry.label,
       format: entry.format,
