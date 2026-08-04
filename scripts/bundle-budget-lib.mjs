@@ -80,8 +80,12 @@ export function measureFiles(distDirectory, files) {
     }
   })
 
-  const largest = measured.reduce(
+  const largestRaw = measured.reduce(
     (current, item) => (!current || item.rawBytes > current.rawBytes ? item : current),
+    null,
+  )
+  const largestGzip = measured.reduce(
+    (current, item) => (!current || item.gzipBytes > current.gzipBytes ? item : current),
     null,
   )
 
@@ -90,7 +94,8 @@ export function measureFiles(distDirectory, files) {
     fileCount: measured.length,
     rawBytes: measured.reduce((total, item) => total + item.rawBytes, 0),
     gzipBytes: measured.reduce((total, item) => total + item.gzipBytes, 0),
-    largest,
+    largestRaw,
+    largestGzip,
   }
 }
 
@@ -167,8 +172,8 @@ export function bundleMetricValues(report) {
     initialJavaScriptGzipBytes: report.initial.javascript.gzipBytes,
     initialCssRawBytes: report.initial.css.rawBytes,
     initialCssGzipBytes: report.initial.css.gzipBytes,
-    largestInitialJavaScriptRawBytes: report.initial.javascript.largest?.rawBytes ?? 0,
-    largestInitialJavaScriptGzipBytes: report.initial.javascript.largest?.gzipBytes ?? 0,
+    largestInitialJavaScriptRawBytes: report.initial.javascript.largestRaw?.rawBytes ?? 0,
+    largestInitialJavaScriptGzipBytes: report.initial.javascript.largestGzip?.gzipBytes ?? 0,
     passiveGuidanceJavaScriptRawBytes: report.passiveGuidance.javascript.rawBytes,
     passiveGuidanceJavaScriptGzipBytes: report.passiveGuidance.javascript.gzipBytes,
     passiveGuidanceCssRawBytes: report.passiveGuidance.css.rawBytes,
