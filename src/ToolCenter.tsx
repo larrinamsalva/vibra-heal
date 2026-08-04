@@ -81,6 +81,7 @@ const PANEL_TOOLS: PanelTool[] = [
   panel('artifact-support-status', 'Artifact Support Status', 'Show current producer, validator, and importer coverage.', '✓✓', 'Guidance', '.artifact-support-status-fab', '#artifact-support-status-panel', '.artifact-support-status-close'),
   panel('artifact-responsibility-map', 'Artifact Responsibility Map', 'Separate human judgment from software format and revalidation duties.', 'R', 'Guidance', '.artifact-responsibility-map-fab', '#artifact-responsibility-map-panel', '.artifact-responsibility-map-close'),
   panel('artifact-decision-boundary-guide', 'Artifact Decision Boundary Guide', 'Separate descriptive facts, structural findings, human judgments, and prohibited decisions.', '≠', 'Guidance', '.artifact-decision-boundary-fab', '#artifact-decision-boundary-panel', '.artifact-decision-boundary-close'),
+  panel('artifact-guidance-index', 'Guidance Index', 'Find the passive artifact reference that answers a specific question.', 'i', 'Guidance', '.artifact-guidance-index-fab', '#artifact-guidance-index-panel', '.artifact-guidance-index-close'),
 ]
 
 const NATURE_TOOL = jump(
@@ -399,7 +400,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, support, responsibility, or decision-boundary guidance into validation, ownership transfer, scoring, recommendation, or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, support, responsibility, decision-boundary, or index guidance into validation, ownership transfer, scoring, recommendation, or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
