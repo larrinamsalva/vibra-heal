@@ -13,10 +13,10 @@
     "vendor-visual"
   ],
   "limits": {
-    "maxInitialJavaScriptFileCount": 4,
+    "maxInitialJavaScriptFileCount": 3,
     "maxInitialJavaScriptRawGrowthBytes": 20000,
     "maxInitialJavaScriptGzipGrowthBytes": 5000,
-    "maxLargestInitialJavaScriptRawBytes": 1000000,
-    "maxLargestInitialJavaScriptGzipBytes": 285000
+    "maxLargestInitialJavaScriptRawBytes": 900000,
+    "maxLargestInitialJavaScriptGzipBytes": 245000
   }
 }
