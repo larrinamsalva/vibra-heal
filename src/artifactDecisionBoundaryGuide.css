@@ -1,0 +1,364 @@
+.artifact-decision-boundary-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 24;
+}
+
+.artifact-decision-boundary-panel {
+  position: fixed;
+  inset: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  z-index: 80;
+  width: min(1040px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 2.4vw, 1.7rem);
+  border: 1px solid rgba(151, 220, 255, 0.36);
+  border-radius: 1.4rem;
+  background: rgba(8, 18, 32, 0.98);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55);
+  color: #f4fbff;
+}
+
+.artifact-decision-boundary-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.artifact-decision-boundary-header p,
+.artifact-decision-boundary-details article > header p {
+  margin: 0 0 0.25rem;
+  color: #9edfff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.artifact-decision-boundary-header h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(1.45rem, 4vw, 2.35rem);
+  line-height: 1.08;
+}
+
+.artifact-decision-boundary-close {
+  flex: 0 0 auto;
+  width: 2.8rem;
+  min-height: 2.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.artifact-decision-boundary-close:hover,
+.artifact-decision-boundary-close:focus-visible {
+  background: rgba(158, 223, 255, 0.18);
+}
+
+.artifact-decision-boundary-intro {
+  max-width: 80ch;
+  margin: 1rem 0 1.25rem;
+  color: #d2e7f2;
+  line-height: 1.65;
+}
+
+.artifact-decision-boundary-totals {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0 0 1.4rem;
+}
+
+.artifact-decision-boundary-totals > div {
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid rgba(158, 223, 255, 0.2);
+  border-radius: 1rem;
+  background: rgba(158, 223, 255, 0.07);
+}
+
+.artifact-decision-boundary-totals dt {
+  color: #b8d4e3;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.artifact-decision-boundary-totals dd {
+  margin: 0.25rem 0 0;
+  font-size: clamp(1.2rem, 3vw, 1.7rem);
+  font-weight: 900;
+}
+
+.artifact-decision-boundary-classes,
+.artifact-decision-boundary-matrix,
+.artifact-decision-boundary-rules {
+  margin-top: 1.5rem;
+}
+
+.artifact-decision-boundary-classes > h3,
+.artifact-decision-boundary-matrix > h3,
+.artifact-decision-boundary-rules > h3 {
+  margin: 0 0 0.8rem;
+  font-size: 1.15rem;
+}
+
+.artifact-decision-boundary-classes > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.artifact-decision-boundary-classes article {
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.artifact-decision-boundary-classes article[data-boundary-class='prohibited-automatic-decision'] {
+  border-color: rgba(255, 177, 177, 0.42);
+  background: rgba(255, 94, 94, 0.08);
+}
+
+.artifact-decision-boundary-classes article > span {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(158, 223, 255, 0.12);
+  color: #bce8ff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.artifact-decision-boundary-classes h4,
+.artifact-decision-boundary-detail-grid h4 {
+  margin: 0 0 0.45rem;
+}
+
+.artifact-decision-boundary-classes p {
+  margin: 0.35rem 0;
+  color: #d7e8f1;
+  line-height: 1.55;
+}
+
+.artifact-decision-boundary-classes strong {
+  display: block;
+  margin-top: 0.75rem;
+  color: #fff;
+}
+
+.artifact-decision-boundary-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(158, 223, 255, 0.2);
+  border-radius: 1rem;
+}
+
+.artifact-decision-boundary-table-wrap:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.artifact-decision-boundary-table-wrap table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.artifact-decision-boundary-table-wrap caption {
+  padding: 0.85rem;
+  color: #c8dfeb;
+  text-align: left;
+}
+
+.artifact-decision-boundary-table-wrap th,
+.artifact-decision-boundary-table-wrap td {
+  padding: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  vertical-align: top;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.artifact-decision-boundary-table-wrap thead th {
+  border-top: 0;
+  background: rgba(158, 223, 255, 0.09);
+  color: #e7f7ff;
+}
+
+.artifact-decision-boundary-table-wrap tbody th {
+  width: 185px;
+}
+
+.artifact-decision-boundary-table-wrap tbody th strong,
+.artifact-decision-boundary-table-wrap tbody th code,
+.artifact-decision-boundary-table-wrap tbody th span {
+  display: block;
+}
+
+.artifact-decision-boundary-table-wrap code,
+.artifact-decision-boundary-details code {
+  max-width: 100%;
+  margin-top: 0.35rem;
+  color: #aee5ff;
+  overflow-wrap: anywhere;
+}
+
+.artifact-decision-boundary-table-wrap tbody th span {
+  margin-top: 0.25rem;
+  color: #b8d4e3;
+  font-size: 0.8rem;
+}
+
+.artifact-decision-boundary-details {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.artifact-decision-boundary-details > article {
+  padding: 1rem;
+  border: 1px solid rgba(158, 223, 255, 0.2);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.artifact-decision-boundary-details article > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.artifact-decision-boundary-details article > header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.artifact-decision-boundary-details article > header > strong {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(158, 223, 255, 0.11);
+  color: #c7ecff;
+  font-size: 0.78rem;
+}
+
+.artifact-decision-boundary-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.artifact-decision-boundary-detail-grid section {
+  min-width: 0;
+  padding: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 0.9rem;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.artifact-decision-boundary-detail-grid section:last-child {
+  border-color: rgba(255, 177, 177, 0.32);
+}
+
+.artifact-decision-boundary-detail-grid ul,
+.artifact-decision-boundary-rules ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.artifact-decision-boundary-detail-grid li,
+.artifact-decision-boundary-rules li {
+  margin: 0.45rem 0;
+  color: #d4e6ef;
+  line-height: 1.55;
+}
+
+.artifact-decision-boundary-rules {
+  padding: 1rem;
+  border: 1px solid rgba(158, 223, 255, 0.24);
+  border-radius: 1rem;
+  background: rgba(158, 223, 255, 0.055);
+}
+
+@media (max-width: 900px) {
+  .artifact-decision-boundary-totals {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .artifact-decision-boundary-panel {
+    inset: max(0.45rem, env(safe-area-inset-top)) max(0.45rem, env(safe-area-inset-right))
+      max(0.45rem, env(safe-area-inset-bottom)) max(0.45rem, env(safe-area-inset-left));
+    width: calc(100vw - 0.9rem);
+    max-height: calc(100vh - 0.9rem);
+    padding: 0.9rem;
+    border-radius: 1rem;
+  }
+
+  .artifact-decision-boundary-totals,
+  .artifact-decision-boundary-classes > div,
+  .artifact-decision-boundary-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-decision-boundary-details article > header {
+    display: block;
+  }
+
+  .artifact-decision-boundary-details article > header > strong {
+    display: inline-block;
+    margin-top: 0.7rem;
+  }
+}
+
+html[data-vibraheal-text='large'] .artifact-decision-boundary-panel {
+  font-size: 1.12rem;
+}
+
+html[data-vibraheal-contrast='high'] .artifact-decision-boundary-panel {
+  border-color: currentColor;
+  background: #050b12;
+}
+
+html[data-vibraheal-contrast='high'] .artifact-decision-boundary-panel * {
+  border-color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artifact-decision-boundary-panel,
+  .artifact-decision-boundary-panel * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .artifact-decision-boundary-panel,
+  .artifact-decision-boundary-panel article,
+  .artifact-decision-boundary-panel section,
+  .artifact-decision-boundary-panel table,
+  .artifact-decision-boundary-panel th,
+  .artifact-decision-boundary-panel td,
+  .artifact-decision-boundary-close {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+}
