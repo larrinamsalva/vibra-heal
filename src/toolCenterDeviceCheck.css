@@ -9,6 +9,7 @@
 .artifact-version-guide-fab,
 .artifact-support-status-fab,
 .artifact-responsibility-map-fab,
-.artifact-decision-boundary-fab {
+.artifact-decision-boundary-fab,
+.artifact-guidance-index-fab {
   display: none !important;
 }
