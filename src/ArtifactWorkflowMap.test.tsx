@@ -3,8 +3,9 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import ArtifactWorkflowMap, { buildArtifactWorkflowModel } from './ArtifactWorkflowMap'
+import ArtifactWorkflowMap from './ArtifactWorkflowMap'
 import { getArtifactCompatibility } from './artifactCompatibility'
+import { buildArtifactWorkflowModel } from './artifactWorkflow'
 
 beforeEach(() => {
   Object.defineProperty(window, 'fetch', {
