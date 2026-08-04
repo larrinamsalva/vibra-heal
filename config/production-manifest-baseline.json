@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "source": "PR #37 final green production build",
+  "recordedAt": "2026-08-04",
+  "snapshot": {
+    "startup": {
+      "applicationJavaScript": {
+        "file": "assets/index-Dn8iM_SO.js",
+        "rawBytes": 250553,
+        "gzipBytes": 68125
+      },
+      "reactVendorJavaScript": {
+        "file": "assets/vendor-react-KNHVcdZk.js",
+        "rawBytes": 192532,
+        "gzipBytes": 60374
+      },
+      "visualVendorJavaScript": {
+        "file": "assets/vendor-visual-jqNVgydL.js",
+        "rawBytes": 862424,
+        "gzipBytes": 232287
+      },
+      "css": {
+        "files": [
+          "assets/index-VqmFpW14.css"
+        ],
+        "rawBytes": 125244,
+        "gzipBytes": 23202
+      },
+      "totalJavaScript": {
+        "fileCount": 3,
+        "rawBytes": 1305509,
+        "gzipBytes": 360786
+      }
+    },
+    "passiveGuidance": {
+      "dynamicEntryCount": 7,
+      "totalJavaScript": {
+        "fileCount": 13,
+        "rawBytes": 73629,
+        "gzipBytes": 24117
+      },
+      "totalCss": {
+        "fileCount": 7,
+        "rawBytes": 46439,
+        "gzipBytes": 11558
+      },
+      "sharedJavaScript": {
+        "files": [
+          "assets/artifactCatalog-ZTTfZTso.js",
+          "assets/artifactDecisionBoundary-CWGd7QEM.js",
+          "assets/artifactResponsibility-BcS9dtt7.js",
+          "assets/artifactSupportStatus-DLtj3z5o.js",
+          "assets/artifactVersionPolicy-BtE3QEq6.js",
+          "assets/artifactWorkflow-CtaNJTul.js"
+        ],
+        "rawBytes": 26882,
+        "gzipBytes": 10720
+      },
+      "entries": [
+        {
+          "source": "src/ArtifactWorkflowMap.tsx",
+          "label": "Workflow Map",
+          "javascript": {
+            "file": "assets/ArtifactWorkflowMap-2Kvu1xw0.js",
+            "rawBytes": 6965,
+            "gzipBytes": 2191
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactWorkflowMap-ZHUz0AEb.css"
+            ],
+            "rawBytes": 5897,
+            "gzipBytes": 1684
+          }
+        },
+        {
+          "source": "src/ArtifactGlossary.tsx",
+          "label": "Artifact Glossary",
+          "javascript": {
+            "file": "assets/ArtifactGlossary-CJi8DzT3.js",
+            "rawBytes": 4585,
+            "gzipBytes": 1480
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactGlossary-BrYCWsl5.css"
+            ],
+            "rawBytes": 4749,
+            "gzipBytes": 1383
+          }
+        },
+        {
+          "source": "src/ArtifactVersionGuide.tsx",
+          "label": "Artifact Version Guide",
+          "javascript": {
+            "file": "assets/ArtifactVersionGuide-kLXp5TPP.js",
+            "rawBytes": 5987,
+            "gzipBytes": 1730
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactVersionGuide-C--KrgfN.css"
+            ],
+            "rawBytes": 7008,
+            "gzipBytes": 1652
+          }
+        },
+        {
+          "source": "src/ArtifactSupportStatus.tsx",
+          "label": "Artifact Support Status",
+          "javascript": {
+            "file": "assets/ArtifactSupportStatus-D1l2fe_h.js",
+            "rawBytes": 6433,
+            "gzipBytes": 1696
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactSupportStatus-Cy6jLisD.css"
+            ],
+            "rawBytes": 7283,
+            "gzipBytes": 1723
+          }
+        },
+        {
+          "source": "src/ArtifactResponsibilityMap.tsx",
+          "label": "Artifact Responsibility Map",
+          "javascript": {
+            "file": "assets/ArtifactResponsibilityMap-4Zn_U3VD.js",
+            "rawBytes": 7302,
+            "gzipBytes": 1997
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactResponsibilityMap-w51prHCo.css"
+            ],
+            "rawBytes": 7554,
+            "gzipBytes": 1749
+          }
+        },
+        {
+          "source": "src/ArtifactDecisionBoundaryGuide.tsx",
+          "label": "Artifact Decision Boundary Guide",
+          "javascript": {
+            "file": "assets/ArtifactDecisionBoundaryGuide-CvdNRAxw.js",
+            "rawBytes": 6563,
+            "gzipBytes": 1655
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactDecisionBoundaryGuide-D_nFfa2t.css"
+            ],
+            "rawBytes": 7132,
+            "gzipBytes": 1698
+          }
+        },
+        {
+          "source": "src/ArtifactGuidanceIndex.tsx",
+          "label": "Guidance Index",
+          "javascript": {
+            "file": "assets/ArtifactGuidanceIndex-BGOYDR-3.js",
+            "rawBytes": 8912,
+            "gzipBytes": 2648
+          },
+          "css": {
+            "files": [
+              "assets/ArtifactGuidanceIndex-CHf1J5F_.css"
+            ],
+            "rawBytes": 6816,
+            "gzipBytes": 1669
+          }
+        }
+      ]
+    },
+    "dependencies": [
+      {
+        "name": "react",
+        "declared": "^19.1.0",
+        "installed": null
+      },
+      {
+        "name": "react-dom",
+        "declared": "^19.1.0",
+        "installed": null
+      },
+      {
+        "name": "three",
+        "declared": "^0.178.0",
+        "installed": null
+      },
+      {
+        "name": "@react-three/fiber",
+        "declared": "^9.1.2",
+        "installed": null
+      },
+      {
+        "name": "@react-three/drei",
+        "declared": "^10.4.2",
+        "installed": null
+      }
+    ]
+  }
+}
