@@ -11,7 +11,8 @@
     "test": "vitest run",
     "check:guidance-chunks": "node scripts/check-guidance-chunks.mjs",
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
-    "check:vendor-separation": "node scripts/check-vendor-separation.mjs"
+    "check:vendor-separation": "node scripts/check-vendor-separation.mjs",
+    "report:manifest-history": "node scripts/report-production-manifest-history.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.1.2",

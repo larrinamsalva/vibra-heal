@@ -57,7 +57,8 @@ After `npm run build`:
 
 1. `npm run check:guidance-chunks` confirms the seven passive references remain dynamic entries.
 2. `npm run check:bundle-budget` measures the complete production startup and passive-guidance graphs.
-3. `npm run check:vendor-separation` reads those measurements and the Vite manifest, then writes `dist/.vite/vendor-separation-report.json`.
+3. `npm run check:vendor-separation` verifies the reviewed startup boundaries and writes `dist/.vite/vendor-separation-report.json`.
+4. `npm run report:manifest-history` compares the emitted semantic boundaries with the reviewed PR #37 baseline and writes JSON and Markdown history reports.
 
 The vendor report includes:
 
@@ -70,7 +71,15 @@ The vendor report includes:
 - synchronous-cycle result
 - every acceptance check and its headroom
 
-A green report proves only that the emitted graph satisfies the configured structural limits. It does not prove real-device speed, accessibility, visual correctness, or release approval.
+The manifest history report adds:
+
+- application, React, and visual content-hash changes
+- startup CSS membership and size changes
+- each passive-guidance entry's JavaScript and CSS changes
+- shared passive-guidance support changes
+- declared and exact installed dependency-version context
+
+A green vendor report proves only that the emitted graph satisfies the configured structural limits. A successfully generated history report proves only that the comparison is structurally trustworthy. Neither proves real-device speed, accessibility, visual correctness, or release approval.
 
 ## Caching behavior
 
@@ -95,7 +104,7 @@ Tests cover exact families, scoped packages, Windows paths, unrelated dependenci
 
 ## Runtime and privacy boundary
 
-Vendor separation runs during the production build. It does not:
+Vendor separation and manifest history run during the production build. They do not:
 
 - add analytics, accounts, telemetry, or remote configuration
 - inspect browser storage or selected files
@@ -106,7 +115,7 @@ Vendor separation runs during the production build. It does not:
 
 ## Manual review
 
-Before merging a vendor-policy change, review:
+Before merging a vendor-policy or baseline change, review:
 
 - first load on desktop and a slower mobile device
 - installed-app launch online and offline
@@ -116,8 +125,11 @@ Before merging a vendor-policy change, review:
 - Tool Center and lazy guidance first-open behavior
 - browser caching after an application-only change
 - browser caching after a visual dependency change
+- manifest history differences and their expected owners
 - console output for circular chunks or module-order errors
 
 ## Contribution rule
 
 A package family may be added to a vendor chunk only when its ownership and dependency direction are understood. A failing threshold should first trigger investigation or a smaller change. Raising a limit requires a measured report and an explanation of why the larger graph is justified.
+
+The manifest baseline should be refreshed only after the changed architecture or dependency set has passed all enforcement gates and review. Do not refresh it merely to hide visible differences.
