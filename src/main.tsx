@@ -3,14 +3,7 @@ import { createRoot } from 'react-dom/client'
 import AccessibilityControls from './AccessibilityControls'
 import AnimalCalm from './AnimalCalm'
 import App from './App'
-import ArtifactDecisionBoundaryGuide from './ArtifactDecisionBoundaryGuide'
-import ArtifactGlossary from './ArtifactGlossary'
-import ArtifactGuidanceIndex from './ArtifactGuidanceIndex'
 import ArtifactInspector from './ArtifactInspector'
-import ArtifactResponsibilityMap from './ArtifactResponsibilityMap'
-import ArtifactSupportStatus from './ArtifactSupportStatus'
-import ArtifactVersionGuide from './ArtifactVersionGuide'
-import ArtifactWorkflowMap from './ArtifactWorkflowMap'
 import BackupRestoreV2 from './BackupRestoreV2'
 import BreathingGuide from './BreathingGuide'
 import { installBreathingSessionBridge } from './breathingSessionBridge'
@@ -18,6 +11,7 @@ import DeviceCheck from './DeviceCheck'
 import IssueReport from './IssueReport'
 import LocalDataPrivacyCenter from './LocalDataPrivacyCenter'
 import NatureMixer from './NatureMixer'
+import PassiveGuidanceHost from './PassiveGuidanceHost'
 import PwaInstall from './PwaInstall'
 import ReleaseChecklist from './ReleaseChecklist'
 import ReleaseHistory from './ReleaseHistory'
@@ -49,13 +43,7 @@ createRoot(document.getElementById('root')!).render(
     <ReleaseHistory />
     <ReleasePackage />
     <ArtifactInspector />
-    <ArtifactWorkflowMap />
-    <ArtifactGlossary />
-    <ArtifactVersionGuide />
-    <ArtifactSupportStatus />
-    <ArtifactResponsibilityMap />
-    <ArtifactDecisionBoundaryGuide />
-    <ArtifactGuidanceIndex />
+    <PassiveGuidanceHost />
     <ToolCenter />
   </StrictMode>,
 )
