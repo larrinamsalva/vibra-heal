@@ -1,6 +1,6 @@
 # Accessible Tool Center
 
-VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, artifact reference, support, responsibility, and decision-boundary reporting, and safety behavior.
+VibraHeal uses one visible **Tools** launcher to organize optional panels and in-page destinations. The Tool Center reduces floating-button clutter, creates a predictable keyboard starting point, and keeps feature navigation separate from audio, storage, file inspection, static workflow guidance, artifact reference, support, responsibility, decision-boundary reporting, guidance indexing, and safety behavior.
 
 ## Tools included
 
@@ -32,6 +32,7 @@ VibraHeal uses one visible **Tools** launcher to organize optional panels and in
 - Artifact Support Status
 - Artifact Responsibility Map
 - Artifact Decision Boundary Guide
+- Guidance Index
 - Animal Calm
 
 Nature Mixer and Animal Calm are page sections. The remaining tools are non-modal panels.
@@ -75,27 +76,28 @@ Opening the Tool Center or moving between tools does not:
 - turn Artifact Support Status into execution, successful review, approval, or defect-free operation
 - turn Artifact Responsibility Map into ownership transfer, evidence validation, an assigned approver, or a recorded decision
 - turn Artifact Decision Boundary Guide into a score, ranking, recommendation, approval, diagnosis, compliance finding, or automated verdict
+- turn Guidance Index into automatic panel opening, hidden reference ranking, personal-data-based recommendation, validation, or workflow execution
 - change frequency, volume, timer, or saved-session values
 - connect human audio tools to Animal Calm
 
-Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, and Artifact Decision Boundary Guide are static guidance and contain no workflow-action controls.
+Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, Artifact Decision Boundary Guide, and Guidance Index are static guidance and contain no workflow-action controls.
 
 ## Automated tests
 
 `src/ToolCenter.test.tsx` uses invented browser elements to verify that:
 
 - the Tool Center has a readable dialog name
-- the launcher reports twenty-one destinations
+- the launcher reports twenty-two destinations
 - focus moves to the first tool when opened
 - Arrow, Home, End, and Escape navigation works
 - opening a second panel closes the first panel
 - only one managed panel remains in the document
 - panel closure returns focus to the Tools launcher
 - jumping to Nature Mixer closes an open panel and focuses the section
-- Artifact Inspector, Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, and Artifact Decision Boundary Guide participate in panel switching
+- Artifact Inspector, Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, Artifact Decision Boundary Guide, and Guidance Index participate in panel switching
 - legacy launchers are removed from keyboard and assistive-technology navigation
 
-The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, execute support routes, assign responsibility, record or automate a decision, calculate a score, recommend a release, or move a file between tools.
+The test does not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, execute support routes, assign responsibility, record or automate a decision, calculate a score, recommend a release, rank guidance, or move a file between tools.
 
 ## Real-browser review still required
 
@@ -115,6 +117,7 @@ Simulated component tests do not replace review with real browsers and assistive
 - Artifact Support Status table scrolling and detailed coverage navigation
 - Artifact Responsibility Map lane, table, ordered-handoff, and long-text navigation
 - Artifact Decision Boundary Guide class cards, matrix scrolling, detailed lists, and prohibited-decision wording
+- Guidance Index grouping, long-question wrapping, source lists, metrics, and Decision Boundary Guide switching
 - audio behavior on real hardware
 
 ## Contribution rule
