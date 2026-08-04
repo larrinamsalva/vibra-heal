@@ -54,6 +54,7 @@ export function requestPassiveGuidanceLoad(
 
   return new Promise((resolve, reject) => {
     let settled = false
+    let timeoutId = 0
 
     const cleanup = () => {
       window.clearTimeout(timeoutId)
@@ -80,7 +81,7 @@ export function requestPassiveGuidanceLoad(
       finish(() => reject(new Error(detail.message)))
     }
 
-    const timeoutId = window.setTimeout(() => {
+    timeoutId = window.setTimeout(() => {
       finish(() => reject(new Error('Timed out while loading the guidance module.')))
     }, timeoutMs)
 
