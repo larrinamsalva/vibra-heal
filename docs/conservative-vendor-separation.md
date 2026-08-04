@@ -13,20 +13,43 @@ The policy does not place every dependency into one generic vendor file. `config
 
 The application entry therefore remains responsible for VibraHeal code and any dependency that has not earned a stable vendor boundary.
 
+## Measured production result
+
+The first green PR #37 production build emitted three synchronous JavaScript files:
+
+| Startup file | Raw bytes | Gzip bytes |
+| --- | ---: | ---: |
+| VibraHeal application entry | 250,553 | 68,125 |
+| React vendor runtime | 192,532 | 60,374 |
+| Visual vendor runtime | 862,424 | 232,287 |
+| **Total** | **1,305,509** | **360,786** |
+
+Compared with the unsplit PR #36 baseline:
+
+- total raw JavaScript decreased by 4,321 bytes
+- total gzip JavaScript decreased by 1,896 bytes
+- the largest raw startup file decreased by 447,406 bytes, about 34 percent
+- the largest gzip startup file decreased by 130,395 bytes, about 36 percent
+- startup JavaScript requests increased from one to three
+- no synchronous import cycle was found
+- all seven passive guidance entries remained lazy
+
+The visual vendor file remains above Vite's generic 500 kB advisory. VibraHeal keeps that warning visible and relies on its stricter measured budgets rather than raising the warning threshold or claiming the visual stack is fully optimized.
+
 ## Production acceptance rules
 
 `config/vendor-separation.json` records the unsplit PR #36 baseline and the conditions a split must satisfy:
 
 - one `vendor-react` file exists in the synchronous startup graph
 - one `vendor-visual` file exists in the synchronous startup graph
-- startup JavaScript uses no more than four files
+- startup JavaScript uses no more than three files
 - total startup raw growth is no more than 20,000 bytes
 - total startup gzip growth is no more than 5,000 bytes
-- the largest startup JavaScript file is no more than 1,000,000 raw bytes
-- the largest startup JavaScript file is no more than 285,000 gzip bytes
+- the largest startup JavaScript file is no more than 900,000 raw bytes
+- the largest startup JavaScript file is no more than 245,000 gzip bytes
 - the synchronous startup graph contains no import cycle
 
-The existing startup bundle budget continues to enforce total JavaScript, CSS, and passive-guidance limits. Vendor separation cannot pass by moving bytes into another startup file or by making lazy guidance eager.
+The existing startup bundle budget continues to enforce total JavaScript, CSS, passive-guidance limits, and the same reduced largest-chunk ceilings. Vendor separation cannot pass by moving bytes into another startup file or by making lazy guidance eager.
 
 ## Build-time verification
 
@@ -55,7 +78,7 @@ The Vite production page references the application and vendor startup chunks. T
 
 A later deployment can reuse an unchanged content-hashed vendor file while downloading changed application code. When React or the visual stack changes, the corresponding vendor hash changes and that file is refreshed.
 
-More startup files also mean more requests. Modern browsers can fetch module dependencies efficiently, but request count, parsing, and cache reuse must still be reviewed on real devices. The split verifier limits startup JavaScript to four files rather than assuming more files are always better.
+More startup files also mean more requests. Modern browsers can fetch module dependencies efficiently, but request count, parsing, and cache reuse must still be reviewed on real devices. The split verifier limits startup JavaScript to three files rather than assuming more files are always better.
 
 ## Package classification rules
 
