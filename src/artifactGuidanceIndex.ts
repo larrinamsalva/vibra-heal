@@ -3,7 +3,7 @@ import { buildArtifactDecisionBoundaryModel } from './artifactDecisionBoundary'
 import { buildArtifactResponsibilityMapModel } from './artifactResponsibility'
 import { buildArtifactSupportStatusModel } from './artifactSupportStatus'
 import { buildArtifactVersionGuideModel } from './artifactVersionPolicy'
-import { buildArtifactWorkflowModel } from './ArtifactWorkflowMap'
+import { buildArtifactWorkflowModel } from './artifactWorkflow'
 import {
   PASSIVE_GUIDANCE_INDEX_GROUPS,
   PASSIVE_GUIDANCE_REFERENCE_TOOLS,
