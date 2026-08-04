@@ -21,7 +21,7 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Test privacy, accessibility, tools, offline lifecycle, review artifacts, shared schemas, bundle budgets, Artifact Inspector, compatibility guidance, passive guidance registry and loading, Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, Artifact Decision Boundary Guide, and Artifact Guidance Index
+      - name: Test privacy, accessibility, tools, offline lifecycle, review artifacts, shared schemas, bundle budgets, vendor separation, Artifact Inspector, compatibility guidance, passive guidance registry and loading, Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, Artifact Decision Boundary Guide, and Artifact Guidance Index
         run: npm test
       - name: Build
         run: npm run build
@@ -29,3 +29,5 @@ jobs:
         run: npm run check:guidance-chunks
       - name: Enforce startup bundle budget
         run: npm run check:bundle-budget
+      - name: Verify conservative vendor separation
+        run: npm run check:vendor-separation
