@@ -3,13 +3,6 @@
 .release-checklist-fab,
 .release-history-fab,
 .release-package-fab,
-.artifact-inspector-fab,
-.artifact-workflow-map-fab,
-.artifact-glossary-fab,
-.artifact-version-guide-fab,
-.artifact-support-status-fab,
-.artifact-responsibility-map-fab,
-.artifact-decision-boundary-fab,
-.artifact-guidance-index-fab {
+.artifact-inspector-fab {
   display: none !important;
 }

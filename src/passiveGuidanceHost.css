@@ -1,0 +1,8 @@
+.passive-guidance-host,
+.passive-guidance-host-mount {
+  display: contents;
+}
+
+.passive-guidance-host-mount > button {
+  display: none !important;
+}

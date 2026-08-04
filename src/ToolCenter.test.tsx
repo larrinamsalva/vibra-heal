@@ -3,7 +3,13 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  dispatchPassiveGuidanceReady,
+  PASSIVE_GUIDANCE_REQUEST_EVENT,
+  readPassiveGuidanceRequest,
+} from './passiveGuidanceEvents'
 import ToolCenter from './ToolCenter'
+import { getPassiveGuidanceTool } from './toolRegistry'
 
 type HarnessPanel = {
   triggerClass: string
@@ -177,6 +183,47 @@ describe('ToolCenter', () => {
       expect(screen.getByRole('dialog', { name: secondPanel })).toBeInTheDocument()
     })
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
+  })
+
+  it('requests a missing passive guidance trigger and opens it only after readiness', async () => {
+    const tool = getPassiveGuidanceTool('artifact-guidance-index')
+    expect(tool).not.toBeNull()
+    document.querySelector(tool!.triggerSelector)?.remove()
+
+    const handleRequest = (event: Event) => {
+      const detail = readPassiveGuidanceRequest(event)
+      if (detail?.id !== tool!.id) return
+
+      addPanelHarness({
+        triggerClass: tool!.triggerSelector.slice(1),
+        panelId: tool!.panelSelector.slice(1),
+        closeClass: tool!.closeSelector.slice(1),
+        name: 'Artifact Guidance Index panel',
+      })
+      dispatchPassiveGuidanceReady(tool!.id)
+    }
+
+    window.addEventListener(PASSIVE_GUIDANCE_REQUEST_EVENT, handleRequest)
+    try {
+      render(<ToolCenter />)
+      const launcher = screen.getByRole('button', { name: /Tools/i })
+
+      fireEvent.click(launcher)
+      fireEvent.click(screen.getByRole('button', { name: /Guidance Index/i }))
+
+      expect(
+        await screen.findByRole('dialog', { name: 'Artifact Guidance Index panel' }),
+      ).toBeInTheDocument()
+
+      await waitFor(() => {
+        const trigger = document.querySelector<HTMLElement>(tool!.triggerSelector)
+        expect(trigger).toHaveAttribute('aria-hidden', 'true')
+        expect(trigger).toHaveAttribute('tabindex', '-1')
+        expect(trigger?.dataset.toolCenterManaged).toBe('true')
+      })
+    } finally {
+      window.removeEventListener(PASSIVE_GUIDANCE_REQUEST_EVENT, handleRequest)
+    }
   })
 
   it('returns focus to the Tools launcher when an active panel closes', async () => {
