@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "recordedBaseline": {
+    "source": "PR #35 production build",
+    "initialJavaScriptRawBytes": 1309830,
+    "initialJavaScriptGzipBytes": 362680,
+    "initialCssRawBytes": 125240,
+    "initialCssGzipBytes": 23200,
+    "dynamicGuidanceEntryCount": 7
+  },
+  "limits": {
+    "initialJavaScriptRawBytes": 1350000,
+    "initialJavaScriptGzipBytes": 375000,
+    "initialCssRawBytes": 135000,
+    "initialCssGzipBytes": 26000,
+    "largestInitialJavaScriptRawBytes": 1350000,
+    "largestInitialJavaScriptGzipBytes": 375000,
+    "passiveGuidanceJavaScriptRawBytes": 90000,
+    "passiveGuidanceJavaScriptGzipBytes": 35000,
+    "passiveGuidanceCssRawBytes": 55000,
+    "passiveGuidanceCssGzipBytes": 15000,
+    "dynamicGuidanceEntryCount": 7
+  }
+}

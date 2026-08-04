@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { PASSIVE_GUIDANCE_SOURCES } from './bundle-budget-lib.mjs'
 
 const manifestPath = resolve(process.cwd(), 'dist/.vite/manifest.json')
 if (!existsSync(manifestPath)) {
@@ -7,15 +8,6 @@ if (!existsSync(manifestPath)) {
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
-const expectedSources = [
-  'src/ArtifactWorkflowMap.tsx',
-  'src/ArtifactGlossary.tsx',
-  'src/ArtifactVersionGuide.tsx',
-  'src/ArtifactSupportStatus.tsx',
-  'src/ArtifactResponsibilityMap.tsx',
-  'src/ArtifactDecisionBoundaryGuide.tsx',
-  'src/ArtifactGuidanceIndex.tsx',
-]
 
 function findRecord(source) {
   return manifest[source]
@@ -27,7 +19,7 @@ const entryRecord = Object.values(manifest).find((record) => record?.isEntry)
 if (!entryRecord) throw new Error('The production entry record is missing from the Vite manifest.')
 
 const dynamicFiles = []
-for (const source of expectedSources) {
+for (const source of PASSIVE_GUIDANCE_SOURCES) {
   const record = findRecord(source)
   if (!record) throw new Error(`Missing manifest record for ${source}.`)
   if (record.isDynamicEntry !== true) {
@@ -39,12 +31,12 @@ for (const source of expectedSources) {
   dynamicFiles.push(record.file)
 }
 
-if (new Set(dynamicFiles).size !== expectedSources.length) {
+if (new Set(dynamicFiles).size !== PASSIVE_GUIDANCE_SOURCES.length) {
   throw new Error('Passive guidance modules were unexpectedly collapsed into duplicate entry files.')
 }
 
 const declaredDynamicImports = new Set(entryRecord.dynamicImports ?? [])
-for (const source of expectedSources) {
+for (const source of PASSIVE_GUIDANCE_SOURCES) {
   if (!declaredDynamicImports.has(source)) {
     throw new Error(`The main entry does not declare ${source} as a dynamic import.`)
   }
@@ -60,7 +52,7 @@ const dynamicBytes = dynamicFiles.reduce(
 console.log(
   JSON.stringify(
     {
-      verifiedDynamicEntries: expectedSources.length,
+      verifiedDynamicEntries: PASSIVE_GUIDANCE_SOURCES.length,
       initialEntryFile: entryRecord.file,
       initialEntryBytes: entryBytes,
       passiveGuidanceBytes: dynamicBytes,
