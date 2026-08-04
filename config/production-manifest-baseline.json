@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source": "PR #37 final green production build",
+  "source": "PR #37 final green production build; installed versions captured by PR #38 bootstrap",
   "recordedAt": "2026-08-04",
   "snapshot": {
     "startup": {
@@ -175,27 +175,27 @@
       {
         "name": "react",
         "declared": "^19.1.0",
-        "installed": null
+        "installed": "19.2.8"
       },
       {
         "name": "react-dom",
         "declared": "^19.1.0",
-        "installed": null
+        "installed": "19.2.8"
       },
       {
         "name": "three",
         "declared": "^0.178.0",
-        "installed": null
+        "installed": "0.178.0"
       },
       {
         "name": "@react-three/fiber",
         "declared": "^9.1.2",
-        "installed": null
+        "installed": "9.7.0"
       },
       {
         "name": "@react-three/drei",
         "declared": "^10.4.2",
-        "installed": null
+        "installed": "10.7.7"
       }
     ]
   }
