@@ -128,7 +128,13 @@ describe('production bundle accounting', () => {
 
     expect(report.initial.javascript.rawBytes).toBe(expectedRaw)
     expect(report.initial.javascript.gzipBytes).toBe(expectedGzip)
-    expect(report.initial.javascript.largest?.file).toBe('assets/entry.js')
+    expect(report.initial.javascript.largestRaw?.file).toBe('assets/entry.js')
+    expect(report.initial.javascript.largestGzip?.gzipBytes).toBe(
+      Math.max(
+        gzipSync(contents['assets/entry.js']).byteLength,
+        gzipSync(contents['assets/vendor.js']).byteLength,
+      ),
+    )
   })
 
   it('rejects a guidance source that is missing or not a dynamic entry', () => {
@@ -159,7 +165,8 @@ describe('bundle budget evaluation', () => {
       javascript: {
         rawBytes: 100,
         gzipBytes: 50,
-        largest: { rawBytes: 80, gzipBytes: 40 },
+        largestRaw: { rawBytes: 80, gzipBytes: 35 },
+        largestGzip: { rawBytes: 70, gzipBytes: 40 },
       },
       css: { rawBytes: 30, gzipBytes: 15 },
     },
@@ -213,9 +220,7 @@ describe('bundle budget evaluation', () => {
   })
 
   it('rejects missing, negative, and non-integer limits', () => {
-    const malformed = structuredClone(limits) as typeof limits & {
-      limits: typeof limits.limits & { initialCssRawBytes?: number }
-    }
+    const malformed: any = structuredClone(limits)
     delete malformed.limits.initialCssRawBytes
     expect(() => validateBudgetConfiguration(malformed)).toThrow('initialCssRawBytes')
 
