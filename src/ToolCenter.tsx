@@ -1,115 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from 'react'
+import { requestPassiveGuidanceLoad } from './passiveGuidanceEvents'
+import {
+  isPassiveGuidanceTool,
+  PANEL_TOOLS,
+  TOOL_GROUPS,
+  TOOLS,
+  type JumpTool,
+  type PanelTool,
+  type ToolDefinition,
+} from './toolRegistry'
 import './toolCenter.css'
-
-type ToolGroup = 'Session tools' | 'Preferences and data' | 'Guidance'
-
-type PanelTool = {
-  kind: 'panel'
-  id: string
-  label: string
-  description: string
-  symbol: string
-  group: ToolGroup
-  triggerSelector: string
-  panelSelector: string
-  closeSelector: string
-}
-
-type JumpTool = {
-  kind: 'jump'
-  id: string
-  label: string
-  description: string
-  symbol: string
-  group: ToolGroup
-  targetSelector: string
-}
-
-type ToolDefinition = PanelTool | JumpTool
-
-function panel(
-  id: string,
-  label: string,
-  description: string,
-  symbol: string,
-  group: ToolGroup,
-  triggerSelector: string,
-  panelSelector: string,
-  closeSelector: string,
-): PanelTool {
-  return {
-    kind: 'panel',
-    id,
-    label,
-    description,
-    symbol,
-    group,
-    triggerSelector,
-    panelSelector,
-    closeSelector,
-  }
-}
-
-function jump(
-  id: string,
-  label: string,
-  description: string,
-  symbol: string,
-  group: ToolGroup,
-  targetSelector: string,
-): JumpTool {
-  return { kind: 'jump', id, label, description, symbol, group, targetSelector }
-}
-
-const PANEL_TOOLS: PanelTool[] = [
-  panel('breathing', 'Breathing', 'Choose a text-first breathing pattern and pace.', '◌', 'Session tools', '.breathing-fab', '#breathing-guide-panel', '.breathing-close'),
-  panel('summary', 'Session summary', 'Print or download a private session summary.', '▤', 'Session tools', '.summary-fab', '#session-summary-panel', '.summary-close'),
-  panel('journal', 'Journal', 'Save only reflections you deliberately choose.', '✎', 'Session tools', '.journal-fab', '#session-journal-panel', '.journal-close'),
-  panel('accessibility', 'Accessibility', 'Adjust visuals, motion, text size, and contrast.', 'Aa', 'Preferences and data', '.accessibility-fab', '#accessibility-panel', '.accessibility-close'),
-  panel('backup', 'Backup and restore', 'Export or restore validated local settings.', '↕', 'Preferences and data', '.backup-fab', '#backup-panel', '.backup-close'),
-  panel('privacy', 'Privacy and local data', 'Inspect, export, or clear browser-local data.', '⌁', 'Preferences and data', '.privacy-center-fab', '#privacy-center-panel', '.privacy-center-close'),
-  panel('install', 'Install and updates', 'Review installation, offline, and update status.', '▣', 'Preferences and data', '.pwa-install-fab', '#pwa-install-panel', '.pwa-close-button'),
-  panel('device-check', 'Device Check', 'Run a local capability scan and structured real-device review.', '✓?', 'Guidance', '.device-check-fab', '#device-check-panel', '.device-check-close'),
-  panel('issue-report', 'Issue Report', 'Format a focused local bug report without submitting it.', '!', 'Guidance', '.issue-report-fab', '#issue-report-panel', '.issue-report-close'),
-  panel('release-checklist', 'Release Checklist', 'Record local milestone review without claiming certification.', '✓', 'Guidance', '.release-checklist-fab', '#release-checklist-panel', '.release-checklist-close'),
-  panel('release-history', 'Release History', 'Compare explicitly imported checklist files without treating them as approvals.', '↔', 'Guidance', '.release-history-fab', '#release-history-panel', '.release-history-close'),
-  panel('release-package', 'Release Package', 'Build a sanitized manifest from explicitly selected review artifacts.', '▦', 'Guidance', '.release-package-fab', '#release-package-panel', '.release-package-close'),
-  panel('artifact-inspector', 'Artifact Inspector', 'Validate one local review file and show only safe structured metadata.', '⌕', 'Guidance', '.artifact-inspector-fab', '#artifact-inspector-panel', '.artifact-inspector-close'),
-  panel('artifact-workflow-map', 'Workflow Map', 'View the static five-artifact, seven-route local review workflow.', '⌘', 'Guidance', '.artifact-workflow-map-fab', '#artifact-workflow-map-panel', '.artifact-workflow-map-close'),
-  panel('artifact-glossary', 'Artifact Glossary', 'Explain each registered review format and its privacy boundary.', 'ABC', 'Guidance', '.artifact-glossary-fab', '#artifact-glossary-panel', '.artifact-glossary-close'),
-  panel('artifact-version-guide', 'Artifact Version Guide', 'Explain current v1 compatibility and future migration rules.', 'v1', 'Guidance', '.artifact-version-guide-fab', '#artifact-version-guide-panel', '.artifact-version-guide-close'),
-  panel('artifact-support-status', 'Artifact Support Status', 'Show current producer, validator, and importer coverage.', '✓✓', 'Guidance', '.artifact-support-status-fab', '#artifact-support-status-panel', '.artifact-support-status-close'),
-  panel('artifact-responsibility-map', 'Artifact Responsibility Map', 'Separate human judgment from software format and revalidation duties.', 'R', 'Guidance', '.artifact-responsibility-map-fab', '#artifact-responsibility-map-panel', '.artifact-responsibility-map-close'),
-  panel('artifact-decision-boundary-guide', 'Artifact Decision Boundary Guide', 'Separate descriptive facts, structural findings, human judgments, and prohibited decisions.', '≠', 'Guidance', '.artifact-decision-boundary-fab', '#artifact-decision-boundary-panel', '.artifact-decision-boundary-close'),
-  panel('artifact-guidance-index', 'Guidance Index', 'Find the passive artifact reference that answers a specific question.', 'i', 'Guidance', '.artifact-guidance-index-fab', '#artifact-guidance-index-panel', '.artifact-guidance-index-close'),
-]
-
-const NATURE_TOOL = jump(
-  'nature',
-  'Nature mixer',
-  'Jump to the human-only rain, ocean, and wind mixer.',
-  '🌿',
-  'Session tools',
-  '#nature-mixer',
-)
-
-const ANIMAL_TOOL = jump(
-  'animal',
-  'Animal Calm',
-  'Jump to silent animal-safety and observation guidance.',
-  '🐾',
-  'Guidance',
-  '#animal-calm',
-)
-
-const TOOLS: ToolDefinition[] = [
-  PANEL_TOOLS[0],
-  NATURE_TOOL,
-  ...PANEL_TOOLS.slice(1),
-  ANIMAL_TOOL,
-]
-
-const GROUPS: ToolGroup[] = ['Session tools', 'Preferences and data', 'Guidance']
 
 function getOpenPanelTool() {
   return PANEL_TOOLS.find((tool) => document.querySelector(tool.panelSelector)) ?? null
@@ -148,6 +54,7 @@ export default function ToolCenter() {
   const firstItemRef = useRef<HTMLButtonElement>(null)
   const switchingRef = useRef(false)
   const activeToolRef = useRef<string | null>(null)
+  const openRequestRef = useRef(0)
 
   const activeLabel = useMemo(
     () => PANEL_TOOLS.find((tool) => tool.id === activeToolId)?.label,
@@ -185,6 +92,7 @@ export default function ToolCenter() {
 
   function openPanelTool(tool: PanelTool) {
     setMenuOpen(false)
+    const requestId = ++openRequestRef.current
     const current = getOpenPanelTool()
 
     if (current?.id === tool.id) {
@@ -196,8 +104,30 @@ export default function ToolCenter() {
     switchingRef.current = true
     if (current) getLegacyTrigger(current)?.click()
 
-    window.setTimeout(() => {
-      const trigger = getLegacyTrigger(tool)
+    const activate = async () => {
+      let trigger = getLegacyTrigger(tool)
+
+      if (!trigger && isPassiveGuidanceTool(tool)) {
+        setStatus(`Loading ${tool.label}. No file or browser data is being read.`)
+
+        try {
+          await requestPassiveGuidanceLoad(tool.id)
+        } catch {
+          if (requestId !== openRequestRef.current) return
+          switchingRef.current = false
+          setStatus(
+            `${tool.label} could not be loaded. Check the connection, or open it once online before relying on it offline.`,
+          )
+          focusLauncher()
+          return
+        }
+
+        if (requestId !== openRequestRef.current) return
+        trigger = getLegacyTrigger(tool)
+      }
+
+      if (requestId !== openRequestRef.current) return
+
       if (!trigger) {
         switchingRef.current = false
         setStatus(`${tool.label} is temporarily unavailable.`)
@@ -208,11 +138,14 @@ export default function ToolCenter() {
       trigger.click()
       setStatus(`${tool.label} opened. Only one VibraHeal tool panel is active.`)
       focusPanelClose(tool)
-    }, current ? 40 : 0)
+    }
+
+    window.setTimeout(() => void activate(), current ? 40 : 0)
   }
 
   function jumpToTool(tool: JumpTool) {
     setMenuOpen(false)
+    openRequestRef.current += 1
     switchingRef.current = true
     closeOpenPanel()
 
@@ -246,7 +179,7 @@ export default function ToolCenter() {
     focusLauncher()
   }
 
-  function handleMenuKeyDown(event: React.KeyboardEvent<HTMLElement>) {
+  function handleMenuKeyDown(event: ReactKeyboardEvent<HTMLElement>) {
     const items = Array.from(
       event.currentTarget.querySelectorAll<HTMLButtonElement>('[data-tool-center-item]'),
     )
@@ -312,9 +245,20 @@ export default function ToolCenter() {
       }
 
       const current = getOpenPanelTool()
+      if (!current && switchingRef.current) {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        openRequestRef.current += 1
+        switchingRef.current = false
+        setStatus('Pending tool opening cancelled. Focus returned to the Tools launcher.')
+        focusLauncher()
+        return
+      }
+
       if (!current) return
       event.preventDefault()
       event.stopImmediatePropagation()
+      openRequestRef.current += 1
       switchingRef.current = false
       getLegacyTrigger(current)?.click()
       setStatus(`${current.label} closed.`)
@@ -364,7 +308,7 @@ export default function ToolCenter() {
           </p>
 
           <div className="tool-center-groups">
-            {GROUPS.map((group) => {
+            {TOOL_GROUPS.map((group) => {
               const groupedTools = TOOLS.filter((tool) => tool.group === group)
               return (
                 <section key={group} aria-labelledby={`tool-center-${group.replaceAll(' ', '-').toLowerCase()}`}>
@@ -400,7 +344,7 @@ export default function ToolCenter() {
 
           <p className="tool-center-status" aria-live="polite">{status}</p>
           <p className="tool-center-note">
-            This launcher changes navigation only. It does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, support, responsibility, decision-boundary, or index guidance into validation, ownership transfer, scoring, recommendation, or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
+            This launcher changes navigation only. Passive guidance code loads only after a deliberate selection and does not read an artifact, storage value, or browser profile. The launcher does not start audio, save a journal entry, inspect or route a file, create or submit an issue report, turn glossary, version, support, responsibility, decision-boundary, or index guidance into validation, ownership transfer, scoring, recommendation, or workflow execution, certify, compare, package, sign, publish, or deploy releases, restore a backup, clear data, or change Animal Calm boundaries.
           </p>
         </aside>
       )}
