@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "recordedBaseline": {
+    "source": "PR #36 production budget report",
+    "initialJavaScriptRawBytes": 1309830,
+    "initialJavaScriptGzipBytes": 362682,
+    "largestInitialJavaScriptRawBytes": 1309830,
+    "largestInitialJavaScriptGzipBytes": 362682,
+    "initialJavaScriptFileCount": 1
+  },
+  "expectedChunks": [
+    "vendor-react",
+    "vendor-visual"
+  ],
+  "limits": {
+    "maxInitialJavaScriptFileCount": 4,
+    "maxInitialJavaScriptRawGrowthBytes": 20000,
+    "maxInitialJavaScriptGzipGrowthBytes": 5000,
+    "maxLargestInitialJavaScriptRawBytes": 1000000,
+    "maxLargestInitialJavaScriptGzipBytes": 285000
+  }
+}
