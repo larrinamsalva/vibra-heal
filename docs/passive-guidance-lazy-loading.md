@@ -129,6 +129,27 @@ The compatibility trigger is hidden by a shared host rule and is also marked `ar
 
 The production build remains the authoritative proof that Vite emits real dynamic chunks.
 
+## Production verification and budget
+
+Two separate post-build checks protect this architecture:
+
+```bash
+npm run check:guidance-chunks
+npm run check:bundle-budget
+```
+
+The first requires all seven panels to remain distinct dynamic entries declared by the production entry. The second walks the complete Vite manifest graph and measures:
+
+- initial JavaScript and CSS
+- shared synchronous startup chunks
+- the complete passive-guidance JavaScript and CSS graph
+- the largest startup JavaScript chunk by raw size
+- the largest startup JavaScript chunk by gzip size
+
+The budget counts a startup vendor chunk as startup. Splitting one large entry file therefore cannot create a false reduction in total initial bytes.
+
+See [`startup-bundle-budget.md`](startup-bundle-budget.md) for the current baseline, limits, report format, and contribution rules.
+
 ## Real-browser review still required
 
 Review should cover:
@@ -149,3 +170,5 @@ Review should cover:
 A new passive artifact reference must be registered in `src/toolRegistry.ts` with a unique id, selectors, loader, and Index metadata decision. It must not be statically imported by `src/main.tsx`.
 
 Adding a dynamic loader does not authorize the panel to read files, storage, network data, or user context. Consequential actions remain inside their existing deliberate tools and confirmations.
+
+A new or renamed passive entry must also update the shared source list used by both production checks. A change that exceeds the bundle budget must reduce the emitted graph or include a separately reviewed budget change with measured justification.
