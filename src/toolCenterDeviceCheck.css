@@ -8,6 +8,7 @@
 .artifact-glossary-fab,
 .artifact-version-guide-fab,
 .artifact-support-status-fab,
-.artifact-responsibility-map-fab {
+.artifact-responsibility-map-fab,
+.artifact-decision-boundary-fab {
   display: none !important;
 }
