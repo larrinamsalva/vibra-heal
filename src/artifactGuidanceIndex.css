@@ -1,0 +1,355 @@
+.artifact-guidance-index-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 48;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  background: rgba(10, 18, 34, 0.94);
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34);
+}
+
+.artifact-guidance-index-panel {
+  position: fixed;
+  inset: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  z-index: 91;
+  overflow: auto;
+  max-width: 1180px;
+  margin: auto;
+  padding: clamp(1rem, 2.4vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(125, 211, 252, 0.12), transparent 34%),
+    radial-gradient(circle at 100% 18%, rgba(196, 181, 253, 0.12), transparent 32%),
+    #0b1220;
+  color: #f8fafc;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58);
+  overscroll-behavior: contain;
+}
+
+.artifact-guidance-index-panel * {
+  box-sizing: border-box;
+}
+
+.artifact-guidance-index-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.artifact-guidance-index-header p,
+.artifact-guidance-index-section-heading p {
+  margin: 0 0 0.35rem;
+  color: #93c5fd;
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.artifact-guidance-index-header h2,
+.artifact-guidance-index-section-heading h3,
+.artifact-guidance-index-group-heading h4,
+.artifact-guidance-index-card-grid h5,
+.artifact-guidance-index-card-grid h6 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+.artifact-guidance-index-header h2 {
+  max-width: 760px;
+  font-size: clamp(1.45rem, 3vw, 2.35rem);
+}
+
+.artifact-guidance-index-close {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.artifact-guidance-index-close:hover,
+.artifact-guidance-index-close:focus-visible {
+  background: rgba(147, 197, 253, 0.18);
+}
+
+.artifact-guidance-index-intro {
+  max-width: 900px;
+  margin: 1rem 0 0;
+  color: #dbeafe;
+  line-height: 1.65;
+}
+
+.artifact-guidance-index-totals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.35rem 0 0;
+}
+
+.artifact-guidance-index-totals div,
+.artifact-guidance-index-metrics div {
+  min-width: 0;
+  border: 1px solid rgba(147, 197, 253, 0.2);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.artifact-guidance-index-totals div {
+  padding: 0.9rem;
+}
+
+.artifact-guidance-index-totals dt,
+.artifact-guidance-index-metrics dt {
+  color: #bfdbfe;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.artifact-guidance-index-totals dd {
+  margin: 0.35rem 0 0;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.artifact-guidance-index-directory,
+.artifact-guidance-index-rules {
+  margin-top: 1.65rem;
+}
+
+.artifact-guidance-index-section-heading h3 {
+  font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+}
+
+.artifact-guidance-index-groups {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.artifact-guidance-index-groups > section {
+  padding: clamp(0.85rem, 2vw, 1.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.artifact-guidance-index-group-heading {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+
+.artifact-guidance-index-group-heading h4 {
+  font-size: 1.2rem;
+  color: #e0f2fe;
+}
+
+.artifact-guidance-index-group-heading p {
+  max-width: 900px;
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.artifact-guidance-index-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.artifact-guidance-index-card-grid > article {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 18px;
+  background: rgba(2, 6, 23, 0.64);
+}
+
+.artifact-guidance-index-card-grid > article > span {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  color: #a5f3fc;
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.artifact-guidance-index-card-grid h5 {
+  color: #f8fafc;
+  font-size: 1.15rem;
+}
+
+.artifact-guidance-index-card-grid h6 {
+  margin-top: 1rem;
+  color: #bfdbfe;
+  font-size: 0.84rem;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.artifact-guidance-index-card-grid p,
+.artifact-guidance-index-card-grid li,
+.artifact-guidance-index-rules li {
+  color: #dbeafe;
+  line-height: 1.55;
+}
+
+.artifact-guidance-index-card-grid section p {
+  margin: 0.35rem 0 0;
+}
+
+.artifact-guidance-index-answer {
+  margin: 0.85rem 0 0;
+  color: #cbd5e1 !important;
+}
+
+.artifact-guidance-index-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+}
+
+.artifact-guidance-index-metrics div {
+  padding: 0.7rem;
+}
+
+.artifact-guidance-index-metrics dd {
+  margin: 0.3rem 0 0;
+  color: #f8fafc;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.artifact-guidance-index-card-grid ul,
+.artifact-guidance-index-rules ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.artifact-guidance-index-card-grid li + li,
+.artifact-guidance-index-rules li + li {
+  margin-top: 0.38rem;
+}
+
+.artifact-guidance-index-open-instruction {
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  border-left: 4px solid #7dd3fc;
+  border-radius: 10px;
+  background: rgba(14, 116, 144, 0.14);
+  color: #ecfeff !important;
+  font-weight: 800;
+}
+
+.artifact-guidance-index-rules {
+  padding: 1rem;
+  border: 1px solid rgba(196, 181, 253, 0.23);
+  border-radius: 18px;
+  background: rgba(76, 29, 149, 0.12);
+}
+
+.artifact-guidance-index-status {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.artifact-guidance-index-close:focus-visible,
+.artifact-guidance-index-fab:focus-visible {
+  outline: 3px solid #fef08a;
+  outline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .artifact-guidance-index-totals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .artifact-guidance-index-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .artifact-guidance-index-panel {
+    inset: 0;
+    border: 0;
+    border-radius: 0;
+    padding: max(1rem, env(safe-area-inset-top)) max(0.85rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(0.85rem, env(safe-area-inset-left));
+  }
+
+  .artifact-guidance-index-header {
+    gap: 0.65rem;
+  }
+
+  .artifact-guidance-index-totals,
+  .artifact-guidance-index-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-text='large'] .artifact-guidance-index-panel {
+  font-size: 1.12rem;
+}
+
+html[data-contrast='high'] .artifact-guidance-index-panel {
+  border-color: #fff;
+  background: #050914;
+}
+
+html[data-contrast='high'] .artifact-guidance-index-groups > section,
+html[data-contrast='high'] .artifact-guidance-index-card-grid > article,
+html[data-contrast='high'] .artifact-guidance-index-totals div,
+html[data-contrast='high'] .artifact-guidance-index-metrics div,
+html[data-contrast='high'] .artifact-guidance-index-rules {
+  border-color: #e2e8f0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artifact-guidance-index-panel,
+  .artifact-guidance-index-panel * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .artifact-guidance-index-panel,
+  .artifact-guidance-index-groups > section,
+  .artifact-guidance-index-card-grid > article,
+  .artifact-guidance-index-totals div,
+  .artifact-guidance-index-metrics div,
+  .artifact-guidance-index-rules,
+  .artifact-guidance-index-status,
+  .artifact-guidance-index-open-instruction {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .artifact-guidance-index-open-instruction {
+    border-left-width: 4px;
+  }
+}
