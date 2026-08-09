@@ -273,9 +273,11 @@ describe('SoundLab component', () => {
     render(<SoundLab />)
     fireEvent.click(screen.getByRole('button', { name: 'Sound Lab' }))
     const dialog = screen.getByRole('dialog', { name: 'Sound Lab revival' })
+    const stereoReadout = dialog.querySelector('.sound-lab-stereo-readout')
 
-    expect(within(dialog).getByText(/Left/i)).toHaveTextContent('430.0 Hz')
-    expect(within(dialog).getByText(/Right/i)).toHaveTextContent('434.0 Hz')
+    expect(stereoReadout).not.toBeNull()
+    expect(stereoReadout).toHaveTextContent('Left 430.0 Hz')
+    expect(stereoReadout).toHaveTextContent('Right 434.0 Hz')
     expect(audioContextConstructs).toBe(0)
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'Start stereo pair' }))
@@ -301,11 +303,11 @@ describe('SoundLab component', () => {
     await waitFor(() => expect(within(dialog).getByText('0 / 4 active')).toBeInTheDocument())
     expect(within(dialog).getByRole('button', { name: 'Start noise' })).toBeInTheDocument()
     expect(within(dialog).getByRole('button', { name: 'Stop journey' })).toBeInTheDocument()
-    expect(within(dialog).getByText(/Slow Drift · Settle/i)).toBeInTheDocument()
+    expect(within(dialog).getByRole('status')).toHaveTextContent('Slow Drift · Settle')
     expect(within(dialog).getByRole('button', { name: 'Start stereo pair' })).toBeDisabled()
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'Stop journey' }))
-    await waitFor(() => expect(within(dialog).queryByText(/Slow Drift · Settle/i)).not.toBeInTheDocument())
+    await waitFor(() => expect(within(dialog).queryByRole('status')).not.toBeInTheDocument())
     expect(within(dialog).getByText(/Sound Journey stopped/i)).toBeInTheDocument()
   })
 
@@ -313,9 +315,10 @@ describe('SoundLab component', () => {
     render(<SoundLab />)
     const trigger = screen.getByRole('button', { name: 'Sound Lab' })
     fireEvent.click(trigger)
-    fireEvent.click(screen.getByRole('button', { name: 'Start Slow Drift' }))
+    const dialog = screen.getByRole('dialog', { name: 'Sound Lab revival' })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Start Slow Drift' }))
 
-    await waitFor(() => expect(screen.getByText(/Slow Drift · Settle/i)).toBeInTheDocument())
+    await waitFor(() => expect(within(dialog).getByRole('status')).toHaveTextContent('Slow Drift · Settle'))
     fireEvent.keyDown(window, { key: 'Escape' })
 
     await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Sound Lab revival' })).not.toBeInTheDocument())
