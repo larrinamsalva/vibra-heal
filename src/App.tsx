@@ -574,8 +574,8 @@ export default function App() {
                       <b>{formatHz(entry.hz)} Hz</b>
                     </span>
                     <span className="library-description">{entry.description}</span>
-                    <span className="tag-row">{entry.tags.slice(0, 3).map((tag) => <small key={tag}>{tag}</small>)}</span>
                   </button>
+                  <span className="tag-row library-tag-row">{entry.tags.slice(0, 3).map((tag) => <button key={tag} onClick={() => setQuery(tag)}>{tag}</button>)}</span>
                   <button
                     className={favorite ? 'favorite-star active' : 'favorite-star'}
                     onClick={() => toggleFavorite(entry)}

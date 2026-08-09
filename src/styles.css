@@ -95,7 +95,7 @@ input[type='range'] { display: block; width: 100%; accent-color: var(--mint); ma
 .library-card { display: grid; grid-template-columns: minmax(0, 1fr) 46px; width: 100%; border: 1px solid rgba(255,255,255,.07); border-radius: 16px; padding: 0; overflow: hidden; background: rgba(255,255,255,.022); transition: .2s ease; }
 .library-card:hover { transform: translateY(-1px); border-color: rgba(130, 241, 223, .28); background: rgba(130, 241, 223, .035); }
 .library-card.active { border-color: rgba(130, 241, 223, .55); background: linear-gradient(145deg, rgba(130, 241, 223, .12), rgba(128, 113, 255, .07)); box-shadow: inset 3px 0 0 var(--mint); }
-.library-card-select { min-width: 0; width: 100%; padding: 15px; border: 0; text-align: left; color: inherit; background: transparent; cursor: pointer; }
+.library-card-select { grid-column: 1; grid-row: 1; min-width: 0; width: 100%; padding: 15px; border: 0; text-align: left; color: inherit; background: transparent; cursor: pointer; }
 .library-card-top { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
 .library-card-top > span > strong, .library-card-top > span > small { display: block; }
 .library-card-top > span > strong { margin-bottom: 4px; }
@@ -103,8 +103,10 @@ input[type='range'] { display: block; width: 100%; accent-color: var(--mint); ma
 .library-card-top b { flex: 0 0 auto; color: var(--mint); font: 700 .92rem 'Space Mono', monospace; }
 .library-description { display: block; margin-top: 10px; color: #9db3b0; font-size: .78rem; line-height: 1.5; }
 .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
-.tag-row small { border: 1px solid rgba(255,255,255,.07); border-radius: 999px; padding: 4px 7px; color: #809996; background: rgba(0,0,0,.12); font-size: .62rem; }
-.favorite-star { width: 46px; border: 0; border-left: 1px solid rgba(255,255,255,.06); color: #718885; background: rgba(0,0,0,.08); cursor: pointer; font-size: 1.2rem; transition: .2s ease; }
+.tag-row button { border: 1px solid rgba(255,255,255,.07); border-radius: 999px; padding: 4px 7px; color: #809996; background: rgba(0,0,0,.12); cursor: pointer; font-size: .62rem; }
+.tag-row button:hover { border-color: rgba(130, 241, 223, .34); color: var(--mint); background: rgba(130, 241, 223, .06); }
+.library-tag-row { grid-column: 1; grid-row: 2; margin-top: -4px; padding: 0 15px 15px; }
+.favorite-star { grid-column: 2; grid-row: 1 / span 2; width: 46px; border: 0; border-left: 1px solid rgba(255,255,255,.06); color: #718885; background: rgba(0,0,0,.08); cursor: pointer; font-size: 1.2rem; transition: .2s ease; }
 .favorite-star:hover { color: #ffe39a; background: rgba(255, 211, 100, .06); }
 .favorite-star.active { color: #ffe39a; background: rgba(255, 211, 100, .1); }
 .library-note { margin: 16px 0 0 !important; padding-top: 15px; border-top: 1px solid var(--line); font-size: .75rem; }
