@@ -131,6 +131,10 @@ function Visualizer({ active, intensity }: { active: boolean; intensity: number 
   )
 }
 
+function TagFilterButton({ tag, onChoose }: { tag: string; onChoose: (tag: string) => void }) {
+  return <button type="button" className="filter-chip" onClick={() => onChoose(tag)}>{tag}</button>
+}
+
 type AudioGraph = {
   context: AudioContext
   left: OscillatorNode
@@ -296,6 +300,13 @@ export default function App() {
   function chooseEntry(entry: FrequencyEntry) {
     setSelected(entry)
     setFrequency(entry.hz)
+  }
+
+  function chooseLibraryTag(tag: string) {
+    setQuery(tag)
+    setCategory('All')
+    setFavoritesOnly(false)
+    setActiveGoalId(null)
   }
 
   function stopPlayback() {
@@ -506,6 +517,9 @@ export default function App() {
           <div className="frequency-readout"><span>{formatHz(frequency)}</span><small>Hz carrier</small></div>
           <p>{selected.description}</p>
           <p className="intention"><strong>Session idea:</strong> {selected.intention}</p>
+          <div className="tag-row">
+            {selected.tags.map((tag) => <TagFilterButton key={tag} tag={tag} onChoose={chooseLibraryTag} />)}
+          </div>
           <label>Carrier frequency <span>{formatHz(frequency)} Hz</span>
             <input type="range" min="40" max="1200" step="0.1" value={frequency} onChange={(event) => setFrequency(Number(event.target.value))} />
           </label>
@@ -565,17 +579,21 @@ export default function App() {
               const favorite = favoriteIds.includes(entry.id)
               return (
                 <div key={entry.id} className={entry.id === selected.id ? 'library-card active' : 'library-card'}>
-                  <button className="library-card-select" onClick={() => chooseEntry(entry)}>
-                    <span className="library-card-top">
-                      <span>
-                        <strong>{entry.name}</strong>
-                        <small>{entry.category}</small>
+                  <div>
+                    <button className="library-card-select" onClick={() => chooseEntry(entry)}>
+                      <span className="library-card-top">
+                        <span>
+                          <strong>{entry.name}</strong>
+                          <small>{entry.category}</small>
+                        </span>
+                        <b>{formatHz(entry.hz)} Hz</b>
                       </span>
-                      <b>{formatHz(entry.hz)} Hz</b>
+                      <span className="library-description">{entry.description}</span>
+                    </button>
+                    <span className="tag-row library-card-select">
+                      {entry.tags.slice(0, 3).map((tag) => <TagFilterButton key={tag} tag={tag} onChoose={chooseLibraryTag} />)}
                     </span>
-                    <span className="library-description">{entry.description}</span>
-                    <span className="tag-row">{entry.tags.slice(0, 3).map((tag) => <small key={tag}>{tag}</small>)}</span>
-                  </button>
+                  </div>
                   <button
                     className={favorite ? 'favorite-star active' : 'favorite-star'}
                     onClick={() => toggleFavorite(entry)}
@@ -596,7 +614,7 @@ export default function App() {
               </div>
             )}
           </div>
-          <p className="library-note"><strong>How labels work:</strong> “Audio feature” describes the sound itself, “Wellness practice” describes a mindful use, and “Traditional association” identifies a cultural or spiritual meaning without presenting it as medical evidence.</p>
+          <p className="library-note"><strong>How labels work:</strong> Tap a label to find similar tones. “Audio feature” describes the sound itself, “Wellness practice” describes a mindful use, and “Traditional association” identifies a cultural or spiritual meaning without presenting it as medical evidence.</p>
         </article>
 
         <article className="panel timer-panel">
