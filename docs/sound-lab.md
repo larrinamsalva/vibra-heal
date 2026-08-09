@@ -2,7 +2,7 @@
 
 Sound Lab revives selected experimental-audio ideas from the earlier standalone VibraHeal prototype inside the current React/Web Audio application.
 
-It is available from **Tools → Sound Lab** and is intended for consenting human listeners who want to explore sound design. It is not a symptom selector, treatment system, diagnostic tool, medical protocol, veterinary tool, or evidence that a particular waveform, frequency, layer, or noise color produces a health outcome.
+It is available from **Tools → Sound Lab** and is intended for consenting human listeners who want to explore sound design. It is not a symptom selector, treatment system, diagnostic tool, medical protocol, veterinary tool, or evidence that a particular waveform, frequency, offset, pulse rhythm, layer, noise color, or journey produces a health or consciousness outcome.
 
 ## Phase 1 controls
 
@@ -15,24 +15,13 @@ Sound Lab offers four standard Web Audio oscillator shapes:
 - **Square** — a bright waveform rich in odd harmonics.
 - **Sawtooth** — a bright waveform containing many harmonics.
 
-The preview carrier is limited to **40–1200 Hz**. The preview gain control is capped below the normal Web Audio unity level and all Sound Lab sources pass through a shared master gain and dynamics compressor.
-
-Square and sawtooth waves can sound substantially brighter than a sine wave at the same numeric gain. The interface therefore tells the listener to start especially low with those shapes.
+The preview carrier is limited to **40–1200 Hz**. All Sound Lab sources pass through a shared master gain and dynamics compressor. Square and sawtooth waves can sound substantially brighter than sine at the same numeric gain, so the interface tells the listener to start especially low.
 
 ### Layered tones
 
-A deliberate **Add layer** or quick-frequency button starts a layer. Sound Lab allows at most **four active layers**.
+A deliberate **Add layer** or quick-frequency button starts a layer. Sound Lab allows at most **four active layers**. Each layer has its own frequency, waveform, conservative level, and explicit Remove action.
 
-Each layer has its own:
-
-- frequency from 40–1200 Hz
-- sine, triangle, square, or sawtooth waveform
-- conservative level control
-- explicit Remove action
-
-A frequency that is already active cannot be added a second time through the Add action. Existing layers may be adjusted after they start.
-
-**Stop and clear layers** fades and removes all current layered tones. **Stop all Sound Lab audio** also stops the preview and noise engine and closes the Sound Lab AudioContext.
+A frequency already active cannot be added a second time through the Add action. **Stop and clear layers** fades and removes the current layered tones.
 
 ### Local noise lab
 
@@ -43,40 +32,95 @@ Sound Lab generates four technical noise colors locally:
 - **Brown noise** — broadband noise with strong low-frequency emphasis.
 - **Violet noise** — broadband noise weighted toward higher frequencies.
 
-The samples are synthesized in browser memory. Sound Lab does not download a recording, contact a media service, upload generated audio, or record microphone input.
+Samples are synthesized in browser memory. Sound Lab does not download a recording, contact a media service, upload generated audio, or record microphone input.
 
-The earlier standalone prototype displayed a "green noise" choice, but that name does not have one standard technical definition. Phase 1 therefore does not present a green-noise generator. A future VibraHeal-specific texture could be added only with a precise definition rather than implying that one universal green-noise spectrum exists.
+The earlier standalone prototype displayed a "green noise" choice, but that name does not have one standard technical definition. VibraHeal therefore does not present one universal green-noise generator.
+
+## Phase 2 controls
+
+### Stereo pair
+
+The Stereo Pair uses two oscillators derived from one carrier:
+
+- left frequency = carrier minus half the selected offset
+- right frequency = carrier plus half the selected offset
+- left and right are panned to their respective channels
+- both pass through one conservative stereo level before the shared Sound Lab master limiter
+
+The carrier remains inside **40–1200 Hz** and the total stereo difference is limited to **0–12 Hz**.
+
+Four presets describe only the technical channel difference:
+
+- **Centered** — 0 Hz total difference
+- **Close pair** — 2 Hz
+- **Open pair** — 4 Hz
+- **Wide pair** — 8 Hz
+
+These are not brainwave, sleep, focus, meditation, or treatment presets. Headphones make the left/right difference easiest to hear.
+
+### Pulse rhythm
+
+The Stereo Pair includes optional amplitude movement controlled by:
+
+- pulse rate from **0.5–12 Hz**
+- pulse depth from **0–100%**
+
+The implementation modulates the Stereo Pair's gain while keeping the reviewed stereo maximum level. A numeric pulse rate describes only the rate of amplitude movement. VibraHeal does not map pulse rates to a mental, medical, neurological, or consciousness state.
+
+### Authored Sound Journeys
+
+Phase 2 includes three fixed technical sequences:
+
+- **Slow Drift**
+- **Wide Horizon**
+- **Gentle Motion**
+
+Each journey is **2 minutes 15 seconds** and contains three authored stages. A stage may change only:
+
+- carrier frequency
+- waveform
+- stereo offset
+- pulse rate
+- pulse depth
+
+Starting a Sound Journey is exclusive inside Sound Lab. It first stops the preview tone, local noise, layered tones, and any standalone Stereo Pair. This prevents a journey from unexpectedly stacking on top of other Sound Lab sources.
+
+The interface identifies the active journey, stage number, stage label, and seconds remaining. **Stop journey**, **Stop all Sound Lab audio**, Escape, closing the panel, or Tool Center switching cancels the tracked journey timers and stops the stereo audio.
+
+Journey names describe sound movement only. They do not promise relaxation, sleep, focus, healing, meditation, lucid dreaming, entrainment, or a particular brain state.
 
 ## Explicit-start and stop behavior
 
 Opening Sound Lab does **not** create an AudioContext and does not start audio.
 
-An AudioContext is created only after a deliberate audio action such as:
+Audio begins only after a deliberate action such as:
 
 - **Start preview tone**
 - **Add layer** / a quick-layer button
 - **Start noise**
+- **Start stereo pair**
+- **Start Slow Drift / Wide Horizon / Gentle Motion**
 
-Closing Sound Lab stops its active audio. Escape also closes the panel and stops the Sound Lab session. Switching to another Tool Center panel closes Sound Lab through the same compatibility trigger, which invokes the same stop behavior.
+Closing Sound Lab stops its active audio. Escape closes the panel and stops the Sound Lab session. Switching to another Tool Center panel invokes the same cleanup behavior.
 
-Sound Lab is intentionally separate from the main VibraHeal tone player and the Nature Mixer. Those engines do not automatically start, stop, inherit, or synchronize settings with Sound Lab in Phase 1.
+Sound Lab remains separate from the main VibraHeal tone player and Nature Mixer. Those engines do not automatically start, stop, inherit, or synchronize settings with Sound Lab.
 
 ## Privacy and persistence
 
-Phase 1 Sound Lab is session-only.
+Sound Lab remains session-only in Phase 2.
 
 It does not:
 
 - read or write `localStorage`
 - add Sound Lab choices to Backup Format v2
-- add layers or noise selections to saved sessions
+- add layers, noise, stereo, pulse, or journeys to saved sessions
 - write journal entries or listening history
 - read user files
 - call `fetch`
 - send telemetry or analytics
 - use an account or cloud synchronization
 
-Closing or reloading the page discards the current Sound Lab setup.
+Closing or reloading the page discards the current Sound Lab setup and journey progress.
 
 A future saved-Sound-Lab feature would require an explicit storage/privacy design and, if it becomes part of saved sessions or backups, a reviewed data-format compatibility plan.
 
@@ -85,9 +129,10 @@ A future saved-Sound-Lab feature would require an explicit storage/privacy desig
 Sound Lab is for consenting human listeners only.
 
 - Start at a low level.
-- Reduce levels before adding more layers.
+- Reduce levels before adding more sources.
 - Keep square and sawtooth waveforms especially low.
-- Stop if the sound is uncomfortable, painful, fatiguing, or produces ringing or other concerning hearing symptoms.
+- Stereo separation and pulse movement can feel tiring; stop whenever they are uncomfortable.
+- Stop if sound is painful, fatiguing, produces ringing, or causes other concerning hearing symptoms.
 - Do not use Sound Lab headphones, earbuds, wearable speakers, or vibration devices on animals.
 
 Frequency labels and audio structures must not be presented as diagnosing, treating, curing, killing pathogens, repairing DNA, replacing medication, or providing medical or veterinary care.
@@ -96,16 +141,20 @@ Frequency labels and audio structures must not be presented as diagnosing, treat
 
 The Sound Lab test suite verifies that:
 
-- the four reviewed waveform types stay registered
-- the four technically defined noise colors stay registered
-- frequencies and gains remain clamped to reviewed limits
+- four reviewed waveform types and four defined noise colors remain registered
+- the four stereo presets remain technical 0/2/4/8 Hz differences
+- all three authored journeys remain within reviewed carrier, offset, pulse-rate, pulse-depth, and duration bounds
+- journey wording avoids outcome and brain-state labels
 - generated noise samples remain finite and bounded
 - rendering and opening the panel do not create an AudioContext
-- opening the panel does not read browser storage or use the network
+- opening the panel does not read/write browser storage or use the network
 - audio begins only after an explicit user action
 - the layer count cannot exceed four
-- Stop all clears preview, noise, and layers together
-- Escape closes the panel and restores compatibility-trigger focus
-- Tool Center registers Sound Lab as an eager Session tool and still keeps only one panel open
+- the Stereo Pair exposes the calculated left/right frequencies
+- starting a journey clears existing Sound Lab layers/noise before the journey runs
+- a running journey has an explicit Stop journey control
+- Stop all clears all Sound Lab audio
+- Escape closes the panel, cancels the Sound Lab session, and restores compatibility-trigger focus
+- Tool Center still keeps only one managed panel open
 
-Automated tests do not certify comfortable listening on every speaker, headphone, operating system, browser, or device. Real-device review should include low-volume checks for all four waveform types, multiple simultaneous layers, every noise color, Stop all, Escape, Tool Center switching, and installed-app updates.
+Automated tests do not certify comfortable listening on every speaker, headphone, operating system, browser, or device. Real-device review should include low-volume checks for all four waveforms, multiple layers, every noise color, stereo presets, pulse rate/depth extremes at low level, each journey, Stop journey, Stop all, Escape, Tool Center switching, and installed-app updates.

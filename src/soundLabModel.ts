@@ -1,5 +1,24 @@
 export type SoundLabWaveform = 'sine' | 'triangle' | 'square' | 'sawtooth'
 export type SoundLabNoiseKind = 'white' | 'pink' | 'brown' | 'violet'
+export type SoundLabStereoPresetId = 'centered' | 'close-pair' | 'open-pair' | 'wide-pair'
+export type SoundLabJourneyId = 'slow-drift' | 'wide-horizon' | 'gentle-motion'
+
+export type SoundLabJourneyStep = {
+  label: string
+  seconds: number
+  carrierHz: number
+  offsetHz: number
+  pulseRateHz: number
+  pulseDepth: number
+  waveform: SoundLabWaveform
+}
+
+export type SoundLabJourney = {
+  id: SoundLabJourneyId
+  name: string
+  description: string
+  steps: readonly SoundLabJourneyStep[]
+}
 
 export const SOUND_LAB_LIMITS = {
   minHz: 40,
@@ -8,6 +27,11 @@ export const SOUND_LAB_LIMITS = {
   previewMaxGain: 0.12,
   layerMaxGain: 0.08,
   noiseMaxGain: 0.08,
+  stereoMaxGain: 0.08,
+  stereoOffsetMaxHz: 12,
+  pulseRateMinHz: 0.5,
+  pulseRateMaxHz: 12,
+  pulseDepthMax: 1,
 } as const
 
 export const SOUND_LAB_WAVEFORMS: ReadonlyArray<{
@@ -16,30 +40,10 @@ export const SOUND_LAB_WAVEFORMS: ReadonlyArray<{
   symbol: string
   description: string
 }> = [
-  {
-    id: 'sine',
-    label: 'Sine',
-    symbol: '∿',
-    description: 'A smooth single-frequency tone with the fewest added harmonics.',
-  },
-  {
-    id: 'triangle',
-    label: 'Triangle',
-    symbol: '△',
-    description: 'A softer harmonic tone that is brighter than sine without the hard edge of square.',
-  },
-  {
-    id: 'square',
-    label: 'Square',
-    symbol: '⊓',
-    description: 'A bright, buzzy waveform rich in odd harmonics. Keep the level especially low.',
-  },
-  {
-    id: 'sawtooth',
-    label: 'Sawtooth',
-    symbol: '⋰',
-    description: 'A bright waveform containing many harmonics. Keep the level especially low.',
-  },
+  { id: 'sine', label: 'Sine', symbol: '∿', description: 'Smooth, low-harmonic tone.' },
+  { id: 'triangle', label: 'Triangle', symbol: '△', description: 'Softer harmonic tone.' },
+  { id: 'square', label: 'Square', symbol: '⊓', description: 'Bright odd harmonics; keep low.' },
+  { id: 'sawtooth', label: 'Sawtooth', symbol: '⋰', description: 'Bright many harmonics; keep low.' },
 ]
 
 export const SOUND_LAB_NOISES: ReadonlyArray<{
@@ -47,29 +51,69 @@ export const SOUND_LAB_NOISES: ReadonlyArray<{
   label: string
   description: string
 }> = [
-  {
-    id: 'white',
-    label: 'White noise',
-    description: 'Broadband noise with even power density across frequency. It has a bright, steady hiss.',
-  },
-  {
-    id: 'pink',
-    label: 'Pink noise',
-    description: 'Broadband noise with progressively less energy at higher frequencies, giving it a fuller sound.',
-  },
-  {
-    id: 'brown',
-    label: 'Brown noise',
-    description: 'Broadband noise with strong low-frequency emphasis and a deeper, rumbling character.',
-  },
-  {
-    id: 'violet',
-    label: 'Violet noise',
-    description: 'Broadband noise weighted toward higher frequencies, producing a very bright texture.',
-  },
+  { id: 'white', label: 'White noise', description: 'Even-power broadband hiss.' },
+  { id: 'pink', label: 'Pink noise', description: 'Less high-frequency energy.' },
+  { id: 'brown', label: 'Brown noise', description: 'Strong low-frequency emphasis.' },
+  { id: 'violet', label: 'Violet noise', description: 'Strong high-frequency emphasis.' },
 ]
 
 export const SOUND_LAB_QUICK_TONES = [174, 396, 432, 528, 639] as const
+
+export const SOUND_LAB_STEREO_PRESETS: ReadonlyArray<{
+  id: SoundLabStereoPresetId
+  label: string
+  offsetHz: number
+}> = [
+  { id: 'centered', label: 'Centered', offsetHz: 0 },
+  { id: 'close-pair', label: 'Close pair', offsetHz: 2 },
+  { id: 'open-pair', label: 'Open pair', offsetHz: 4 },
+  { id: 'wide-pair', label: 'Wide pair', offsetHz: 8 },
+]
+
+function journeyStep(
+  label: string,
+  seconds: number,
+  carrierHz: number,
+  offsetHz: number,
+  pulseRateHz: number,
+  pulseDepth: number,
+  waveform: SoundLabWaveform = 'sine',
+): SoundLabJourneyStep {
+  return { label, seconds, carrierHz, offsetHz, pulseRateHz, pulseDepth, waveform }
+}
+
+export const SOUND_LAB_JOURNEYS: readonly SoundLabJourney[] = [
+  {
+    id: 'slow-drift',
+    name: 'Slow Drift',
+    description: 'Small sine changes.',
+    steps: [
+      journeyStep('Settle', 45, 432, 2, 0.8, 0.18),
+      journeyStep('Drift', 45, 438, 4, 1.1, 0.24),
+      journeyStep('Return', 45, 432, 2, 0.8, 0.16),
+    ],
+  },
+  {
+    id: 'wide-horizon',
+    name: 'Wide Horizon',
+    description: 'Widening triangle.',
+    steps: [
+      journeyStep('Near', 40, 396, 2, 1, 0.14, 'triangle'),
+      journeyStep('Open', 50, 432, 6, 1.6, 0.22, 'triangle'),
+      journeyStep('Wide', 45, 480, 8, 1.2, 0.16, 'triangle'),
+    ],
+  },
+  {
+    id: 'gentle-motion',
+    name: 'Gentle Motion',
+    description: 'Shallow sine motion.',
+    steps: [
+      journeyStep('Begin', 45, 528, 1, 0.6, 0.12),
+      journeyStep('Move', 45, 500, 3, 1, 0.2),
+      journeyStep('Home', 45, 528, 1, 0.6, 0.1),
+    ],
+  },
+]
 
 export function clampSoundLabFrequency(value: number) {
   if (!Number.isFinite(value)) return 432
@@ -79,6 +123,34 @@ export function clampSoundLabFrequency(value: number) {
 export function clampSoundLabGain(value: number, maximum: number) {
   if (!Number.isFinite(value)) return 0
   return Math.min(maximum, Math.max(0, value))
+}
+
+export function clampSoundLabStereoOffset(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.min(SOUND_LAB_LIMITS.stereoOffsetMaxHz, Math.max(0, value))
+}
+
+export function clampSoundLabPulseRate(value: number) {
+  if (!Number.isFinite(value)) return 1
+  return Math.min(SOUND_LAB_LIMITS.pulseRateMaxHz, Math.max(SOUND_LAB_LIMITS.pulseRateMinHz, value))
+}
+
+export function clampSoundLabPulseDepth(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.min(SOUND_LAB_LIMITS.pulseDepthMax, Math.max(0, value))
+}
+
+export function soundLabStereoFrequencies(carrierHz: number, offsetHz: number) {
+  const carrier = clampSoundLabFrequency(carrierHz)
+  const offset = clampSoundLabStereoOffset(offsetHz)
+  return {
+    leftHz: clampSoundLabFrequency(carrier - offset / 2),
+    rightHz: clampSoundLabFrequency(carrier + offset / 2),
+  }
+}
+
+export function getSoundLabJourneyTotalSeconds(journey: SoundLabJourney) {
+  return journey.steps.reduce((total, step) => total + Math.max(0, step.seconds), 0)
 }
 
 function clampSample(value: number) {
