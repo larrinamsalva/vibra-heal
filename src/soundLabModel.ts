@@ -40,30 +40,10 @@ export const SOUND_LAB_WAVEFORMS: ReadonlyArray<{
   symbol: string
   description: string
 }> = [
-  {
-    id: 'sine',
-    label: 'Sine',
-    symbol: '∿',
-    description: 'A smooth single-frequency tone with the fewest added harmonics.',
-  },
-  {
-    id: 'triangle',
-    label: 'Triangle',
-    symbol: '△',
-    description: 'A softer harmonic tone that is brighter than sine without the hard edge of square.',
-  },
-  {
-    id: 'square',
-    label: 'Square',
-    symbol: '⊓',
-    description: 'A bright, buzzy waveform rich in odd harmonics. Keep the level especially low.',
-  },
-  {
-    id: 'sawtooth',
-    label: 'Sawtooth',
-    symbol: '⋰',
-    description: 'A bright waveform containing many harmonics. Keep the level especially low.',
-  },
+  { id: 'sine', label: 'Sine', symbol: '∿', description: 'Smooth, low-harmonic tone.' },
+  { id: 'triangle', label: 'Triangle', symbol: '△', description: 'Softer harmonic tone.' },
+  { id: 'square', label: 'Square', symbol: '⊓', description: 'Bright odd harmonics; keep low.' },
+  { id: 'sawtooth', label: 'Sawtooth', symbol: '⋰', description: 'Bright many harmonics; keep low.' },
 ]
 
 export const SOUND_LAB_NOISES: ReadonlyArray<{
@@ -71,26 +51,10 @@ export const SOUND_LAB_NOISES: ReadonlyArray<{
   label: string
   description: string
 }> = [
-  {
-    id: 'white',
-    label: 'White noise',
-    description: 'Broadband noise with even power density across frequency. It has a bright, steady hiss.',
-  },
-  {
-    id: 'pink',
-    label: 'Pink noise',
-    description: 'Broadband noise with progressively less energy at higher frequencies, giving it a fuller sound.',
-  },
-  {
-    id: 'brown',
-    label: 'Brown noise',
-    description: 'Broadband noise with strong low-frequency emphasis and a deeper, rumbling character.',
-  },
-  {
-    id: 'violet',
-    label: 'Violet noise',
-    description: 'Broadband noise weighted toward higher frequencies, producing a very bright texture.',
-  },
+  { id: 'white', label: 'White noise', description: 'Even-power broadband hiss.' },
+  { id: 'pink', label: 'Pink noise', description: 'Less high-frequency energy.' },
+  { id: 'brown', label: 'Brown noise', description: 'Strong low-frequency emphasis.' },
+  { id: 'violet', label: 'Violet noise', description: 'Strong high-frequency emphasis.' },
 ]
 
 export const SOUND_LAB_QUICK_TONES = [174, 396, 432, 528, 639] as const
@@ -99,63 +63,54 @@ export const SOUND_LAB_STEREO_PRESETS: ReadonlyArray<{
   id: SoundLabStereoPresetId
   label: string
   offsetHz: number
-  description: string
 }> = [
-  {
-    id: 'centered',
-    label: 'Centered',
-    offsetHz: 0,
-    description: 'Both channels use the same carrier frequency.',
-  },
-  {
-    id: 'close-pair',
-    label: 'Close pair',
-    offsetHz: 2,
-    description: 'A subtle 2 Hz difference between the left and right channels.',
-  },
-  {
-    id: 'open-pair',
-    label: 'Open pair',
-    offsetHz: 4,
-    description: 'A clearly separated 4 Hz left/right frequency difference.',
-  },
-  {
-    id: 'wide-pair',
-    label: 'Wide pair',
-    offsetHz: 8,
-    description: 'A wider 8 Hz left/right difference for obvious stereo movement.',
-  },
+  { id: 'centered', label: 'Centered', offsetHz: 0 },
+  { id: 'close-pair', label: 'Close pair', offsetHz: 2 },
+  { id: 'open-pair', label: 'Open pair', offsetHz: 4 },
+  { id: 'wide-pair', label: 'Wide pair', offsetHz: 8 },
 ]
+
+function journeyStep(
+  label: string,
+  seconds: number,
+  carrierHz: number,
+  offsetHz: number,
+  pulseRateHz: number,
+  pulseDepth: number,
+  waveform: SoundLabWaveform = 'sine',
+): SoundLabJourneyStep {
+  return { label, seconds, carrierHz, offsetHz, pulseRateHz, pulseDepth, waveform }
+}
 
 export const SOUND_LAB_JOURNEYS: readonly SoundLabJourney[] = [
   {
     id: 'slow-drift',
     name: 'Slow Drift',
-    description: 'A three-stage sine journey with small carrier, stereo-offset, and pulse changes.',
+    description: 'Small sine changes.',
     steps: [
-      { label: 'Settle', seconds: 45, carrierHz: 432, offsetHz: 2, pulseRateHz: 0.8, pulseDepth: 0.18, waveform: 'sine' },
-      { label: 'Drift', seconds: 45, carrierHz: 438, offsetHz: 4, pulseRateHz: 1.1, pulseDepth: 0.24, waveform: 'sine' },
-      { label: 'Return', seconds: 45, carrierHz: 432, offsetHz: 2, pulseRateHz: 0.8, pulseDepth: 0.16, waveform: 'sine' },
+      journeyStep('Settle', 45, 432, 2, 0.8, 0.18),
+      journeyStep('Drift', 45, 438, 4, 1.1, 0.24),
+      journeyStep('Return', 45, 432, 2, 0.8, 0.16),
     ],
   },
   {
     id: 'wide-horizon',
     name: 'Wide Horizon',
-    description: 'A gradual triangle-wave expansion from a close pair to a wider stereo difference.',
+    description: 'Widening triangle.',
     steps: [
-      { label: 'Near', seconds: 40, carrierHz: 396, offsetHz: 2, pulseRateHz: 1, pulseDepth: 0.14, waveform: 'triangle' },
-      { label: 'Open', seconds: 50, carrierHz: 432, offsetHz: 6, pulseRateHz: 1.6, pulseDepth: 0.22, waveform: 'triangle' },
-      { label: 'Wide', seconds: 45, carrierHz: 480, offsetHz: 8, pulseRateHz: 1.2, pulseDepth: 0.16, waveform: 'triangle' },
+      journeyStep('Near', 40, 396, 2, 1, 0.14, 'triangle'),
+      journeyStep('Open', 50, 432, 6, 1.6, 0.22, 'triangle'),
+      journeyStep('Wide', 45, 480, 8, 1.2, 0.16, 'triangle'),
     ],
   },
   {
     id: 'gentle-motion',
     name: 'Gentle Motion',
-    description: 'A restrained sine sequence with a shallow pulse and narrow stereo movement.',
+    description: 'Shallow sine motion.',
     steps: [
-      { label: 'Begin', seconds: 45, carrierHz: 528, offsetHz: 1, pulseRateHz: 0.6, pulseDepth: 0.12, waveform: 'sine' },
-      { label: 'Move', seconds: 45, carrierHz: 500, offsetHz: 3, pulseRateHz: 1, pulseDepth: 0.2, waveform: 'sine' },
-      { label: 'Home', seconds: 45, carrierHz: 528, offsetHz: 1, pulseRateHz: 0.6, pulseDepth: 0.1, waveform: 'sine' },
+      journeyStep('Begin', 45, 528, 1, 0.6, 0.12),
+      journeyStep('Move', 45, 500, 3, 1, 0.2),
+      journeyStep('Home', 45, 528, 1, 0.6, 0.1),
     ],
   },
 ]
