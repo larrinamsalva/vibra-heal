@@ -257,7 +257,7 @@ describe('SoundLab component', () => {
       expect(within(dialog).getByRole('button', { name: 'Start preview tone' })).toBeEnabled()
       expect(within(dialog).getByRole('button', { name: 'Start stereo pair' })).toBeDisabled()
       expect(within(dialog).getByRole('button', { name: 'Start Slow Drift' })).toBeDisabled()
-      expect(within(dialog).getByRole('note', { name: '' })).toBeInTheDocument()
+      expect(within(dialog).getByText(/Stereo panning is unavailable in this browser/i)).toBeInTheDocument()
 
       fireEvent.click(within(dialog).getByRole('button', { name: 'Start preview tone' }))
       expect(audioContextConstructs).toBe(1)
