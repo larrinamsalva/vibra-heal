@@ -18,6 +18,7 @@ import ReleaseHistory from './ReleaseHistory'
 import ReleasePackage from './ReleasePackage'
 import SessionJournal from './SessionJournal'
 import SessionSummary from './SessionSummary'
+import SoundLab from './SoundLab'
 import ToolCenter from './ToolCenter'
 import './styles.css'
 import './releaseCleanup.css'
@@ -35,6 +36,7 @@ createRoot(document.getElementById('root')!).render(
     <SessionJournal />
     <LocalDataPrivacyCenter />
     <NatureMixer />
+    <SoundLab />
     <AnimalCalm />
     <PwaInstall />
     <DeviceCheck />
