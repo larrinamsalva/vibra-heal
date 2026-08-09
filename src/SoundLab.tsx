@@ -285,13 +285,13 @@ export default function SoundLab() {
     () => soundLabStereoFrequencies(stereoHz, stereoOffset),
     [stereoHz, stereoOffset],
   )
-  const audioSupported = typeof window !== 'undefined'
-    && typeof window.AudioContext === 'function'
+  const audioSupported = typeof window !== 'undefined' && typeof window.AudioContext === 'function'
+  const stereoSupported = audioSupported
     && typeof window.AudioContext.prototype.createStereoPanner === 'function'
 
   function ensureGraph() {
     if (!audioSupported) {
-      setStatus('Required Web Audio stereo controls are unavailable in this browser. Sound Lab cannot start audio here.')
+      setStatus('Web Audio is unavailable in this browser. Sound Lab controls cannot start audio here.')
       return null
     }
 
@@ -462,13 +462,17 @@ export default function SoundLab() {
   }
 
   function chooseStereoPreset(offsetHz: number, label: string) {
-    if (activeJourneyId) return
+    if (activeJourneyId || !stereoSupported) return
     setStereoOffset(clampSoundLabStereoOffset(offsetHz))
     setStatus(`${label} selected: ${offsetHz} Hz total left/right difference.`)
   }
 
   function toggleStereo() {
     if (activeJourneyId) return
+    if (!stereoSupported) {
+      setStatus('Stereo panning is unavailable in this browser. Waveform preview, layers, and noise can still be used.')
+      return
+    }
     if (stereoPlaying) {
       stopStereo()
       return
@@ -546,13 +550,17 @@ export default function SoundLab() {
   }
 
   function startJourney(journey: SoundLabJourney) {
+    if (!stereoSupported) {
+      setStatus('Sound Journeys need stereo panning, which is unavailable in this browser. Other Sound Lab controls remain available.')
+      return
+    }
     stopPreviewTone(false)
     stopNoise(false)
     stopLayers(false)
     stopStereo(false)
     resetJourneyState()
     setActiveJourneyId(journey.id)
-    window.setTimeout(() => applyJourneyStep(journey, 0), 0)
+    applyJourneyStep(journey, 0)
   }
 
   useEffect(() => {
@@ -699,19 +707,20 @@ export default function SoundLab() {
           <section className="sound-lab-section sound-lab-stereo" aria-labelledby="sound-lab-stereo-title">
             <div className="sound-lab-section-heading"><div><p className="sound-lab-kicker">Stereo pair + pulse rhythm</p><h3 id="sound-lab-stereo-title">Separate the left and right carrier gently.</h3></div><span>{activeJourney ? 'Journey controls active' : stereoPlaying ? 'Stereo pair playing' : 'Stereo pair stopped'}</span></div>
             <p className="sound-lab-description">Headphones make left/right frequency differences easiest to hear. Pulse rhythm is simple amplitude movement; its rate does not promise or label a mental or physical state.</p>
+            {!stereoSupported && audioSupported && <p className="sound-lab-description" role="note">Stereo panning is unavailable in this browser. The waveform preview, layered tones, and Noise Lab remain available.</p>}
             <div className="sound-lab-stereo-presets" role="group" aria-label="Stereo offset presets">
-              {SOUND_LAB_STEREO_PRESETS.map((preset) => <button key={preset.id} type="button" className={selectedStereoPreset?.id === preset.id ? 'active' : ''} onClick={() => chooseStereoPreset(preset.offsetHz, preset.label)} aria-pressed={selectedStereoPreset?.id === preset.id} disabled={Boolean(activeJourney)}><strong>{preset.label}</strong><span>{preset.offsetHz} Hz</span></button>)}
+              {SOUND_LAB_STEREO_PRESETS.map((preset) => <button key={preset.id} type="button" className={selectedStereoPreset?.id === preset.id ? 'active' : ''} onClick={() => chooseStereoPreset(preset.offsetHz, preset.label)} aria-pressed={selectedStereoPreset?.id === preset.id} disabled={Boolean(activeJourney) || !stereoSupported}><strong>{preset.label}</strong><span>{preset.offsetHz} Hz</span></button>)}
             </div>
             <div className="sound-lab-stereo-readout" aria-live="polite"><span>Left <strong>{stereoFrequencies.leftHz.toFixed(1)} Hz</strong></span><span>Right <strong>{stereoFrequencies.rightHz.toFixed(1)} Hz</strong></span></div>
             <div className="sound-lab-control-grid sound-lab-stereo-controls">
-              <label>Carrier <span>{stereoHz.toFixed(1)} Hz</span><input type="number" min={SOUND_LAB_LIMITS.minHz} max={SOUND_LAB_LIMITS.maxHz} step="0.1" value={stereoHz} disabled={Boolean(activeJourney)} onChange={(event) => setStereoHz(clampSoundLabFrequency(Number(event.target.value)))} /></label>
-              <label>Offset <span>{stereoOffset.toFixed(1)} Hz</span><input type="range" min="0" max={SOUND_LAB_LIMITS.stereoOffsetMaxHz} step="0.5" value={stereoOffset} disabled={Boolean(activeJourney)} onChange={(event) => setStereoOffset(clampSoundLabStereoOffset(Number(event.target.value)))} /></label>
-              <label>Waveform<select value={stereoWaveform} disabled={Boolean(activeJourney)} onChange={(event) => setStereoWaveform(event.target.value as SoundLabWaveform)}>{SOUND_LAB_WAVEFORMS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
-              <label>Stereo level <span>{Math.round(stereoVolume * 100)}%</span><input type="range" min="0" max={SOUND_LAB_LIMITS.stereoMaxGain} step="0.005" value={stereoVolume} onChange={(event) => setStereoVolume(clampSoundLabGain(Number(event.target.value), SOUND_LAB_LIMITS.stereoMaxGain))} /></label>
-              <label>Pulse rate <span>{pulseRate.toFixed(1)} Hz</span><input type="range" min={SOUND_LAB_LIMITS.pulseRateMinHz} max={SOUND_LAB_LIMITS.pulseRateMaxHz} step="0.1" value={pulseRate} disabled={Boolean(activeJourney)} onChange={(event) => setPulseRate(clampSoundLabPulseRate(Number(event.target.value)))} /></label>
-              <label>Pulse depth <span>{Math.round(pulseDepth * 100)}%</span><input type="range" min="0" max={SOUND_LAB_LIMITS.pulseDepthMax} step="0.05" value={pulseDepth} disabled={Boolean(activeJourney)} onChange={(event) => setPulseDepth(clampSoundLabPulseDepth(Number(event.target.value)))} /></label>
+              <label>Carrier <span>{stereoHz.toFixed(1)} Hz</span><input type="number" min={SOUND_LAB_LIMITS.minHz} max={SOUND_LAB_LIMITS.maxHz} step="0.1" value={stereoHz} disabled={Boolean(activeJourney) || !stereoSupported} onChange={(event) => setStereoHz(clampSoundLabFrequency(Number(event.target.value)))} /></label>
+              <label>Offset <span>{stereoOffset.toFixed(1)} Hz</span><input type="range" min="0" max={SOUND_LAB_LIMITS.stereoOffsetMaxHz} step="0.5" value={stereoOffset} disabled={Boolean(activeJourney) || !stereoSupported} onChange={(event) => setStereoOffset(clampSoundLabStereoOffset(Number(event.target.value)))} /></label>
+              <label>Waveform<select value={stereoWaveform} disabled={Boolean(activeJourney) || !stereoSupported} onChange={(event) => setStereoWaveform(event.target.value as SoundLabWaveform)}>{SOUND_LAB_WAVEFORMS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
+              <label>Stereo level <span>{Math.round(stereoVolume * 100)}%</span><input type="range" min="0" max={SOUND_LAB_LIMITS.stereoMaxGain} step="0.005" value={stereoVolume} disabled={!stereoSupported} onChange={(event) => setStereoVolume(clampSoundLabGain(Number(event.target.value), SOUND_LAB_LIMITS.stereoMaxGain))} /></label>
+              <label>Pulse rate <span>{pulseRate.toFixed(1)} Hz</span><input type="range" min={SOUND_LAB_LIMITS.pulseRateMinHz} max={SOUND_LAB_LIMITS.pulseRateMaxHz} step="0.1" value={pulseRate} disabled={Boolean(activeJourney) || !stereoSupported} onChange={(event) => setPulseRate(clampSoundLabPulseRate(Number(event.target.value)))} /></label>
+              <label>Pulse depth <span>{Math.round(pulseDepth * 100)}%</span><input type="range" min="0" max={SOUND_LAB_LIMITS.pulseDepthMax} step="0.05" value={pulseDepth} disabled={Boolean(activeJourney) || !stereoSupported} onChange={(event) => setPulseDepth(clampSoundLabPulseDepth(Number(event.target.value)))} /></label>
             </div>
-            <button className="sound-lab-primary" type="button" onClick={toggleStereo} disabled={!audioSupported || Boolean(activeJourney)}>{stereoPlaying && !activeJourney ? 'Stop stereo pair' : 'Start stereo pair'}</button>
+            <button className="sound-lab-primary" type="button" onClick={toggleStereo} disabled={!stereoSupported || Boolean(activeJourney)}>{stereoPlaying && !activeJourney ? 'Stop stereo pair' : 'Start stereo pair'}</button>
           </section>
 
           <section className="sound-lab-section" aria-labelledby="sound-lab-journeys-title">
@@ -724,7 +733,7 @@ export default function SoundLab() {
                   <article className={active ? 'sound-lab-journey active' : 'sound-lab-journey'} key={journey.id}>
                     <div><p className="sound-lab-kicker">{formatJourneyTime(getSoundLabJourneyTotalSeconds(journey))}</p><h4>{journey.name}</h4><p>{journey.description}</p></div>
                     <ol>{journey.steps.map((step) => <li key={`${journey.id}-${step.label}`}><strong>{step.label}</strong><span>{step.carrierHz} Hz · ±{(step.offsetHz / 2).toFixed(1)} Hz · pulse {step.pulseRateHz} Hz</span></li>)}</ol>
-                    {active ? <button className="sound-lab-secondary" type="button" onClick={() => stopJourney()}>Stop journey</button> : <button className="sound-lab-primary" type="button" onClick={() => startJourney(journey)} disabled={!audioSupported}>Start {journey.name}</button>}
+                    {active ? <button className="sound-lab-secondary" type="button" onClick={() => stopJourney()}>Stop journey</button> : <button className="sound-lab-primary" type="button" onClick={() => startJourney(journey)} disabled={!stereoSupported}>Start {journey.name}</button>}
                   </article>
                 )
               })}
