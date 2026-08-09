@@ -304,6 +304,7 @@ export const PASSIVE_GUIDANCE_REFERENCE_TOOLS = PASSIVE_GUIDANCE_TOOLS.filter(
 
 const EAGER_PANEL_TOOLS: readonly EagerPanelTool[] = [
   panel('breathing', 'Breathing', 'Choose a text-first breathing pattern and pace.', '◌', 'Session tools', '.breathing-fab', '#breathing-guide-panel', '.breathing-close'),
+  panel('sound-lab', 'Sound Lab', 'Experiment with waveform shapes, layered tones, and local noise.', '∿', 'Session tools', '.sound-lab-fab', '#sound-lab-panel', '.sound-lab-close'),
   panel('summary', 'Session summary', 'Print or download a private session summary.', '▤', 'Session tools', '.summary-fab', '#session-summary-panel', '.summary-close'),
   panel('journal', 'Journal', 'Save only reflections you deliberately choose.', '✎', 'Session tools', '.journal-fab', '#session-journal-panel', '.journal-close'),
   panel('accessibility', 'Accessibility', 'Adjust visuals, motion, text size, and contrast.', 'Aa', 'Preferences and data', '.accessibility-fab', '#accessibility-panel', '.accessibility-close'),

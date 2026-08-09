@@ -20,6 +20,7 @@ type HarnessPanel = {
 
 const HARNESS_PANELS: HarnessPanel[] = [
   { triggerClass: 'breathing-fab', panelId: 'breathing-guide-panel', closeClass: 'breathing-close', name: 'Breathing panel' },
+  { triggerClass: 'sound-lab-fab', panelId: 'sound-lab-panel', closeClass: 'sound-lab-close', name: 'Sound Lab panel' },
   { triggerClass: 'summary-fab', panelId: 'session-summary-panel', closeClass: 'summary-close', name: 'Summary panel' },
   { triggerClass: 'journal-fab', panelId: 'session-journal-panel', closeClass: 'journal-close', name: 'Journal panel' },
   { triggerClass: 'accessibility-fab', panelId: 'accessibility-panel', closeClass: 'accessibility-close', name: 'Accessibility panel' },
@@ -129,16 +130,17 @@ afterEach(() => {
 })
 
 describe('ToolCenter', () => {
-  it('opens a named twenty-two-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
+  it('opens a named twenty-three-tool menu, supports arrow navigation, and restores launcher focus after Escape', async () => {
     render(<ToolCenter />)
 
     const launcher = screen.getByRole('button', { name: /Tools/i })
-    expect(launcher).toHaveTextContent('22 tools')
+    expect(launcher).toHaveTextContent('23 tools')
     fireEvent.click(launcher)
 
     const menu = screen.getByRole('dialog', { name: 'Choose one tool at a time.' })
     const breathing = screen.getByRole('button', { name: /Breathing/i })
     const animal = screen.getByRole('button', { name: /Animal Calm/i })
+    expect(screen.getByRole('button', { name: /Sound Lab/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Artifact Version Guide/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Artifact Support Status/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Artifact Responsibility Map/i })).toBeInTheDocument()
@@ -159,6 +161,7 @@ describe('ToolCenter', () => {
   })
 
   it.each([
+    ['Breathing', 'Breathing panel', 'Sound Lab', 'Sound Lab panel'],
     ['Release Package', 'Release Package panel', 'Artifact Inspector', 'Artifact Inspector panel'],
     ['Artifact Inspector', 'Artifact Inspector panel', 'Workflow Map', 'Artifact Workflow Map panel'],
     ['Workflow Map', 'Artifact Workflow Map panel', 'Artifact Glossary', 'Artifact Glossary panel'],
