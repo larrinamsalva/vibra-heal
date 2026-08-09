@@ -8,6 +8,7 @@ VibraHeal uses one visible **Tools** launcher to organize optional panels and in
 
 - Breathing
 - Nature mixer
+- Sound Lab
 - Session summary
 - Journal
 
@@ -61,6 +62,8 @@ Eager feature launchers remain in the document as hidden compatibility bridges. 
 
 Tool Center activates those bridges so each feature keeps its existing tested state, validation, audio, storage, privacy, and safety logic instead of duplicating it.
 
+Sound Lab is an eager Session tool. Its compatibility trigger opens and closes the existing Sound Lab component; closing that component stops its own preview tone, local noise, and active layered tones before returning focus.
+
 ## Passive guidance loading
 
 The seven passive references are not statically imported by `src/main.tsx`.
@@ -102,12 +105,15 @@ Successful lazy JavaScript and CSS responses are cached by the existing service-
 
 A passive guide opened once online can normally reopen offline. A guide never opened on the current installed version may be unavailable during a first-ever offline attempt because lazy chunks are not part of the initial shell precache. Tool Center reports the failure without opening a partial panel or exposing a raw network error.
 
+Sound Lab is part of the eager application shell. Its generated tones and noise do not require a remote media file or external service after the app itself has loaded.
+
 ## Safety and privacy boundary
 
 Opening the Tool Center or moving between already available tools does not:
 
-- start or stop the tone engine
+- start or stop the main tone engine
 - start or stop nature ambience
+- start a Sound Lab preview, noise texture, or layer without the Sound Lab action itself
 - start a breathing guide
 - save, analyze, or delete a journal entry
 - read, inspect, import, export, migrate, or route a file without a deliberate feature action
@@ -127,16 +133,20 @@ Opening the Tool Center or moving between already available tools does not:
 
 Every consequential action remains inside its original feature and keeps its original confirmation or user gesture. Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, Artifact Decision Boundary Guide, and Guidance Index are static guidance and contain no workflow-action controls.
 
+Sound Lab is session-only in Phase 1. It does not read or write local storage, add choices to saved sessions or backups, create listening history, read a user file, or use the network. Closing Sound Lab stops its own audio. See `docs/sound-lab.md`.
+
 ## Automated tests
 
-`src/toolRegistry.test.ts` verifies registry counts, order, selector uniqueness, Index grouping, and unknown-id rejection.
+`src/toolRegistry.test.ts` verifies registry counts, order, Sound Lab registration, selector uniqueness, Index grouping, and unknown-id rejection.
 
 `src/PassiveGuidanceHost.test.tsx` verifies that no passive panel mounts at startup, only a deliberately requested module mounts, repeat requests do not duplicate it, and missing-host requests fail locally.
+
+`src/SoundLab.test.tsx` verifies Sound Lab's four waveform shapes, four technical noise colors, four-layer limit, reviewed frequency/gain clamps, local noise sample bounds, explicit audio start, no storage/network access, Stop all, and Escape cleanup.
 
 `src/ToolCenter.test.tsx` uses invented browser elements to verify that:
 
 - the Tool Center has a readable dialog name
-- the launcher reports twenty-two destinations
+- the launcher reports twenty-three destinations
 - focus moves to the first tool when opened
 - Arrow, Home, End, and Escape navigation works
 - opening a second panel closes the first panel
@@ -144,10 +154,11 @@ Every consequential action remains inside its original feature and keeps its ori
 - panel closure returns focus to the Tools launcher
 - jumping to Nature Mixer closes an open panel and focuses the section
 - a missing passive trigger causes a typed load request and opens only after a ready event
+- Breathing and Sound Lab participate in eager panel switching
 - Artifact Inspector, Workflow Map, Artifact Glossary, Artifact Version Guide, Artifact Support Status, Artifact Responsibility Map, Artifact Decision Boundary Guide, and Guidance Index participate in panel switching
 - mounted compatibility launchers are removed from keyboard and assistive-technology navigation
 
-The tests do not play audio, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, execute support routes, assign responsibility, record or automate a decision, calculate a score, recommend a release, rank guidance, or move a file between tools.
+The tests do not play audio through real hardware, inspect a person's browser profile, restore a backup, clear data, install a service worker, save journal text, read a real review artifact, validate evidence, migrate data, execute support routes, assign responsibility, record or automate a decision, calculate a score, recommend a release, rank guidance, or move a file between tools.
 
 ## Real-browser review still required
 
@@ -155,6 +166,10 @@ Simulated component tests do not replace review with real browsers and assistive
 
 - complete Tab and Shift+Tab order
 - screen-reader announcement wording and timing
+- Sound Lab sine, triangle, square, and sawtooth playback at low levels
+- Sound Lab four-layer ceiling, per-layer editing, removal, Stop layers, and Stop all
+- Sound Lab white, pink, brown, and violet noise on real audio hardware
+- Sound Lab Escape and Tool Center switching while audio is active
 - first lazy open on normal and throttled connections
 - cancellation while a passive module is loading
 - first-ever offline selection of an unopened passive guide
