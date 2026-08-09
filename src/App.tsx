@@ -132,25 +132,7 @@ function Visualizer({ active, intensity }: { active: boolean; intensity: number 
 }
 
 function TagFilterButton({ tag, onChoose }: { tag: string; onChoose: (tag: string) => void }) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChoose(tag)}
-      aria-label={`Find tones labeled ${tag}`}
-      title={`Find tones labeled ${tag}`}
-      style={{
-        border: '1px solid rgba(255,255,255,.07)',
-        borderRadius: 999,
-        padding: '4px 7px',
-        color: '#809996',
-        background: 'rgba(0,0,0,.12)',
-        cursor: 'pointer',
-        fontSize: '.62rem',
-      }}
-    >
-      {tag}
-    </button>
-  )
+  return <button type="button" className="filter-chip" onClick={() => onChoose(tag)}>{tag}</button>
 }
 
 type AudioGraph = {
@@ -325,10 +307,6 @@ export default function App() {
     setCategory('All')
     setFavoritesOnly(false)
     setActiveGoalId(null)
-    setGoalMessage(`Showing tones labeled “${tag}”. Clear the search to return to the full library.`)
-    window.setTimeout(() => {
-      document.getElementById('frequency-library')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 40)
   }
 
   function stopPlayback() {
@@ -539,8 +517,7 @@ export default function App() {
           <div className="frequency-readout"><span>{formatHz(frequency)}</span><small>Hz carrier</small></div>
           <p>{selected.description}</p>
           <p className="intention"><strong>Session idea:</strong> {selected.intention}</p>
-          <p className="result-count">Tap a sound label to find similar tones</p>
-          <div className="tag-row" aria-label={`${selected.name} sound labels`}>
+          <div className="tag-row">
             {selected.tags.map((tag) => <TagFilterButton key={tag} tag={tag} onChoose={chooseLibraryTag} />)}
           </div>
           <label>Carrier frequency <span>{formatHz(frequency)} Hz</span>
@@ -613,7 +590,7 @@ export default function App() {
                       </span>
                       <span className="library-description">{entry.description}</span>
                     </button>
-                    <span className="tag-row" style={{ marginTop: 0, padding: '0 15px 15px' }} aria-label={`${entry.name} sound labels`}>
+                    <span className="tag-row library-card-select">
                       {entry.tags.slice(0, 3).map((tag) => <TagFilterButton key={tag} tag={tag} onChoose={chooseLibraryTag} />)}
                     </span>
                   </div>
@@ -637,7 +614,7 @@ export default function App() {
               </div>
             )}
           </div>
-          <p className="library-note"><strong>How labels work:</strong> Tap a label such as “low tone,” “steady,” or “settling” to find similar tones. “Audio feature” describes the sound itself, “Wellness practice” describes a mindful use, and “Traditional association” identifies a cultural or spiritual meaning without presenting it as medical evidence.</p>
+          <p className="library-note"><strong>How labels work:</strong> Tap a label to find similar tones. “Audio feature” describes the sound itself, “Wellness practice” describes a mindful use, and “Traditional association” identifies a cultural or spiritual meaning without presenting it as medical evidence.</p>
         </article>
 
         <article className="panel timer-panel">
