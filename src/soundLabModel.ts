@@ -1,5 +1,24 @@
 export type SoundLabWaveform = 'sine' | 'triangle' | 'square' | 'sawtooth'
 export type SoundLabNoiseKind = 'white' | 'pink' | 'brown' | 'violet'
+export type SoundLabStereoPresetId = 'centered' | 'close-pair' | 'open-pair' | 'wide-pair'
+export type SoundLabJourneyId = 'slow-drift' | 'wide-horizon' | 'gentle-motion'
+
+export type SoundLabJourneyStep = {
+  label: string
+  seconds: number
+  carrierHz: number
+  offsetHz: number
+  pulseRateHz: number
+  pulseDepth: number
+  waveform: SoundLabWaveform
+}
+
+export type SoundLabJourney = {
+  id: SoundLabJourneyId
+  name: string
+  description: string
+  steps: readonly SoundLabJourneyStep[]
+}
 
 export const SOUND_LAB_LIMITS = {
   minHz: 40,
@@ -8,6 +27,11 @@ export const SOUND_LAB_LIMITS = {
   previewMaxGain: 0.12,
   layerMaxGain: 0.08,
   noiseMaxGain: 0.08,
+  stereoMaxGain: 0.08,
+  stereoOffsetMaxHz: 12,
+  pulseRateMinHz: 0.5,
+  pulseRateMaxHz: 12,
+  pulseDepthMax: 1,
 } as const
 
 export const SOUND_LAB_WAVEFORMS: ReadonlyArray<{
@@ -71,6 +95,71 @@ export const SOUND_LAB_NOISES: ReadonlyArray<{
 
 export const SOUND_LAB_QUICK_TONES = [174, 396, 432, 528, 639] as const
 
+export const SOUND_LAB_STEREO_PRESETS: ReadonlyArray<{
+  id: SoundLabStereoPresetId
+  label: string
+  offsetHz: number
+  description: string
+}> = [
+  {
+    id: 'centered',
+    label: 'Centered',
+    offsetHz: 0,
+    description: 'Both channels use the same carrier frequency.',
+  },
+  {
+    id: 'close-pair',
+    label: 'Close pair',
+    offsetHz: 2,
+    description: 'A subtle 2 Hz difference between the left and right channels.',
+  },
+  {
+    id: 'open-pair',
+    label: 'Open pair',
+    offsetHz: 4,
+    description: 'A clearly separated 4 Hz left/right frequency difference.',
+  },
+  {
+    id: 'wide-pair',
+    label: 'Wide pair',
+    offsetHz: 8,
+    description: 'A wider 8 Hz left/right difference for obvious stereo movement.',
+  },
+]
+
+export const SOUND_LAB_JOURNEYS: readonly SoundLabJourney[] = [
+  {
+    id: 'slow-drift',
+    name: 'Slow Drift',
+    description: 'A three-stage sine journey with small carrier, stereo-offset, and pulse changes.',
+    steps: [
+      { label: 'Settle', seconds: 45, carrierHz: 432, offsetHz: 2, pulseRateHz: 0.8, pulseDepth: 0.18, waveform: 'sine' },
+      { label: 'Drift', seconds: 45, carrierHz: 438, offsetHz: 4, pulseRateHz: 1.1, pulseDepth: 0.24, waveform: 'sine' },
+      { label: 'Return', seconds: 45, carrierHz: 432, offsetHz: 2, pulseRateHz: 0.8, pulseDepth: 0.16, waveform: 'sine' },
+    ],
+  },
+  {
+    id: 'wide-horizon',
+    name: 'Wide Horizon',
+    description: 'A gradual triangle-wave expansion from a close pair to a wider stereo difference.',
+    steps: [
+      { label: 'Near', seconds: 40, carrierHz: 396, offsetHz: 2, pulseRateHz: 1, pulseDepth: 0.14, waveform: 'triangle' },
+      { label: 'Open', seconds: 50, carrierHz: 432, offsetHz: 6, pulseRateHz: 1.6, pulseDepth: 0.22, waveform: 'triangle' },
+      { label: 'Wide', seconds: 45, carrierHz: 480, offsetHz: 8, pulseRateHz: 1.2, pulseDepth: 0.16, waveform: 'triangle' },
+    ],
+  },
+  {
+    id: 'gentle-motion',
+    name: 'Gentle Motion',
+    description: 'A restrained sine sequence with a shallow pulse and narrow stereo movement.',
+    steps: [
+      { label: 'Begin', seconds: 45, carrierHz: 528, offsetHz: 1, pulseRateHz: 0.6, pulseDepth: 0.12, waveform: 'sine' },
+      { label: 'Move', seconds: 45, carrierHz: 500, offsetHz: 3, pulseRateHz: 1, pulseDepth: 0.2, waveform: 'sine' },
+      { label: 'Home', seconds: 45, carrierHz: 528, offsetHz: 1, pulseRateHz: 0.6, pulseDepth: 0.1, waveform: 'sine' },
+    ],
+  },
+]
+
 export function clampSoundLabFrequency(value: number) {
   if (!Number.isFinite(value)) return 432
   return Math.min(SOUND_LAB_LIMITS.maxHz, Math.max(SOUND_LAB_LIMITS.minHz, value))
@@ -79,6 +168,34 @@ export function clampSoundLabFrequency(value: number) {
 export function clampSoundLabGain(value: number, maximum: number) {
   if (!Number.isFinite(value)) return 0
   return Math.min(maximum, Math.max(0, value))
+}
+
+export function clampSoundLabStereoOffset(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.min(SOUND_LAB_LIMITS.stereoOffsetMaxHz, Math.max(0, value))
+}
+
+export function clampSoundLabPulseRate(value: number) {
+  if (!Number.isFinite(value)) return 1
+  return Math.min(SOUND_LAB_LIMITS.pulseRateMaxHz, Math.max(SOUND_LAB_LIMITS.pulseRateMinHz, value))
+}
+
+export function clampSoundLabPulseDepth(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.min(SOUND_LAB_LIMITS.pulseDepthMax, Math.max(0, value))
+}
+
+export function soundLabStereoFrequencies(carrierHz: number, offsetHz: number) {
+  const carrier = clampSoundLabFrequency(carrierHz)
+  const offset = clampSoundLabStereoOffset(offsetHz)
+  return {
+    leftHz: clampSoundLabFrequency(carrier - offset / 2),
+    rightHz: clampSoundLabFrequency(carrier + offset / 2),
+  }
+}
+
+export function getSoundLabJourneyTotalSeconds(journey: SoundLabJourney) {
+  return journey.steps.reduce((total, step) => total + Math.max(0, step.seconds), 0)
 }
 
 function clampSample(value: number) {
