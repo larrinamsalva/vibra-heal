@@ -22,6 +22,17 @@ GitHub Actions remains read-only and uses:
 
 `npm ci` must fail rather than silently rewrite the dependency graph when `package.json` and `package-lock.json` disagree.
 
+## Lockfile versus production history
+
+The lockfile and the production-manifest-history baseline serve different purposes.
+
+- `package-lock.json` is the current exact install graph for reproducible builds.
+- `config/production-manifest-baseline.json` is a historical reviewed snapshot used to describe what has changed since that point.
+
+Do not rewrite the historical manifest baseline merely to make its dependency-change count return to zero. A dependency difference in that report can be useful history while the current lockfile still guarantees a stable install graph.
+
+The first locked CI run confirmed the existing historical difference already seen before this phase: `@react-three/drei` resolves to 10.7.8 while the older production-history snapshot records 10.7.7. The other tracked runtime dependency versions matched that historical snapshot.
+
 ## Updating dependencies
 
 A deliberate dependency update should:
