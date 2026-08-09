@@ -14,17 +14,32 @@ import {
 } from './toolRegistry'
 
 describe('toolRegistry', () => {
-  it('preserves the current twenty-two-tool order and three groups', () => {
-    expect(TOOLS).toHaveLength(22)
-    expect(PANEL_TOOLS).toHaveLength(20)
+  it('preserves the current twenty-three-tool order and three groups', () => {
+    expect(TOOLS).toHaveLength(23)
+    expect(PANEL_TOOLS).toHaveLength(21)
     expect(TOOLS[0]?.id).toBe('breathing')
     expect(TOOLS[1]).toBe(NATURE_TOOL)
+    expect(TOOLS[2]?.id).toBe('sound-lab')
     expect(TOOLS.at(-1)).toBe(ANIMAL_TOOL)
     expect(TOOL_GROUPS).toEqual([
       'Session tools',
       'Preferences and data',
       'Guidance',
     ])
+  })
+
+  it('registers Sound Lab as an eager Session tool without treating it as passive guidance', () => {
+    const soundLab = getPanelToolById('sound-lab')
+    expect(soundLab).toMatchObject({
+      kind: 'panel',
+      label: 'Sound Lab',
+      group: 'Session tools',
+      loadStrategy: 'eager',
+      triggerSelector: '.sound-lab-fab',
+      panelSelector: '#sound-lab-panel',
+      closeSelector: '.sound-lab-close',
+    })
+    expect(soundLab && isPassiveGuidanceTool(soundLab)).toBe(false)
   })
 
   it('registers seven uniquely addressed passive guidance modules', () => {
