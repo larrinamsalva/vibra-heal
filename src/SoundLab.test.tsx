@@ -241,6 +241,35 @@ describe('SoundLab component', () => {
     expect(within(dialog).getByText(/rate does not promise or label a mental or physical state/i)).toBeInTheDocument()
   })
 
+  it('keeps Phase 1 audio available when stereo panning is unsupported', () => {
+    const originalStereoPanner = FakeAudioContext.prototype.createStereoPanner
+    Object.defineProperty(FakeAudioContext.prototype, 'createStereoPanner', {
+      configurable: true,
+      writable: true,
+      value: undefined,
+    })
+
+    try {
+      render(<SoundLab />)
+      fireEvent.click(screen.getByRole('button', { name: 'Sound Lab' }))
+      const dialog = screen.getByRole('dialog', { name: 'Sound Lab revival' })
+
+      expect(within(dialog).getByRole('button', { name: 'Start preview tone' })).toBeEnabled()
+      expect(within(dialog).getByRole('button', { name: 'Start stereo pair' })).toBeDisabled()
+      expect(within(dialog).getByRole('button', { name: 'Start Slow Drift' })).toBeDisabled()
+      expect(within(dialog).getByRole('note', { name: '' })).toBeInTheDocument()
+
+      fireEvent.click(within(dialog).getByRole('button', { name: 'Start preview tone' }))
+      expect(audioContextConstructs).toBe(1)
+    } finally {
+      Object.defineProperty(FakeAudioContext.prototype, 'createStereoPanner', {
+        configurable: true,
+        writable: true,
+        value: originalStereoPanner,
+      })
+    }
+  })
+
   it('starts audio only after an explicit action, caps layers at four, and stops everything together', async () => {
     render(<SoundLab />)
     fireEvent.click(screen.getByRole('button', { name: 'Sound Lab' }))
