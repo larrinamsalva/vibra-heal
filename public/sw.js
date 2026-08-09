@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vibraheal-shell-v0.34'
+const CACHE_NAME = 'vibraheal-shell-v0.35'
 const BASE_PATH = '/vibra-heal/'
 const REQUIRED_SHELL = [
   BASE_PATH,
@@ -66,24 +66,34 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url)
   if (url.origin !== self.location.origin || !url.pathname.startsWith(BASE_PATH)) return
-  if (url.pathname.endsWith('/sw.js')) return
+
+  if (request.mode === 'navigate') {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request)
+        const cache = await caches.open(CACHE_NAME)
+        return cacheResponse(cache, BASE_PATH, response)
+      } catch {
+        return (await caches.match(BASE_PATH))
+          || new Response('VibraHeal is offline and the app shell is not cached yet.', {
+            status: 503,
+            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+          })
+      }
+    })())
+    return
+  }
 
   event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME)
+    const cached = await caches.match(request)
+    if (cached) return cached
 
     try {
       const response = await fetch(request)
-      return await cacheResponse(cache, request, response)
+      const cache = await caches.open(CACHE_NAME)
+      return cacheResponse(cache, request, response)
     } catch {
-      const cached = await cache.match(request, { ignoreSearch: request.mode === 'navigate' })
-      if (cached) return cached
-
-      if (request.mode === 'navigate') {
-        const shell = await cache.match(BASE_PATH)
-        if (shell) return shell
-      }
-
-      return new Response('VibraHeal is offline and this resource is not cached yet.', {
+      return new Response('VibraHeal is offline and this file is not cached yet.', {
         status: 503,
         headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       })
